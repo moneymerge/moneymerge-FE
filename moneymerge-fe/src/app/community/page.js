@@ -145,7 +145,7 @@ export default function Component() {
                 href={"/community"}
               >
                 <CalendarIcon className="h-4 w-4" />
-                <a>커뮤니티</a>
+                커뮤니티
               </Link>
               <Link
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
