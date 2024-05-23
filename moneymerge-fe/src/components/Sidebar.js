@@ -15,7 +15,7 @@ const Sidebar = () => {
       <div className="hidden border-r bg-[#fffbeb] lg:block dark:bg-gray-800/40">
       <div className="flex flex-col gap-2">
         <div className="flex h-[60px] items-center px-6">
-          <Link className="flex items-center gap-2 font-semibold" href="#">
+          <Link className="flex items-center gap-2 font-semibold" href="/">
             <Package2Icon className="h-6 w-6" />
             <span className="">머니머지</span>
           </Link>
@@ -105,6 +105,6 @@ function Package2Icon(props) {
   }
 
   
-  
+
 
 export default Sidebar;
