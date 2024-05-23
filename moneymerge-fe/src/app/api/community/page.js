@@ -3,19 +3,10 @@
  * @see https://v0.dev/t/4mFNznayvMw
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  CollapsibleTrigger,
-  CollapsibleContent,
-  Collapsible,
-} from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
   DropdownMenuContent,
   DropdownMenu,
   DropdownMenuRadioItem,
@@ -26,7 +17,6 @@ import {
   CardDescription,
   CardHeader,
   CardContent,
-  CardFooter,
   Card,
 } from "@/components/ui/card";
 import { TabsTrigger, TabsList, Tabs } from "@/components/ui/tabs";
@@ -49,137 +39,14 @@ import {
 
 export default function Component() {
   return (
-    <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
-      {/* 사이드바 */}
-      <div className="hidden border-r bg-[#fffbeb] lg:block dark:bg-gray-800/40">
-        <div className="flex flex-col gap-2">
-          <div className="flex h-[60px] items-center px-6">
-            <Link className="flex items-center gap-2 font-semibold" href="#">
-              <Package2Icon className="h-6 w-6" />
-              <span className="">머니머지</span>
-            </Link>
-            <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
-              <BellIcon className="h-4 w-4" />
-              <span className="sr-only">Toggle notifications</span>
-            </Button>
-          </div>
-          <div className="flex h-[60px] items-center px-6">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
-                  size="icon"
-                  variant="ghost"
-                >
-                  <img
-                    alt="Avatar"
-                    className="rounded-full"
-                    height="32"
-                    src="/placeholder.svg"
-                    style={{
-                      aspectRatio: "32/32",
-                      objectFit: "cover",
-                    }}
-                    width="32"
-                  />
-                  <span className="sr-only">Toggle user menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <span className="p-2">닉네임</span>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Settings</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Preferences</DropdownMenuItem>
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-
-          {/* 가계부 드롭다운 */}
-
-          <div className="flex-1 overflow-auto py-2">
-            <nav className="grid items-start px-4 text-sm font-medium">
-              <Collapsible className="grid gap-4">
-                <CollapsibleTrigger className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-900 transition-all hover:bg-gray-100 dark:text-gray-50 dark:hover:bg-gray-800 [&[data-state=open]>svg]:rotate-90">
-                  <HomeIcon className="h-4 w-4" />
-                  가계부
-                  <ChevronRightIcon className="ml-auto h-5 w-5 transition-all" />
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="grid gap-1">
-                    <Link
-                      className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800"
-                      href="#"
-                    >
-                      <WalletIcon className="h-4 w-4" />
-                      가계부 1
-                    </Link>
-                    <Link
-                      className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                      href="#"
-                    >
-                      <CalendarIcon className="h-4 w-4" />
-                      가계부 2
-                    </Link>
-                    <Link
-                      className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                      href="#"
-                    >
-                      <BarChartIcon className="h-4 w-4" />
-                      가계부 3
-                    </Link>
-                    <Button
-                      className="justify-start gap-2"
-                      size="sm"
-                      variant="ghost"
-                    >
-                      <PlusIcon className="h-4 w-4 text-[#666666] dark:text-[#b3b3b3]" />
-                      Add Household Ledger
-                    </Button>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-              <Link
-                className="flex items-center gap-3 rounded-lg bg-[#ffcc00] px-3 py-2 text-gray-900 transition-all hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
-                href={"/community"}
-              >
-                <CalendarIcon className="h-4 w-4" />
-                커뮤니티
-              </Link>
-              <Link
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                href="#"
-              >
-                <WalletIcon className="h-4 w-4" />
-                포인트 확인
-              </Link>
-              <Link
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                href="#"
-              >
-                <WalletIcon className="h-4 w-4" />
-                로그인/ 로그아웃
-              </Link>
-              <Link
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                href="#"
-              >
-                <SettingsIcon className="h-4 w-4" />
-                Settings
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen w-full">
       <div className="flex flex-col">
-        <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-[#fffbeb] px-6 dark:bg-gray-800/40">
+        {/* <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-[#ffffff] px-6 dark:bg-gray-800/40">
           <Link className="lg:hidden" href="#">
             <Package2Icon className="h-6 w-6" />
             <span className="sr-only">Home</span>
           </Link>
-        </header>
-        {/* 내용 */}
+        </header> */}
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
           <div className="grid gap-6">
             <Card className="bg-[#fffbeb] dark:bg-gray-800/40">
