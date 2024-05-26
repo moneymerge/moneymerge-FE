@@ -13,6 +13,11 @@ import { PaginationPrevious, PaginationItem, PaginationLink, PaginationContent, 
 export default function Component() {
   return (
     <div className="bg-[#fffbeb] text-[#333] min-h-screen flex flex-col">
+      <header className="bg-[#f9f5e7] py-4 px-6 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold">게시판</h1>
+        </div>
+      </header>
       <main className="flex-1 p-8">
         <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
           <div className="flex items-center justify-between">

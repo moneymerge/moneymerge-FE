@@ -132,14 +132,14 @@ const Navbar = () => {
             </Collapsible>
             <Link
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-900 transition-all hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
-              href={"/api/community"}
+              href={"/api/boards"}
             >
               <CalendarIcon className="h-4 w-4" />
               커뮤니티
             </Link>
             <Link
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-900 transition-all hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-              href="/api/point"
+              href="/api/point/1"
             >
               <WalletIcon className="h-4 w-4" />
               포인트 확인
@@ -149,7 +149,7 @@ const Navbar = () => {
               href={"/api/login"}
             >
               <WalletIcon className="h-4 w-4" />
-              로그인/ 로그아웃
+              로그인 / 로그아웃
             </Link>
             <Link
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-900 transition-all hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
