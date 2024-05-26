@@ -5,6 +5,17 @@ import {
     CollapsibleContent,
     Collapsible,
   } from "@/components/ui/collapsible";
+import {
+  DialogTrigger,
+  DialogTitle,
+  DialogHeader,
+  DialogFooter,
+  DialogContent,
+  DialogDescription,
+  Dialog,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 const Navbar = () => {
     return (
@@ -39,14 +50,83 @@ const Navbar = () => {
                     <BarChartIcon className="h-4 w-4" />
                     가계부 3
                   </Link>
-                  <Button
-                    className="justify-start gap-2"
-                    size="sm"
-                    variant="ghost"
-                  >
-                    <PlusIcon className="h-4 w-4 text-[#666666] dark:text-[#b3b3b3]" />
-                    Add Household Ledger
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        className="justify-start gap-2"
+                        size="sm"
+                        variant="ghost"
+                      >
+                        <PlusIcon className="h-4 w-4 text-[#666666] dark:text-[#b3b3b3]" />
+                        Add Household Ledger
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[700px]">
+                      <DialogHeader>
+                        <DialogTitle>새 가계부 만들기</DialogTitle>
+                      </DialogHeader>
+                      <div className="grid gap-6 py-4">
+                        <div className="flex items-center justify-between gap-4 flex-nowrap">
+                          <Label htmlFor="ledgerName" className="whitespace-nowrap">가계부 이름</Label>
+                          <Input className="w-full" id="ledgerName" placeholder="Enter ledger name" type="text" />
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-sm font-medium">가계부 색상</div>
+                          <div className="h-8 w-8 rounded-full bg-[#5c6ac4]" />
+                          <Button size="sm" variant="outline">
+                            Change Color
+                          </Button>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-sm font-medium">나의 색상</div>
+                          <div className="h-8 w-8 rounded-full bg-[#5ccac4]" />
+                          <Button size="sm" variant="outline">
+                            Change Color
+                          </Button>
+                        </div>
+                        <div className="grid gap-2">
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm font-medium">Team Colors</div>
+                            <Button size="sm" variant="outline">
+                              Invite
+                            </Button>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex items-center gap-2">
+                              <div className="h-8 w-8 rounded-full bg-[#de3618]" />
+                              <div className="text-sm">John</div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="h-8 w-8 rounded-full bg-[#f1c40f]" />
+                              <div className="text-sm">Sarah</div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="h-8 w-8 rounded-full bg-[#2ecc71]" />
+                              <div className="text-sm">Alex</div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="h-8 w-8 rounded-full bg-[#9b59b6]" />
+                              <div className="text-sm">Emily</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid gap-2">
+                          <div className="flex items-center justify-between">
+                            <Label htmlFor="monthlyGoal">Monthly Goal</Label>
+                            <Input className="w-24" id="monthlyGoal" type="number" />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Label htmlFor="annualGoal">Annual Goal</Label>
+                            <Input className="w-24" id="annualGoal" type="number" />
+                          </div>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="ghost">Cancel</Button>
+                        <Button type="submit">Save</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CollapsibleContent>
             </Collapsible>
