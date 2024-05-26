@@ -5,6 +5,7 @@
  */
 import { Button } from "@/components/ui/button";
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
+import Link from "next/link"
 
 export default function Component() {
   return (
@@ -28,12 +29,16 @@ export default function Component() {
 
       <div className="flex w-full justify-center gap-4" style={{marginTop: 40}}>
         <p style={{marginTop: 5}}>내 캐릭터: 곰돌쓰</p>
-          <Button size="sm" variant="outline">
-          변경
-          </Button>
-          <Button size="sm" variant="outline">
-          구매
-          </Button>
+          <Link className="flex items-center gap-2" href="/api/characters/1">
+            <Button size="sm" variant="outline">
+            변경
+            </Button>
+          </Link>
+          <Link className="flex items-center gap-2" href="/api/characters/shop/1">
+            <Button size="sm" variant="outline">
+            구매
+            </Button>
+          </Link>
       </div>
       <div>내 포인트: 100 P</div>
 

@@ -25,36 +25,26 @@ const Sidebar = () => {
           </Button>
         </div>
         <div className="flex h-[60px] items-center px-6">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
-                size="icon"
-                variant="ghost"
-              >
-                <img
-                  alt="Avatar"
-                  className="rounded-full"
-                  height="32"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "32/32",
-                    objectFit: "cover",
-                  }}
-                  width="32"
-                />
-                <span className="sr-only">Toggle user menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <span className="p-2">닉네임</span>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Settings</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Preferences</DropdownMenuItem>
-              <DropdownMenuItem>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Link href="/api/profile/1">
+            <Button
+              className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
+              size="icon"
+              variant="ghost"
+            >
+              <img
+                alt="Avatar"
+                className="rounded-full"
+                height="32"
+                src="/placeholder.svg"
+                style={{
+                  aspectRatio: "32/32",
+                  objectFit: "cover",
+                }}
+                width="32"
+              />
+            </Button>
+          </Link>
+          <span className="p-2">닉네임</span>
         </div>
         <Navbar />
       </div>
