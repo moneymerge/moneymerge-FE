@@ -39,6 +39,7 @@ import {
   DialogHeader,
   DialogFooter,
   DialogContent,
+  DialogDescription,
   Dialog,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -51,6 +52,7 @@ import {
   Select,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 
 
 export default function Component() {
@@ -206,48 +208,85 @@ export default function Component() {
                     <PlusIcon className="w-6 h-6" />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-white dark:bg-[#555555] rounded-lg p-6 w-[400px]">
+                <DialogContent className="sm:max-w-[800px]">
                   <DialogHeader>
-                    <DialogTitle>Add Expense</DialogTitle>
+                    <DialogTitle>Create New Transaction</DialogTitle>
+                    <DialogDescription>Fill out the form below to create a new transaction.</DialogDescription>
                   </DialogHeader>
-                  <div className="grid gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="date">Date</Label>
-                      <Input id="date" type="date" />
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                      <div className="space-y-2">
+                        <Label htmlFor="date">Date</Label>
+                        <Input id="date" type="date" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="amount">Amount</Label>
+                        <Input id="amount" placeholder="Enter amount" type="number" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="account-type">Account Type</Label>
+                        <Select id="account-type">
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select account type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="checking">Checking</SelectItem>
+                            <SelectItem value="savings">Savings</SelectItem>
+                            <SelectItem value="credit-card">Credit Card</SelectItem>
+                            <SelectItem value="investment">Investment</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="category">Category</Label>
-                      <Select id="category">
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="food">Food</SelectItem>
-                          <SelectItem value="transportation">
-                            Transportation
-                          </SelectItem>
-                          <SelectItem value="housing">Housing</SelectItem>
-                          <SelectItem value="entertainment">
-                            Entertainment
-                          </SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
+                    <div className="space-y-2">
+                    <Label className="text-right" htmlFor="tags">
+                      Categories
+                    </Label>
+                    <Input className="col-span-3" id="tags" placeholder="Enter tags separated by commas" />
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="amount">Amount</Label>
-                      <Input id="amount" type="number" />
+                    <div className="space-y-2">
+                      <Label htmlFor="memo">Content</Label>
+                      <Textarea className="min-h-[100px]" id="memo" placeholder="Enter memo" />
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea id="description" rows={3} />
+                    <div className="space-y-2">
+                      <Label htmlFor="memo">Memo</Label>
+                      <Textarea className="min-h-[100px]" id="memo" placeholder="Enter memo" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="photo">Photo</Label>
+                      <Input id="photo" type="file" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>가계부</Label>
+                      <div className="grid gap-2">
+                        <div className="flex items-center gap-2">
+                          <Checkbox id="category-1" />
+                          <Label htmlFor="category-1">Groceries</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Checkbox id="category-2" />
+                          <Label htmlFor="category-2">Utilities</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Checkbox id="category-3" />
+                          <Label htmlFor="category-3">Entertainment</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Checkbox id="category-4" />
+                          <Label htmlFor="category-4">Travel</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Checkbox id="category-5" />
+                          <Label htmlFor="category-5">Other</Label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <DialogFooter>
+                    <Button type="submit">Save Transaction</Button>
                     <div>
                       <Button variant="outline">Cancel</Button>
                     </div>
-                    <Button>Save</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
