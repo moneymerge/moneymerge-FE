@@ -1,16 +1,41 @@
+"use client";
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/ybBhE9BgaOZ
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuContent, DropdownMenu, DropdownMenuRadioItem, DropdownMenuRadioGroup } from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
-import { PaginationPrevious, PaginationItem, PaginationLink, PaginationContent, Pagination } from "@/components/ui/pagination"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuContent,
+  DropdownMenu,
+  DropdownMenuRadioItem,
+  DropdownMenuRadioGroup,
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
+import {
+  PaginationPrevious,
+  PaginationItem,
+  PaginationLink,
+  PaginationContent,
+  Pagination,
+} from "@/components/ui/pagination";
+
+import { useState, useEffect } from "react";
 
 export default function Component() {
+  const [boards, setBoards] = useState([]);
+  //const boards = [{boardId : 1, boardType : "INFORMATION", title : "제목1", content : "내용1", image : "#", userId : 1, username : "홍길동", createdAt: "2024-05-21T17:24:54.391282", modifiedAt: "2024-05-21T17:44:56.058967", likes: 1, commentGetResList : []}];
+  useEffect(() => {
+    fetch("http://localhost:8080/api/boards")
+      .then((result) => result.json())
+      .then((result) => setBoards(result.data));
+  }, []);
+
   return (
     <div className="bg-[#fffbeb] text-[#333] min-h-screen flex flex-col">
       <header className="bg-[#f9f5e7] py-4 px-6 flex items-center justify-between">
@@ -41,7 +66,11 @@ export default function Component() {
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <Input className="w-[200px]" placeholder="검색어를 입력하세요" type="text" />
+                <Input
+                  className="w-[200px]"
+                  placeholder="검색어를 입력하세요"
+                  type="text"
+                />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline">
@@ -51,10 +80,18 @@ export default function Component() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[200px]">
                     <DropdownMenuRadioGroup value="all">
-                      <DropdownMenuRadioItem value="all">전체</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="title">제목</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="content">내용</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="author">작성자</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="all">
+                        전체
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="title">
+                        제목
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="content">
+                        내용
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="author">
+                        작성자
+                      </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -67,10 +104,18 @@ export default function Component() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[200px]">
                     <DropdownMenuRadioGroup value="latest">
-                      <DropdownMenuRadioItem value="latest">최신순</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="oldest">오래된순</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="popular">좋아요순</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="views">댓글순</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="latest">
+                        최신순
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="oldest">
+                        오래된순
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="popular">
+                        좋아요순
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="views">
+                        댓글순
+                      </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -91,31 +136,44 @@ export default function Component() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b">
-                  <td className="px-4 py-3">
-                    <Link className="font-medium hover:text-[#333]" href="#">
-                      새로운 기능 업데이트
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge className="bg-[#f9f5e7] text-[#333]" variant="secondary">
-                      공지사항
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3">관리자</td>
-                  <td className="px-4 py-3">2023-05-26</td>
-                  <td className="px-4 py-3">100</td>
-                  <td className="px-4 py-3">10</td>
-                  <td className="px-4 py-3">5</td>
-                </tr>
-                <tr className="border-b">
+                {boards &&
+                  boards.map((row) => (
+                    <tr className="border-b">
+                      <td className="px-4 py-3">
+                        <Link
+                          className="font-medium hover:text-[#333]"
+                          href="/community/{row.boardId}"
+                        >
+                          {row.title}
+                        </Link>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge
+                          className="bg-[#f9f5e7] text-[#333]"
+                          variant="secondary"
+                        >
+                          {row.boardType}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3">{row.username}</td>
+                      <td className="px-4 py-3">{row.createdAt}</td>
+                      <td className="px-4 py-3">{row.likes}</td>
+                      <td className="px-4 py-3">
+                        {row.commentGetResList.length}
+                      </td>
+                    </tr>
+                  ))}
+                {/* <tr className="border-b">
                   <td className="px-4 py-3">
                     <Link className="font-medium hover:text-[#333]" href="#">
                       이벤트 안내
                     </Link>
                   </td>
                   <td className="px-4 py-3">
-                    <Badge className="bg-[#f9f5e7] text-[#333]" variant="secondary">
+                    <Badge
+                      className="bg-[#f9f5e7] text-[#333]"
+                      variant="secondary"
+                    >
                       공지사항
                     </Badge>
                   </td>
@@ -124,38 +182,7 @@ export default function Component() {
                   <td className="px-4 py-3">5</td>
                   <td className="px-4 py-3">2</td>
                 </tr>
-                <tr className="border-b">
-                  <td className="px-4 py-3">
-                    <Link className="font-medium hover:text-[#333]" href="#">
-                      자유게시판 - 안녕하세요
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge className="bg-[#f9f5e7] text-[#333]" variant="secondary">
-                      자유게시판
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3">user1</td>
-                  <td className="px-4 py-3">2023-05-24</td>
-                  <td className="px-4 py-3">2</td>
-                  <td className="px-4 py-3">10</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="px-4 py-3">
-                    <Link className="font-medium hover:text-[#333]" href="#">
-                      Q&A - 질문드립니다
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge className="bg-[#f9f5e7] text-[#333]" variant="secondary">
-                      Q&A
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3">user2</td>
-                  <td className="px-4 py-3">2023-05-23</td>
-                  <td className="px-4 py-3">1</td>
-                  <td className="px-4 py-3">3</td>
-                </tr>
+                */}
               </tbody>
             </table>
           </div>
@@ -181,13 +208,13 @@ export default function Component() {
       <div className="fixed bottom-8 right-8">
         <Link
           className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-          href="/api/boards/create">
-          <PlusIcon className="h-5 w-5 mr-2" />
-          글 작성
+          href="/api/boards/create"
+        >
+          <PlusIcon className="h-5 w-5 mr-2" />글 작성
         </Link>
       </div>
     </div>
-  )
+  );
 }
 
 function ArrowLeftIcon(props) {
@@ -207,9 +234,8 @@ function ArrowLeftIcon(props) {
       <path d="m12 19-7-7 7-7" />
       <path d="M19 12H5" />
     </svg>
-  )
+  );
 }
-
 
 function ArrowUpIcon(props) {
   return (
@@ -228,9 +254,8 @@ function ArrowUpIcon(props) {
       <path d="m5 12 7-7 7 7" />
       <path d="M12 19V5" />
     </svg>
-  )
+  );
 }
-
 
 function ContactIcon(props) {
   return (
@@ -252,9 +277,8 @@ function ContactIcon(props) {
       <line x1="8" x2="8" y1="2" y2="4" />
       <line x1="16" x2="16" y1="2" y2="4" />
     </svg>
-  )
+  );
 }
-
 
 function FileQuestionIcon(props) {
   return (
@@ -274,9 +298,8 @@ function FileQuestionIcon(props) {
       <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" />
       <path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3" />
     </svg>
-  )
+  );
 }
-
 
 function FilterIcon(props) {
   return (
@@ -294,9 +317,8 @@ function FilterIcon(props) {
     >
       <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
     </svg>
-  )
+  );
 }
-
 
 function ListIcon(props) {
   return (
@@ -319,9 +341,8 @@ function ListIcon(props) {
       <line x1="3" x2="3.01" y1="12" y2="12" />
       <line x1="3" x2="3.01" y1="18" y2="18" />
     </svg>
-  )
+  );
 }
-
 
 function SignpostIcon(props) {
   return (
@@ -341,25 +362,25 @@ function SignpostIcon(props) {
       <path d="M18.5 13h-13L2 9.5 5.5 6h13L22 9.5Z" />
       <path d="M12 13v8" />
     </svg>
-  )
+  );
 }
 
 function PlusIcon(props) {
-    return (
-      <svg
-        {...props}
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M5 12h14" />
-        <path d="M12 5v14" />
-      </svg>
-    )
-  }
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14" />
+      <path d="M12 5v14" />
+    </svg>
+  );
+}
