@@ -3,12 +3,22 @@
  * @see https://v0.dev/t/yd9zYS4V4tR
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
-import { Textarea } from "@/components/ui/textarea"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
+
+// import { useState, useEffect } from "react";
 
 export default function Component() {
+  // const [boards, setBoards] = useState([]);
+  // //const boards = [{boardId : 1, boardType : "INFORMATION", title : "제목1", content : "내용1", image : "#", userId : 1, username : "홍길동", createdAt: "2024-05-21T17:24:54.391282", modifiedAt: "2024-05-21T17:44:56.058967", likes: 1, commentGetResList : []}];
+  // useEffect(() => {
+  //   fetch("http://localhost:8080/api/boards")
+  //     .then((result) => result.json())
+  //     .then((result) => setBoards(result.data));
+  // }, []);
+
   return (
     <div className="bg-[#fffbeb] text-[#333] min-h-screen flex flex-col">
       <header className="bg-[#f9f5e7] py-4 px-6 flex items-center justify-between">
@@ -24,7 +34,9 @@ export default function Component() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold">새로운 기능 업데이트</h2>
-              <p className="text-sm text-gray-500">공지사항 | 작성자: 관리자 | 2023-05-26</p>
+              <p className="text-sm text-gray-500">
+                공지사항 | 작성자: 관리자 | 2023-05-26
+              </p>
             </div>
             <div className="flex items-center gap-2">
               <Button variant="outline">
@@ -41,7 +53,9 @@ export default function Component() {
               <li>기능 B</li>
               <li>기능 C</li>
             </ul>
-            <p>앞으로도 지속적인 업데이트를 통해 더 나은 서비스를 제공하겠습니다.</p>
+            <p>
+              앞으로도 지속적인 업데이트를 통해 더 나은 서비스를 제공하겠습니다.
+            </p>
           </div>
           <div className="flex justify-end gap-2">
             <Button variant="outline">수정</Button>
@@ -59,14 +73,18 @@ export default function Component() {
                   <div className="flex items-center justify-between">
                     <div className="font-medium">John Doe</div>
                     <div className="flex items-center">
-                        <div className="text-sm text-gray-500  mr-4">2023-05-26</div>
-                        <Button size="sm" variant="outline">
-                            <HeartIcon className="h-4 w-4" />
-                            <span className="ml-2">10</span>
-                        </Button>
+                      <div className="text-sm text-gray-500  mr-4">
+                        2023-05-26
+                      </div>
+                      <Button size="sm" variant="outline">
+                        <HeartIcon className="h-4 w-4" />
+                        <span className="ml-2">10</span>
+                      </Button>
                     </div>
                   </div>
-                  <p className="mt-2">Great update! I'm excited to try out the new features.</p>
+                  <p className="mt-2">
+                    Great update! I'm excited to try out the new features.
+                  </p>
                   <div className="flex items-center gap-2 mt-2">
                     <Button size="sm" variant="outline">
                       <DeleteIcon className="h-4 w-4 mr-2" />
@@ -88,14 +106,18 @@ export default function Component() {
                   <div className="flex items-center justify-between">
                     <div className="font-medium">Jane Doe</div>
                     <div className="flex items-center">
-                        <div className="text-sm text-gray-500 mr-4">2023-05-27</div>
-                        <Button size="sm" variant="outline">
-                            <HeartIcon className="h-4 w-4" />
-                            <span className="ml-2">10</span>
-                        </Button>
+                      <div className="text-sm text-gray-500 mr-4">
+                        2023-05-27
+                      </div>
+                      <Button size="sm" variant="outline">
+                        <HeartIcon className="h-4 w-4" />
+                        <span className="ml-2">10</span>
+                      </Button>
                     </div>
                   </div>
-                  <p className="mt-2">Awesome, can't wait to see what else is in store!</p>
+                  <p className="mt-2">
+                    Awesome, can't wait to see what else is in store!
+                  </p>
                   <div className="flex items-center gap-2 mt-2">
                     <Button size="sm" variant="outline">
                       <DeleteIcon className="h-4 w-4 mr-2" />
@@ -122,7 +144,7 @@ export default function Component() {
         </div>
       </main>
     </div>
-  )
+  );
 }
 
 function ArrowLeftIcon(props) {
@@ -142,9 +164,8 @@ function ArrowLeftIcon(props) {
       <path d="m12 19-7-7 7-7" />
       <path d="M19 12H5" />
     </svg>
-  )
+  );
 }
-
 
 function DeleteIcon(props) {
   return (
@@ -164,9 +185,8 @@ function DeleteIcon(props) {
       <line x1="18" x2="12" y1="9" y2="15" />
       <line x1="12" x2="18" y1="9" y2="15" />
     </svg>
-  )
+  );
 }
-
 
 function HeartIcon(props) {
   return (
@@ -184,9 +204,8 @@ function HeartIcon(props) {
     >
       <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
     </svg>
-  )
+  );
 }
-
 
 function Trash2Icon(props) {
   return (
@@ -208,5 +227,5 @@ function Trash2Icon(props) {
       <line x1="10" x2="10" y1="11" y2="17" />
       <line x1="14" x2="14" y1="11" y2="17" />
     </svg>
-  )
+  );
 }
