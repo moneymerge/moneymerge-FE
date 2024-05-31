@@ -1,153 +1,18 @@
 import Link from "next/link";
-
-// const Sidebar = () => {
-//   return (
-//     <div className="flex flex-col gap-2">
-//       {/* <svg
-//         xmlns="http://www.w3.org/2000/svg"
-//         width="163"
-//         height="381"
-//         fill="none"
-//       >
-//         <rect
-//           width="162"
-//           height="380"
-//           x=".5"
-//           y=".5"
-//           fill="#FFAFBC"
-//           stroke="#000"
-//           rx="19.5"
-//         />
-//         <rect
-//           width="162"
-//           height="54"
-//           x=".5"
-//           y=".5"
-//           fill="#F1FF9D"
-//           stroke="#000"
-//           rx="19.5"
-//         />
-//         <path fill="#FFAFBC" d="M1 30h161v161H1z" />
-//         <path stroke="#000" d="M0 29.5h163" />
-//         <rect width="137" height="99" x="13" y="94" fill="#FFE9E9" rx="10" />
-//         <rect width="137" height="99" x="13" y="94" fill="#FFE9E9" rx="10" />
-//         <rect width="137" height="99" x="13" y="94" fill="#FFE9E9" rx="10" />
-//         <path
-//           fill="#000"
-//           d="M45.135 180.14h-2.418v-.949h2.418v-3.211h.949v3.211h2.404v.949h-2.404v3.224h-.95v-3.224Zm18.81-7.891h1.092v11.765h-1.092v-11.765Zm.794 4.771h2.17v.897h-2.17v-.897Zm-3.797-3.497h1.053c0 3.341-1.533 6.357-5.33 8.268l-.597-.832c3.25-1.651 4.875-4.16 4.875-7.267v-.169Zm-4.328 0h4.888v.884h-4.889v-.884Zm15.898 2.002h2.612v.871h-2.612v-.871Zm-.091 2.951h2.677v.871h-2.677v-.871Zm4.484-6.214h1.04v11.752h-1.04v-11.752Zm-2.353.299h1.014v10.855h-1.014v-10.855Zm-2.626 1.183h1.04c0 3.081-1.234 5.85-4.393 7.735l-.624-.767c2.743-1.664 3.978-4.004 3.978-6.773v-.195Zm-3.457 0h3.887v.884h-3.887v-.884Zm11.439 5.473h10.66v.884h-10.66v-.884Zm4.757.416h1.066v4.381h-1.066v-4.381Zm-3.419-6.903h1.08v1.612h5.81v-1.612h1.067v5.083h-7.957v-5.083Zm1.08 2.483v1.729h5.81v-1.729h-5.81Zm20.824 4.524h1.066v4.29h-1.066v-4.29Zm-4.77-.377H109v.897H98.38v-.897Zm4.757-5.083h.949v.299c0 2.028-2.197 3.523-4.666 3.9l-.377-.858c2.118-.286 4.094-1.573 4.094-3.042v-.299Zm.143 0h.936v.299c0 1.456 1.989 2.756 4.095 3.042l-.39.858c-2.457-.364-4.641-1.898-4.641-3.9v-.299Zm-3.874-.572h8.567v.884h-8.567v-.884Zm3.744-1.443h1.066v1.755h-1.066v-1.755Zm15.131-.013h1.092v11.765h-1.092v-11.765Zm.793 4.771h2.171v.897h-2.171v-.897Zm-3.796-3.497h1.053c0 3.341-1.534 6.357-5.33 8.268l-.598-.832c3.25-1.651 4.875-4.16 4.875-7.267v-.169Zm-4.329 0h4.888v.884h-4.888v-.884ZM69.404 138.249h1.093v11.765h-1.093v-11.765Zm.794 4.771h2.17v.897h-2.17v-.897Zm-3.796-3.497h1.052c0 3.341-1.533 6.357-5.33 8.268l-.598-.832c3.25-1.651 4.875-4.16 4.875-7.267v-.169Zm-4.33 0h4.888v.884h-4.887v-.884Zm15.898 2.002h2.614v.871H77.97v-.871Zm-.09 2.951h2.678v.871h-2.679v-.871Zm4.485-6.214h1.04v11.752h-1.04v-11.752Zm-2.353.299h1.013v10.855h-1.014v-10.855Zm-2.627 1.183h1.04c0 3.081-1.234 5.85-4.394 7.735l-.624-.767c2.743-1.664 3.978-4.004 3.978-6.773v-.195Zm-3.458 0h3.887v.884h-3.886v-.884Zm11.44 5.473h10.66v.884h-10.66v-.884Zm4.757.416h1.067v4.381h-1.067v-4.381Zm-3.418-6.903h1.078v1.612h5.811v-1.612h1.067v5.083h-7.957v-5.083Zm1.078 2.483v1.729h5.811v-1.729h-5.81Zm9.268 4.784h.82v-.806h.805v-.806h1.599v-.806h.806v-.793h.806v-2.275h-.806v-.806h-2.274v.806h-.794v2.405h-.962v-2.548h.82v-.806h.805v-.793h2.548v.793h.793v.806h.806v2.548h-.806v.806h-.793v.806h-.806v.806h-1.611v.806h-.794v2.262h4.81v.962h-5.772v-3.367ZM69.404 109.249h1.093v11.765h-1.093v-11.765Zm.794 4.771h2.17v.897h-2.17v-.897Zm-3.796-3.497h1.052c0 3.341-1.533 6.357-5.33 8.268l-.598-.832c3.25-1.651 4.875-4.16 4.875-7.267v-.169Zm-4.33 0h4.888v.884h-4.887v-.884Zm15.898 2.002h2.614v.871H77.97v-.871Zm-.09 2.951h2.678v.871h-2.679v-.871Zm4.485-6.214h1.04v11.752h-1.04v-11.752Zm-2.353.299h1.013v10.855h-1.014v-10.855Zm-2.627 1.183h1.04c0 3.081-1.234 5.85-4.394 7.735l-.624-.767c2.743-1.664 3.978-4.004 3.978-6.773v-.195Zm-3.458 0h3.887v.884h-3.886v-.884Zm11.44 5.473h10.66v.884h-10.66v-.884Zm4.757.416h1.067v4.381h-1.067v-4.381Zm-3.418-6.903h1.078v1.612h5.811v-1.612h1.067v5.083h-7.957v-5.083Zm1.078 2.483v1.729h5.811v-1.729h-5.81Zm12.479-1.508h-1.599v-.936h2.548v10.595h-.949v-9.659Z"
-//         />
-//         <rect width="16" height="16" x="26" y="106" fill="#F1FF9D" rx="3" />
-//         <rect width="16" height="16" x="26" y="135" fill="#F1FF9D" rx="3" />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 232)"
-//         />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 232)"
-//         />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 232)"
-//         />
-//         <path
-//           fill="#000"
-//           d="M63.607 215.484h1.04c0 3.393-1.17 6.513-5.304 8.593l-.611-.832c3.627-1.82 4.875-4.433 4.875-7.644v-.117Zm-4.238 0h4.888v.871h-4.888v-.871Zm4.173 2.912v.819l-4.589.429-.182-.936 4.771-.312Zm3.77-4.134h1.079v11.752h-1.079v-11.752Zm-2.691 4.706h3.211v.897h-3.211v-.897Zm8.761 2.379h1.079v4.758h-1.079v-4.758Zm4.173 0h1.079v4.758h-1.079v-4.758Zm-6.877-.286h10.66v.884h-10.66v-.884Zm1.352-6.162h7.93v4.576h-7.93v-4.576Zm6.877.858h-5.811v2.86h5.811v-2.86Zm12.284-1.495h1.079v11.752h-1.079v-11.752Zm-7.8 1.144h1.066v7.28h-1.066v-7.28Zm0 6.643h.962c1.781 0 3.64-.13 5.629-.546l.13.923c-2.041.416-3.9.559-5.759.559h-.962v-.936Zm11.959.247h.936c2.197 0 3.731-.065 5.538-.364l.104.871c-1.846.325-3.406.39-5.642.39h-.936v-.897Zm0-6.968h5.694v.897h-4.628v6.383H95.35v-7.28Zm.806 3.289h4.459v.871h-4.459v-.871Zm7.007-4.355h1.079v11.752h-1.079v-11.752Z"
-//         />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 271)"
-//         />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 271)"
-//         />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 271)"
-//         />
-//         <path
-//           fill="#000"
-//           d="M64.4 253.262h1.04v11.752H64.4v-11.752Zm-1.976 4.784h2.262v.884h-2.262v-.884Zm-.689-4.524h1.014v10.894h-1.014v-10.894Zm-5.694 1.157h1.079v6.786h-1.079v-6.786Zm0 6.357h.754c1.209 0 2.561-.078 4.095-.377l.117.936c-1.599.312-2.951.377-4.212.377h-.754v-.936Zm17.9 1.625h10.647v.897H73.941v-.897Zm4.745-3.042h1.079v3.445h-1.079v-3.445Zm-3.822-5.239h8.723v.884h-8.723v-.884Zm.026 4.732h8.684v.871H74.89v-.871Zm1.807-4.017h1.079v4.173h-1.079v-4.173Zm4.004 0h1.066v4.173h-1.066v-4.173Zm13.74-1.82h1.092v8.58h-1.092v-8.58ZM87.98 263.87h7.904v.884H87.98v-.884Zm0-2.899h1.066v3.198H87.98v-3.198Zm1.248-6.89c1.755 0 3.055 1.196 3.055 2.899 0 1.69-1.3 2.899-3.055 2.899-1.755 0-3.068-1.209-3.068-2.899 0-1.703 1.313-2.899 3.068-2.899Zm0 .936c-1.144 0-2.015.806-2.015 1.963 0 1.144.871 1.95 2.015 1.95 1.144 0 2.015-.806 2.015-1.95 0-1.157-.871-1.963-2.015-1.963Zm9.996 4.576h8.073v.871h-8.073v-.871Zm-1.365 3.016h10.647v.897H97.859v-.897Zm1.365-8.346h7.943v.884h-6.851v4.719h-1.092v-5.603Zm.741 2.626h6.955v.858h-6.955v-.858Z"
-//         />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 310)"
-//         />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 310)"
-//         />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 310)"
-//         />
-//         <path
-//           fill="#000"
-//           d="M57.459 292.262h1.078v11.752H57.46v-11.752Zm.819 4.823h2.184v.91h-2.184v-.91Zm-8.84-2.951h6.928v.884h-6.928v-.884Zm3.51 1.859c1.663 0 2.86 1.118 2.86 2.704s-1.197 2.704-2.86 2.704c-1.651 0-2.86-1.118-2.86-2.704s1.209-2.704 2.86-2.704Zm0 .897c-1.066 0-1.834.741-1.834 1.807 0 1.053.768 1.807 1.834 1.807s1.833-.754 1.833-1.807c0-1.066-.767-1.807-1.834-1.807Zm-.56-4.485h1.08v2.132h-1.08v-2.132Zm10.334.325h8.086v3.068H63.84v2.028h-1.092v-2.86h6.982v-1.365h-7.008v-.871Zm.026 4.563h8.334v.884h-8.333v-.884Zm-1.3 2.093h10.66v.897h-10.66v-.897Zm4.771.338h1.067v4.303h-1.067v-4.303Zm19.044-5.772h3.588v.884h-3.588v-.884Zm0 2.704h3.588v.897h-3.588v-.897Zm-2.145-3.705c1.73 0 3.03 1.17 3.03 2.795 0 1.638-1.3 2.795-3.03 2.795-1.742 0-3.028-1.157-3.028-2.795 0-1.625 1.286-2.795 3.028-2.795Zm0 .923c-1.143 0-1.989.767-1.989 1.872s.846 1.872 1.99 1.872c1.144 0 2.002-.767 2.002-1.872s-.858-1.872-2.002-1.872Zm5.383-1.612h1.078v6.955h-1.078v-6.955Zm-2.782 7.228c2.418 0 3.913.832 3.913 2.249 0 1.43-1.496 2.249-3.913 2.249-2.431 0-3.926-.819-3.926-2.249 0-1.417 1.494-2.249 3.925-2.249Zm0 .858c-1.781 0-2.86.52-2.86 1.391 0 .884 1.079 1.404 2.86 1.404 1.768 0 2.847-.52 2.847-1.404 0-.871-1.08-1.391-2.847-1.391Zm10.906-7.67h.948v.65c0 2.249-2.287 3.861-4.731 4.277l-.43-.871c2.145-.325 4.212-1.729 4.212-3.406v-.65Zm.195 0h.936v.65c0 1.638 2.093 3.081 4.211 3.406l-.429.871c-2.417-.416-4.718-2.054-4.718-4.277v-.65Zm-.195 6.864h1.066v4.472h-1.067v-4.472Zm-4.746-.663H102.5v.897H91.88v-.897Zm11.946-1.027h10.621v.871h-10.621v-.871Zm5.304 1.885c2.509 0 4.03.78 4.03 2.132s-1.521 2.119-4.03 2.119c-2.509 0-4.03-.767-4.03-2.119 0-1.352 1.521-2.132 4.03-2.132Zm0 .858c-1.833 0-2.938.455-2.938 1.274 0 .806 1.105 1.274 2.938 1.274 1.846 0 2.938-.468 2.938-1.274 0-.819-1.092-1.274-2.938-1.274Zm-.689-7.267h.962v.351c0 1.885-2.158 3.172-4.589 3.458l-.39-.845c2.106-.234 4.017-1.287 4.017-2.613v-.351Zm.455 0h.949v.351c0 1.326 1.911 2.379 4.017 2.613l-.39.845c-2.431-.286-4.576-1.573-4.576-3.458v-.351Zm-4.095-.468h8.697v.871H104.8v-.871Z"
-//         />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 349)"
-//         />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 349)"
-//         />
-//         <rect
-//           width="137"
-//           height="26"
-//           fill="#FFE9E9"
-//           rx="10"
-//           transform="matrix(1 0 0 -1 13 349)"
-//         />
-//         <path
-//           fill="#000"
-//           d="M57.732 340.674h10.647v.897H57.732v-.897Zm4.758-2.522h1.079v2.899H62.49v-2.899Zm-3.471-6.019h8.047v3.562h-6.942v2.353h-1.066v-3.224H66v-1.82h-6.981v-.871Zm.039 5.46h8.281v.884h-8.281v-.884Zm11.777-5.083h7.566v.871h-7.566v-.871Zm-1.144 7.891h10.621v.897H69.691v-.897Zm8.138-7.891h1.053v1.17c0 1.508 0 3.185-.442 5.72l-1.079-.104c.468-2.405.468-4.16.468-5.616v-1.17Zm6.941-.351c1.729 0 2.951 1.599 2.951 4.095 0 2.509-1.222 4.108-2.951 4.108s-2.951-1.599-2.951-4.108c0-2.496 1.222-4.095 2.951-4.095Zm0 .975c-1.144 0-1.924 1.222-1.924 3.12 0 1.911.78 3.159 1.924 3.159 1.131 0 1.924-1.248 1.924-3.159 0-1.898-.793-3.12-1.924-3.12Zm4.823-1.872h1.092v11.752h-1.092v-11.752Zm.832 4.693h2.184v.91h-2.184v-.91Zm3.171.676h10.66v.884h-10.66v-.884Zm4.771.377h1.053v1.794h-1.053v-1.794Zm-.026 2.34h.923v.364c0 1.794-2.08 2.977-4.537 3.263l-.351-.832c2.119-.221 3.965-1.183 3.965-2.431v-.364Zm.182 0h.923v.364c0 1.287 1.833 2.223 3.965 2.431l-.351.832c-2.444-.286-4.537-1.43-4.537-3.263v-.364Zm.39-7.917c2.548 0 4.134.793 4.134 2.158 0 1.365-1.586 2.158-4.134 2.158-2.561 0-4.134-.793-4.134-2.158 0-1.365 1.573-2.158 4.134-2.158Zm0 .832c-1.885 0-3.029.481-3.029 1.326 0 .832 1.144 1.326 3.029 1.326 1.872 0 3.029-.494 3.029-1.326 0-.845-1.157-1.326-3.029-1.326ZM30.4 75.262h1.04v11.752H30.4V75.262Zm-1.976 4.784h2.262v.884h-2.262v-.884Zm-.689-4.524h1.014v10.894h-1.014V75.522Zm-5.694 1.157h1.079v6.786h-1.079v-6.786Zm0 6.357h.754c1.209 0 2.561-.078 4.095-.377l.117.936c-1.599.312-2.951.377-4.212.377h-.754v-.936Zm25.843-7.787h1.092v11.765h-1.092V75.249Zm.793 4.771h2.171v.897h-2.171v-.897Zm-3.796-3.497h1.053c0 3.341-1.534 6.357-5.33 8.268l-.598-.832c3.25-1.651 4.875-4.16 4.875-7.267v-.169Zm-4.329 0h4.888v.884h-4.888v-.884Zm15.898 2.002h2.613v.871H56.45v-.871Zm-.091 2.951h2.678v.871h-2.678v-.871Zm4.485-6.214h1.04v11.752h-1.04V75.262Zm-2.353.299h1.014v10.855h-1.014V75.561Zm-2.626 1.183h1.04c0 3.081-1.235 5.85-4.394 7.735l-.624-.767c2.743-1.664 3.978-4.004 3.978-6.773v-.195Zm-3.458 0h3.887v.884h-3.887v-.884Zm11.439 5.473h10.66v.884h-10.66v-.884Zm4.758.416h1.066v4.381h-1.066v-4.381Zm-3.419-6.903h1.079v1.612h5.811V75.73h1.066v5.083h-7.956V75.73Zm1.079 2.483v1.729h5.811v-1.729h-5.811ZM51.82 56.06h-1.26v-13.8h1.48v13.6h1.22v1.22h3.5v-1.22H58v-13.6h1.44v13.8H58.2v1.24h-1.22v1.26h-3.92V57.3h-1.24v-1.24Zm8.74-1.44h1.48v2.46H68V53.6h-6.18v-1.24h-1.26v-3.92h1.26V47.2h6.38v1.24h1.24v2.68H68v-2.48h-5.96v3.5h6.16v1.24h1.24v3.92H68.2v1.26h-6.38V57.3h-1.26v-2.68Zm11.26 1.44h-1.26v-6.4h1.26v-1.22h1.24V47.2h3.92v1.24h1.22v1.22h1.24v3.94h-7.4v2.26h1.22v1.22h3.5v-1.22H78v-1.24h1.44v1.44H78.2v1.24h-1.22v1.26h-3.92V57.3h-1.24v-1.24ZM78 52.14v-2.26h-1.24v-1.24h-3.5v1.24h-1.22v2.26H78Zm3.8-4.94h1.44v1.24h1.02V47.2h3.92v1.44h-3.7v1.24h-1.24v8.68H81.8V47.2Z"
-//         />
-//         <circle cx="26" cy="50" r="13" fill="#FFE9E9" />
-//       </svg> */}
-
-//     </div>
-//   );
-// };
-
 import React from "react";
 import "./style/sidebar.css";
-
+import {
+  DialogTrigger,
+  DialogTitle,
+  DialogHeader,
+  DialogFooter,
+  DialogContent,
+  DialogDescription,
+  Dialog,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 const Sidebar = () => {
   return (
     <div className="box">
@@ -156,30 +21,146 @@ const Sidebar = () => {
           <div className="overlap">
             <div className="rectangle" />
             <div className="div" />
+            <div className="moneymerge">
+              <Link href="/">머니머지</Link>
+            </div>
             {/* <img className="line" alt="Line" src="line-31.svg" /> */}
-            {/* <hr classname="colo"></hr> */}
-            <div className="rectangle-2" />
-            <div className="text-wrapper">+ 가계부 추가</div>
-            <div className="text-wrapper-2">가계부2</div>
-            <div className="text-wrapper-3">가계부1</div>
-            <div className="rectangle-3" />
-            <div className="rectangle-4" />
-            <div className="text-wrapper-4">내 가계부</div>
-            <div className="text-wrapper-5">User</div>
-            <div className="ellipse" />
+            {/* <hr classname="color"></hr> */}
+            {/* 프로필 */}
+            <Link href="/api/profile/1">
+              <div className="ellipse" />
+              <div className="text-wrapper-5">User</div>
+            </Link>
+            <div className="text-wrapper-1">내 가계부</div>
+            {/* 가계부 리스트 감싸는 박스 */}
+            <div className="book-list">
+              {/* 가계부 목록 1 */}
+              <div className="book-wrapper">
+                <Link href="#">
+                  <div className="book-check" />
+                </Link>
+                <div className="text-wrapper">가계부1</div>
+              </div>
+              {/* 가계부 목록 2 */}
+              <div className="book-wrapper">
+                <Link href="#">
+                  <div className="book-check" />
+                </Link>
+                <div className="text-wrapper">가계부2</div>
+              </div>
+              <div className="book-wrapper">
+                {/* 가계부 추가 Dialog*/}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="add-button">+ 가계부 추가</div>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[700px]">
+                    <DialogHeader>
+                      <DialogTitle>새 가계부 만들기</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid gap-6 py-4">
+                      <div className="flex items-center justify-between gap-4 flex-nowrap">
+                        <Label
+                          htmlFor="ledgerName"
+                          className="whitespace-nowrap"
+                        >
+                          가계부 이름
+                        </Label>
+                        <Input
+                          className="w-full"
+                          id="ledgerName"
+                          placeholder="Enter ledger name"
+                          type="text"
+                        />
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-sm font-medium">가계부 색상</div>
+                        <div className="h-8 w-8 rounded-full bg-[#5c6ac4]" />
+                        <Button size="sm" variant="outline">
+                          Change Color
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-sm font-medium">나의 색상</div>
+                        <div className="h-8 w-8 rounded-full bg-[#5ccac4]" />
+                        <Button size="sm" variant="outline">
+                          Change Color
+                        </Button>
+                      </div>
+                      <div className="grid gap-2">
+                        <div className="flex items-center justify-between">
+                          <div className="text-sm font-medium">Team Colors</div>
+                          <Button size="sm" variant="outline">
+                            Invite
+                          </Button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-[#de3618]" />
+                            <div className="text-sm">John</div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-[#f1c40f]" />
+                            <div className="text-sm">Sarah</div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-[#2ecc71]" />
+                            <div className="text-sm">Alex</div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-[#9b59b6]" />
+                            <div className="text-sm">Emily</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid gap-2">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="monthlyGoal">Monthly Goal</Label>
+                          <Input
+                            className="w-24"
+                            id="monthlyGoal"
+                            type="number"
+                          />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="annualGoal">Annual Goal</Label>
+                          <Input
+                            className="w-24"
+                            id="annualGoal"
+                            type="number"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="ghost">Cancel</Button>
+                      <Button type="submit">Save</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
           </div>
-          <div className="overlap-1">
-            <div className="text-wrapper-6">커뮤니티</div>
-          </div>
-          <div className="overlap-2">
-            <div className="text-wrapper-6">내 포인트</div>
-          </div>
-          <div className="overlap-3">
-            <div className="text-wrapper-6">하루 영수증</div>
-          </div>
-          <div className="overlap-4">
-            <div className="text-wrapper-7">로그아웃</div>
-          </div>
+          <Link href="/api/boards">
+            <div className="overlap-1">
+              <div className="text-wrapper-6">커뮤니티</div>
+            </div>
+          </Link>
+          <Link href="/api/point/1">
+            <div className="overlap-2">
+              <div className="text-wrapper-6">내 포인트</div>
+            </div>
+          </Link>
+          <Link href="#">
+            <div className="overlap-3">
+              <div className="text-wrapper-6">하루 영수증</div>
+            </div>
+          </Link>
+          <Link href="/api/login">
+            <div className="overlap-4">
+              <div className="text-wrapper-7">로그아웃</div>
+            </div>
+          </Link>
         </div>
       </div>
     </div>
