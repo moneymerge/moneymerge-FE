@@ -1,8 +1,7 @@
-import { Inter } from "next/font/google";
 import "./globals.css";
-import Sidebar from '../components/Sidebar';
-
-const inter = Inter({ subsets: ["latin"] });
+import Sidebar from "../components/Sidebar";
+import Article from "../components/Article";
+import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Create Next App",
@@ -12,17 +11,32 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-    <head>
-        {/* 공통 메타 태그, 스타일, 폰트 등을 추가할 수 있습니다. */}
-    </head>
-    <body style={{ display: 'flex' }}>
-        <aside style={{ width: '300px', borderLeft: '1px solid #ddd', paddingLeft: '20px', paddingTop: '20px'}}>
+      <head></head>
+      <body
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          backgroundColor: "#316094",
+        }}
+      >
+        <div className="w-200px h-150px bg-[#000000] flex">
+          {/* 사이드 바 */}
+          <div className="flex-grow-[1]">
             <Sidebar />
-        </aside>
-        <main style={{ flex: 1, padding: '20px' }}>
+          </div>
+          {/* 메인 Article */}
+          <div className="flex-grow-[2.5] m-[auto]">
+            <Article />
             {children}
-        </main>
-    </body>
-</html>
+          </div>
+          {/* 푸터 */}
+          <div className="flex-grow-[1]">
+            <Footer />
+          </div>
+        </div>
+      </body>
+    </html>
   );
 }
