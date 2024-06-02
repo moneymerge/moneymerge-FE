@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Sidebar from '../components/Sidebar';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,7 +12,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <head>
+        {/* 공통 메타 태그, 스타일, 폰트 등을 추가할 수 있습니다. */}
+    </head>
+    <body style={{ display: 'flex' }}>
+        <aside style={{ width: '300px', borderLeft: '1px solid #ddd', paddingLeft: '20px', paddingTop: '20px'}}>
+            <Sidebar />
+        </aside>
+        <main style={{ flex: 1, padding: '20px' }}>
+            {children}
+        </main>
+    </body>
+</html>
   );
 }
