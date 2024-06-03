@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 export default function Home() {
   return (
     <div>
-      <div>hihihihi</div>
+      <div className="text-[#ffffff]">hihihihi</div>
     </div>
   );
 }
