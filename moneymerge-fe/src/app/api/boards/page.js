@@ -24,6 +24,7 @@ import {
   PaginationContent,
   Pagination,
 } from "@/components/ui/pagination";
+import RootLayout from "../../../components/layout.js";
 
 import { useState, useEffect } from "react";
 
@@ -37,133 +38,134 @@ export default function Component() {
   }, []);
 
   return (
-    <div className="bg-[#fffbeb] text-[#333] min-h-screen flex flex-col">
-      <header className="bg-[#f9f5e7] py-4 px-6 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold">게시판</h1>
-        </div>
-      </header>
-      <main className="flex-1 p-8">
-        <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="outline">
-                <ListIcon className="h-5 w-5 mr-2" />
-                전체
-              </Button>
-              <Button variant="outline">
-                <SignpostIcon className="h-5 w-5 mr-2" />
-                공지사항
-              </Button>
-              <Button variant="outline">
-                <ContactIcon className="h-5 w-5 mr-2" />
-                자유게시판
-              </Button>
-              <Button variant="outline">
-                <FileQuestionIcon className="h-5 w-5 mr-2" />
-                Q&A
-              </Button>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Input
-                  className="w-[200px]"
-                  placeholder="검색어를 입력하세요"
-                  type="text"
-                />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      <FilterIcon className="h-5 w-5 mr-2" />
-                      검색 범위
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-[200px]">
-                    <DropdownMenuRadioGroup value="all">
-                      <DropdownMenuRadioItem value="all">
-                        전체
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="title">
-                        제목
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="content">
-                        내용
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="author">
-                        작성자
-                      </DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      <ArrowUpIcon className="h-5 w-5 mr-2" />
-                      정렬
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-[200px]">
-                    <DropdownMenuRadioGroup value="latest">
-                      <DropdownMenuRadioItem value="latest">
-                        최신순
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="oldest">
-                        오래된순
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="popular">
-                        좋아요순
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="views">
-                        댓글순
-                      </DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button size="sm">검색</Button>
+    <RootLayout>
+      <div className="bg-[#fffbeb] text-[#333] min-h-screen flex flex-col">
+        <header className="bg-[#f9f5e7] py-4 px-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold">게시판</h1>
+          </div>
+        </header>
+        <main className="flex-1 p-8">
+          <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button variant="outline">
+                  <ListIcon className="h-5 w-5 mr-2" />
+                  전체
+                </Button>
+                <Button variant="outline">
+                  <SignpostIcon className="h-5 w-5 mr-2" />
+                  공지사항
+                </Button>
+                <Button variant="outline">
+                  <ContactIcon className="h-5 w-5 mr-2" />
+                  자유게시판
+                </Button>
+                <Button variant="outline">
+                  <FileQuestionIcon className="h-5 w-5 mr-2" />
+                  Q&A
+                </Button>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Input
+                    className="w-[200px]"
+                    placeholder="검색어를 입력하세요"
+                    type="text"
+                  />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline">
+                        <FilterIcon className="h-5 w-5 mr-2" />
+                        검색 범위
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-[200px]">
+                      <DropdownMenuRadioGroup value="all">
+                        <DropdownMenuRadioItem value="all">
+                          전체
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="title">
+                          제목
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="content">
+                          내용
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="author">
+                          작성자
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline">
+                        <ArrowUpIcon className="h-5 w-5 mr-2" />
+                        정렬
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-[200px]">
+                      <DropdownMenuRadioGroup value="latest">
+                        <DropdownMenuRadioItem value="latest">
+                          최신순
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="oldest">
+                          오래된순
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="popular">
+                          좋아요순
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="views">
+                          댓글순
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <Button size="sm">검색</Button>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full table-auto">
-              <thead>
-                <tr className="bg-gray-100 dark:bg-gray-800">
-                  <th className="px-4 py-3 text-left font-medium">제목</th>
-                  <th className="px-4 py-3 text-left font-medium">종류</th>
-                  <th className="px-4 py-3 text-left font-medium">작성자</th>
-                  <th className="px-4 py-3 text-left font-medium">작성일</th>
-                  <th className="px-4 py-3 text-left font-medium">좋아요</th>
-                  <th className="px-4 py-3 text-left font-medium">댓글 수</th>
-                </tr>
-              </thead>
-              <tbody>
-                {boards &&
-                  boards.map((row) => (
-                    <tr className="border-b">
-                      <td className="px-4 py-3">
-                        <Link
-                          className="font-medium hover:text-[#333]"
-                          href="/community/{row.boardId}"
-                        >
-                          {row.title}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3">
-                        <Badge
-                          className="bg-[#f9f5e7] text-[#333]"
-                          variant="secondary"
-                        >
-                          {row.boardType}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-3">{row.username}</td>
-                      <td className="px-4 py-3">{row.createdAt}</td>
-                      <td className="px-4 py-3">{row.likes}</td>
-                      <td className="px-4 py-3">
-                        {row.commentGetResList.length}
-                      </td>
-                    </tr>
-                  ))}
-                {/* <tr className="border-b">
+            <div className="overflow-x-auto">
+              <table className="w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-100 dark:bg-gray-800">
+                    <th className="px-4 py-3 text-left font-medium">제목</th>
+                    <th className="px-4 py-3 text-left font-medium">종류</th>
+                    <th className="px-4 py-3 text-left font-medium">작성자</th>
+                    <th className="px-4 py-3 text-left font-medium">작성일</th>
+                    <th className="px-4 py-3 text-left font-medium">좋아요</th>
+                    <th className="px-4 py-3 text-left font-medium">댓글 수</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {boards &&
+                    boards.map((row) => (
+                      <tr className="border-b">
+                        <td className="px-4 py-3">
+                          <Link
+                            className="font-medium hover:text-[#333]"
+                            href="/community/{row.boardId}"
+                          >
+                            {row.title}
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge
+                            className="bg-[#f9f5e7] text-[#333]"
+                            variant="secondary"
+                          >
+                            {row.boardType}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3">{row.username}</td>
+                        <td className="px-4 py-3">{row.createdAt}</td>
+                        <td className="px-4 py-3">{row.likes}</td>
+                        <td className="px-4 py-3">
+                          {row.commentGetResList.length}
+                        </td>
+                      </tr>
+                    ))}
+                  {/* <tr className="border-b">
                   <td className="px-4 py-3">
                     <Link className="font-medium hover:text-[#333]" href="#">
                       이벤트 안내
@@ -183,37 +185,38 @@ export default function Component() {
                   <td className="px-4 py-3">2</td>
                 </tr>
                 */}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
+            <div className="flex justify-center">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious href="#" />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">1</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" isActive>
+                      2
+                    </PaginationLink>
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
           </div>
-          <div className="flex justify-center">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" isActive>
-                    2
-                  </PaginationLink>
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+        </main>
+        <div className="fixed bottom-8 right-8">
+          <Link
+            className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+            href="/api/boards/create"
+          >
+            <PlusIcon className="h-5 w-5 mr-2" />글 작성
+          </Link>
         </div>
-      </main>
-      <div className="fixed bottom-8 right-8">
-        <Link
-          className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-          href="/api/boards/create"
-        >
-          <PlusIcon className="h-5 w-5 mr-2" />글 작성
-        </Link>
       </div>
-    </div>
+    </RootLayout>
   );
 }
 

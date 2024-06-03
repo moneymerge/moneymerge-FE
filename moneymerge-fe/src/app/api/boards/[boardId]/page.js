@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
+import RootLayout from "../../../../components/layout.js";
 
 // import { useState, useEffect } from "react";
 
@@ -20,130 +21,133 @@ export default function Component() {
   // }, []);
 
   return (
-    <div className="bg-[#fffbeb] text-[#333] min-h-screen flex flex-col">
-      <header className="bg-[#f9f5e7] py-4 px-6 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link className="flex items-center gap-2" href="/api/boards">
-            <ArrowLeftIcon className="h-5 w-5" />
-            <h1 className="text-2xl font-bold">게시판</h1>
-          </Link>
-        </div>
-      </header>
-      <main className="flex-1 p-8">
-        <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold">새로운 기능 업데이트</h2>
-              <p className="text-sm text-gray-500">
-                공지사항 | 작성자: 관리자 | 2023-05-26
+    <RootLayout>
+      <div className="bg-[#fffbeb] text-[#333] min-h-screen flex flex-col">
+        <header className="bg-[#f9f5e7] py-4 px-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link className="flex items-center gap-2" href="/api/boards">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold">게시판</h1>
+            </Link>
+          </div>
+        </header>
+        <main className="flex-1 p-8">
+          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold">새로운 기능 업데이트</h2>
+                <p className="text-sm text-gray-500">
+                  공지사항 | 작성자: 관리자 | 2023-05-26
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline">
+                  <HeartIcon className="h-5 w-5 mr-2" />
+                  <span className="ml-2">10</span>
+                </Button>
+              </div>
+            </div>
+            <div className="prose prose-gray">
+              <p>새로운 기능이 추가되었습니다. 사용자 경험이 향상되었습니다.</p>
+              <p>이번 업데이트를 통해 다음과 같은 기능이 추가되었습니다:</p>
+              <ul>
+                <li>기능 A</li>
+                <li>기능 B</li>
+                <li>기능 C</li>
+              </ul>
+              <p>
+                앞으로도 지속적인 업데이트를 통해 더 나은 서비스를
+                제공하겠습니다.
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline">
-                <HeartIcon className="h-5 w-5 mr-2" />
-                <span className="ml-2">10</span>
-              </Button>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline">수정</Button>
+              <Button variant="outline">삭제</Button>
             </div>
-          </div>
-          <div className="prose prose-gray">
-            <p>새로운 기능이 추가되었습니다. 사용자 경험이 향상되었습니다.</p>
-            <p>이번 업데이트를 통해 다음과 같은 기능이 추가되었습니다:</p>
-            <ul>
-              <li>기능 A</li>
-              <li>기능 B</li>
-              <li>기능 C</li>
-            </ul>
-            <p>
-              앞으로도 지속적인 업데이트를 통해 더 나은 서비스를 제공하겠습니다.
-            </p>
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline">수정</Button>
-            <Button variant="outline">삭제</Button>
-          </div>
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-bold mb-4">댓글</h3>
-            <div className="space-y-4">
-              <div className="flex items-start gap-4">
-                <Avatar className="w-10 h-10 border">
-                  <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
-                  <AvatarFallback>AC</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <div className="font-medium">John Doe</div>
-                    <div className="flex items-center">
-                      <div className="text-sm text-gray-500  mr-4">
-                        2023-05-26
+            <div className="border-t pt-6">
+              <h3 className="text-lg font-bold mb-4">댓글</h3>
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <Avatar className="w-10 h-10 border">
+                    <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
+                    <AvatarFallback>AC</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium">John Doe</div>
+                      <div className="flex items-center">
+                        <div className="text-sm text-gray-500  mr-4">
+                          2023-05-26
+                        </div>
+                        <Button size="sm" variant="outline">
+                          <HeartIcon className="h-4 w-4" />
+                          <span className="ml-2">10</span>
+                        </Button>
                       </div>
+                    </div>
+                    <p className="mt-2">
+                      Great update! I'm excited to try out the new features.
+                    </p>
+                    <div className="flex items-center gap-2 mt-2">
                       <Button size="sm" variant="outline">
-                        <HeartIcon className="h-4 w-4" />
-                        <span className="ml-2">10</span>
+                        <DeleteIcon className="h-4 w-4 mr-2" />
+                        수정
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Trash2Icon className="h-4 w-4 mr-2" />
+                        삭제
                       </Button>
                     </div>
                   </div>
-                  <p className="mt-2">
-                    Great update! I'm excited to try out the new features.
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Button size="sm" variant="outline">
-                      <DeleteIcon className="h-4 w-4 mr-2" />
-                      수정
-                    </Button>
-                    <Button size="sm" variant="outline">
-                      <Trash2Icon className="h-4 w-4 mr-2" />
-                      삭제
-                    </Button>
-                  </div>
                 </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <Avatar className="w-10 h-10 border">
-                  <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <div className="font-medium">Jane Doe</div>
-                    <div className="flex items-center">
-                      <div className="text-sm text-gray-500 mr-4">
-                        2023-05-27
+                <div className="flex items-start gap-4">
+                  <Avatar className="w-10 h-10 border">
+                    <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
+                    <AvatarFallback>JD</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium">Jane Doe</div>
+                      <div className="flex items-center">
+                        <div className="text-sm text-gray-500 mr-4">
+                          2023-05-27
+                        </div>
+                        <Button size="sm" variant="outline">
+                          <HeartIcon className="h-4 w-4" />
+                          <span className="ml-2">10</span>
+                        </Button>
                       </div>
+                    </div>
+                    <p className="mt-2">
+                      Awesome, can't wait to see what else is in store!
+                    </p>
+                    <div className="flex items-center gap-2 mt-2">
                       <Button size="sm" variant="outline">
-                        <HeartIcon className="h-4 w-4" />
-                        <span className="ml-2">10</span>
+                        <DeleteIcon className="h-4 w-4 mr-2" />
+                        수정
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Trash2Icon className="h-4 w-4 mr-2" />
+                        삭제
                       </Button>
                     </div>
                   </div>
-                  <p className="mt-2">
-                    Awesome, can't wait to see what else is in store!
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Button size="sm" variant="outline">
-                      <DeleteIcon className="h-4 w-4 mr-2" />
-                      수정
-                    </Button>
-                    <Button size="sm" variant="outline">
-                      <Trash2Icon className="h-4 w-4 mr-2" />
-                      삭제
-                    </Button>
-                  </div>
+                </div>
+              </div>
+              <div className="mt-6">
+                <Textarea
+                  className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
+                  placeholder="Write your comment..."
+                />
+                <div className="flex justify-end mt-2">
+                  <Button variant="outline">Submit</Button>
                 </div>
               </div>
             </div>
-            <div className="mt-6">
-              <Textarea
-                className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
-                placeholder="Write your comment..."
-              />
-              <div className="flex justify-end mt-2">
-                <Button variant="outline">Submit</Button>
-              </div>
-            </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </RootLayout>
   );
 }
 

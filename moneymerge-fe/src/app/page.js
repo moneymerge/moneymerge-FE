@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import RootLayout from "../components/layout.js"
 
 export default function Home() {
   const params = useParams();
@@ -15,6 +16,7 @@ export default function Home() {
   }, []);
 
   return (
+    <RootLayout>
     <div>
       {/* <>{params.boardId}</> */}
       <li>id: {board.boardId}</li>
@@ -27,5 +29,6 @@ export default function Home() {
       <li>수정일: {board.modifiedAt}</li>
       <li>좋아요: {board.likes}</li>
     </div>
+    </RootLayout>
   );
 }
