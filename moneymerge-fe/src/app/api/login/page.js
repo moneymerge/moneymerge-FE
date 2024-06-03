@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-
 export default function LoginPage() {
   const router = useRouter();
 
@@ -23,10 +22,9 @@ export default function LoginPage() {
 
   const handleNaverLogin = () => {
     router.push(
-      "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=http://localhost:8080/auth/naver/callback&state=test"
+      "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=http://43.203.66.36:8080/auth/naver/callback&state=test"
     );
   };
-
 
   return (
     <html lang="en">
@@ -165,16 +163,16 @@ export default function LoginPage() {
               </g>
               <path
                 stroke="#030303"
-                d="M15.906 1c11.201 0 351.016.692 366.697.692C398.284 1.692 399 12.056 399 12.056V411.47c-9.045 29.507-25.492 41.52-54.51 50.53H12.2C6.664 461.741 1 457.155 1 447.486V12.056S4.706 1 15.906 1Z"
+                d="M15.906 1c11.201 0 351.016.692 366.697.692C398.284 1.692 399 12.056 399 12.056V425.5c-5.5 21.986-16.397 32.5-38.5 36.5H12.2C6.664 461.741 1 457.155 1 447.486V12.056S4.706 1 15.906 1Z"
               />
               <path
                 stroke="#030303"
-                d="M15.237 1c10.698 0 335.255.667 350.232.667 14.977 0 15.661 9.993 15.661 9.993v385.103c-6.944 34.481-19.155 42.752-52.063 48.719H11.697C6.41 445.232 1 440.81 1 431.488V11.66S4.54 1 15.237 1Z"
+                d="M15.237 1c10.698 0 335.255.667 350.232.667 14.977 0 17.031 9.993 17.031 9.993V406.5c-3 27-13.5 38.982-39 38.982H11.698C6.408 445.232 1 440.81 1 431.488V11.66S4.54 1 15.237 1Z"
               />
               <g filter="url(#c)">
                 <path
                   stroke="#000"
-                  d="M32.322 41.71c3.791-8.235 7.009-10.343 14.237-10.677h291.148c10.331 1.344 12.978 4.075 14.949 10.678v165.513c-5.568 14.378-11.436 22.11-26.339 22.691H46.559s-14.237 0-14.237-10.678V41.711Z"
+                  d="M32.322 41.71c3.791-8.235 7.009-10.343 14.237-10.677h291.148c10.331 1.344 12.978 4.075 14.949 10.678V213c-2.156 10-4.253 16.334-19.156 16.915H46.559s-14.237 0-14.237-10.678V41.711Z"
                 />
               </g>
               <path
