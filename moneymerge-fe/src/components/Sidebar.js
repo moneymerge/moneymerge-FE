@@ -7,12 +7,12 @@ import {
   DialogHeader,
   DialogFooter,
   DialogContent,
-  DialogDescription,
   Dialog,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+
 const Sidebar = () => {
   return (
     <div className="box">
@@ -24,8 +24,6 @@ const Sidebar = () => {
             <div className="moneymerge">
               <Link href="/">머니머지</Link>
             </div>
-            {/* <img className="line" alt="Line" src="line-31.svg" /> */}
-            {/* <hr classname="color"></hr> */}
             {/* 프로필 */}
             <Link href="/api/profile/1">
               <div className="ellipse" />
