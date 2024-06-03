@@ -11,22 +11,20 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-
 export default function LoginPage() {
   const router = useRouter();
 
   const handleKakaoLogin = () => {
     router.push(
-      "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=http://localhost:8080/auth/kakao/callback"
+      "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=http://43.203.66.36:8080/auth/kakao/callback"
     );
   };
 
   const handleNaverLogin = () => {
     router.push(
-      "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=http://localhost:8080/auth/naver/callback&state=test"
+      "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=http://43.203.66.36:8080/auth/naver/callback&state=test"
     );
   };
-
 
   return (
     <html lang="en">

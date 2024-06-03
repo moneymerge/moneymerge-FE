@@ -17,7 +17,7 @@ const Footer = () => {
   const [character, setCharacter] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users/character", {
+    fetch("http://43.203.66.36:8080/api/users/character", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

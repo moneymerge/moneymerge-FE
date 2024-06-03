@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import RootLayout from "../components/layout.js"
+import RootLayout from "../components/layout.js";
 
 export default function Home() {
   const params = useParams();
-  const [board, setBoard] = useState({});;
+  const [board, setBoard] = useState({});
 
   useEffect(() => {
     console.log("useEffect called"); // 디버깅을 위한 콘솔 로그
@@ -17,18 +17,25 @@ export default function Home() {
 
   return (
     <RootLayout>
-    <div>
-      {/* <>{params.boardId}</> */}
-      <li>id: {board.boardId}</li>
-      <li>게시판: {board.boardType}</li>
-      <li>제목: {board.title}</li>
-      <li>내용: {board.content}</li>
-      <li>이미지: {board.image}</li>
-      <li>작성자: {board.author}</li>
-      <li>작성일: {board.createdAt}</li>
-      <li>수정일: {board.modifiedAt}</li>
-      <li>좋아요: {board.likes}</li>
-    </div>
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+        }}
+      >
+        {/* <>{params.boardId}</> */}
+        <li>id: {board.boardId}</li>
+        <li>게시판: {board.boardType}</li>
+        <li>제목: {board.title}</li>
+        <li>내용: {board.content}</li>
+        <li>이미지: {board.image}</li>
+        <li>작성자: {board.author}</li>
+        <li>작성일: {board.createdAt}</li>
+        <li>수정일: {board.modifiedAt}</li>
+        <li>좋아요: {board.likes}</li>
+      </div>
     </RootLayout>
   );
 }

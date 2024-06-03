@@ -30,40 +30,52 @@ import { useState, useEffect } from "react";
 
 export default function Component() {
   const [boards, setBoards] = useState([]);
-  //const boards = [{boardId : 1, boardType : "INFORMATION", title : "제목1", content : "내용1", image : "#", userId : 1, username : "홍길동", createdAt: "2024-05-21T17:24:54.391282", modifiedAt: "2024-05-21T17:44:56.058967", likes: 1, commentGetResList : []}];
+  const [boardType, setBoardType] = useState(null);
+
   useEffect(() => {
-    fetch("http://localhost:8080/api/boards")
+    let url = "http://localhost:8080/api/boards";
+    if (boardType) {
+      url += `?boardType=${boardType}`; // boardType이 설정되면 쿼리 파라미터 추가
+    }
+
+    fetch(url)
       .then((result) => result.json())
-      .then((result) => setBoards(result.data));
-  }, []);
+      .then((result) => {
+        setBoards(result.data);
+      });
+  }, [boardType]);
 
   return (
     <RootLayout>
-      <div className="bg-[#fffbeb] text-[#333] min-h-screen flex flex-col">
-        <header className="bg-[#f9f5e7] py-4 px-6 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold">게시판</h1>
-          </div>
-        </header>
-        <main className="flex-1 p-8">
-          <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button variant="outline">
-                  <ListIcon className="h-5 w-5 mr-2" />
+      <div className="bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
+        {/* <header className="px-6 mt-[-40px] items-center justify-between">
+          <h1 className="text-2 font-bold">게시판</h1>
+        </header> */}
+        <main>
+          <div className="h-full max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
+            {/* <div className="flex flex-col items-center justify-between"> */}
+            <div>
+              <div className="flex items-center gap-1">
+                <Button variant="outline" onClick={() => setBoardType(null)}>
+                  {/* <ListIcon className="h-5 w-5 mr-2" /> */}
                   전체
                 </Button>
-                <Button variant="outline">
-                  <SignpostIcon className="h-5 w-5 mr-2" />
-                  공지사항
+                <Button
+                  variant="outline"
+                  onClick={() => setBoardType("INFORMATION")}
+                >
+                  {/* <SignpostIcon className="h-5 w-5 mr-2" /> */}
+                  정보 나눔
                 </Button>
-                <Button variant="outline">
-                  <ContactIcon className="h-5 w-5 mr-2" />
-                  자유게시판
+                <Button
+                  variant="outline"
+                  onClick={() => setBoardType("CERTIFICATION")}
+                >
+                  인증
                 </Button>
-                <Button variant="outline">
-                  <FileQuestionIcon className="h-5 w-5 mr-2" />
-                  Q&A
+                <Button variant="outline" onClick={() => setBoardType("FREE")}>
+                  {/* <FileQuestionIcon className="h-5 w-5 mr-2" /> */}
+                  자유
                 </Button>
               </div>
               <div className="flex items-center gap-4">
@@ -129,12 +141,24 @@ export default function Component() {
               <table className="w-full table-auto">
                 <thead>
                   <tr className="bg-gray-100 dark:bg-gray-800">
-                    <th className="px-4 py-3 text-left font-medium">제목</th>
-                    <th className="px-4 py-3 text-left font-medium">종류</th>
-                    <th className="px-4 py-3 text-left font-medium">작성자</th>
-                    <th className="px-4 py-3 text-left font-medium">작성일</th>
-                    <th className="px-4 py-3 text-left font-medium">좋아요</th>
-                    <th className="px-4 py-3 text-left font-medium">댓글 수</th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      제목
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      종류
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      작성자
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      작성일
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      좋아요
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      댓글 수
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -143,24 +167,24 @@ export default function Component() {
                       <tr className="border-b">
                         <td className="px-4 py-3">
                           <Link
-                            className="font-medium hover:text-[#333]"
-                            href="/community/{row.boardId}"
+                            className="font-medium hover:text-[#333] text-xs"
+                            href={`/api/boards/${row.boardId}`}
                           >
                             {row.title}
                           </Link>
                         </td>
                         <td className="px-4 py-3">
                           <Badge
-                            className="bg-[#f9f5e7] text-[#333]"
+                            className="bg-[#f9f5e7] text-[#333] text-xs"
                             variant="secondary"
                           >
                             {row.boardType}
                           </Badge>
                         </td>
-                        <td className="px-4 py-3">{row.username}</td>
-                        <td className="px-4 py-3">{row.createdAt}</td>
-                        <td className="px-4 py-3">{row.likes}</td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-3 text-xs">{row.username}</td>
+                        <td className="px-4 py-3 text-xs">{row.createdAt}</td>
+                        <td className="px-4 py-3 text-xs">{row.likes}</td>
+                        <td className="px-4 py-3 text-xs">
                           {row.commentGetResList.length}
                         </td>
                       </tr>

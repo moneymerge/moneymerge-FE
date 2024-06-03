@@ -2,6 +2,7 @@ import "./global.css";
 import Sidebar from "./Sidebar";
 import Article from "./Article";
 import Footer from "./Footer";
+import { ScissorsLineDashed } from "lucide-react";
 
 // export const metadata = {
 //   title: "Create Next App",
@@ -40,19 +41,7 @@ function RootLayout({ children }) {
           </div>
           {/* 메인 Article */}
           <div className="flex-grow-[2.5] m-[auto] relative">
-            <Article />
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                color: "#000", // 글자 색상
-                pointerEvents: "none", // 클릭 불가
-              }}
-            >
-              {children}
-            </div>
+            <Article>{children}</Article>
           </div>
           {/* 푸터 */}
           <div className="flex-grow-[1]" style={{ marginRight: "20px" }}>
