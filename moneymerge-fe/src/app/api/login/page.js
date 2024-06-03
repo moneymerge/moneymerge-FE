@@ -16,7 +16,7 @@ export default function LoginPage() {
 
   const handleKakaoLogin = () => {
     router.push(
-      "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=http://localhost:8080/auth/kakao/callback"
+      "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=http://43.203.66.36:8080/auth/kakao/callback"
     );
   };
 

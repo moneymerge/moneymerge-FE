@@ -1,3 +1,4 @@
+"use client";
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/yd9zYS4V4tR
@@ -22,16 +23,8 @@ export default function Component() {
 
   return (
     <RootLayout>
-      <div className="bg-[#fffbeb] text-[#333] min-h-screen flex flex-col">
-        <header className="bg-[#f9f5e7] py-4 px-6 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link className="flex items-center gap-2" href="/api/boards">
-              <ArrowLeftIcon className="h-5 w-5" />
-              <h1 className="text-2xl font-bold">게시판</h1>
-            </Link>
-          </div>
-        </header>
-        <main className="flex-1 p-8">
+      <div className="bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
+        <main>
           <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
             <div className="flex items-center justify-between">
               <div>
