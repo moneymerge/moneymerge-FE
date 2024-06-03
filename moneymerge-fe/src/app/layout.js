@@ -46,8 +46,7 @@ export default function RootLayout({ children }) {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                color: "#000", // 글자 색상
-                pointerEvents: "none", // 클릭 불가
+                color: "#000" // 글자 색상
               }}
             >
               {children}

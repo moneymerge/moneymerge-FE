@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 import "./style/sidebar.css";
@@ -12,8 +13,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
 
 const Sidebar = () => {
+  const [userData, setUserData] = useState(null);
+  const [bookList, setBookList] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // 쿠키를 포함하여 요청
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        console.log("Received user data:", result.data);
+        console.log("Received book data:", result.data.bookList);
+        setUserData(result.data);
+        setBookList(result.data.bookList);
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  }, []);
+
   return (
     <div className="box">
       <div className="group">
@@ -26,118 +49,116 @@ const Sidebar = () => {
             </div>
             {/* 프로필 */}
             <Link href="/api/profile/1">
-              <div className="ellipse" />
-              <div className="text-wrapper-5">User</div>
+            <div className="ellipse" style={{ backgroundImage: `url(${userData ? userData.profileUrl : "s3://moneymerge/profile/default_profile_image.jpg"})`, backgroundSize: 'cover' }} />
+              <div className="text-wrapper-5">
+                {userData ? userData.username : "Loading..."}
+              </div>
             </Link>
             <div className="text-wrapper-1">내 가계부</div>
-            {/* 가계부 리스트 감싸는 박스 */}
-            <div className="book-list">
-              {/* 가계부 목록 1 */}
-              <div className="book-wrapper">
-                <Link href="#">
-                  <div className="book-check" />
-                </Link>
-                <div className="text-wrapper">가계부1</div>
-              </div>
-              {/* 가계부 목록 2 */}
-              <div className="book-wrapper">
-                <Link href="#">
-                  <div className="book-check" />
-                </Link>
-                <div className="text-wrapper">가계부2</div>
-              </div>
-              <div className="book-wrapper">
-                {/* 가계부 추가 Dialog*/}
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <div className="add-button">+ 가계부 추가</div>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[700px]">
-                    <DialogHeader>
-                      <DialogTitle>새 가계부 만들기</DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-6 py-4">
-                      <div className="flex items-center justify-between gap-4 flex-nowrap">
-                        <Label
-                          htmlFor="ledgerName"
-                          className="whitespace-nowrap"
-                        >
-                          가계부 이름
-                        </Label>
-                        <Input
-                          className="w-full"
-                          id="ledgerName"
-                          placeholder="Enter ledger name"
-                          type="text"
-                        />
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-sm font-medium">가계부 색상</div>
-                        <div className="h-8 w-8 rounded-full bg-[#5c6ac4]" />
-                        <Button size="sm" variant="outline">
-                          Change Color
-                        </Button>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-sm font-medium">나의 색상</div>
-                        <div className="h-8 w-8 rounded-full bg-[#5ccac4]" />
-                        <Button size="sm" variant="outline">
-                          Change Color
-                        </Button>
-                      </div>
-                      <div className="grid gap-2">
-                        <div className="flex items-center justify-between">
-                          <div className="text-sm font-medium">Team Colors</div>
+              <div className="book-list">
+                {/* 서버에서 받은 bookList 데이터를 사용하여 가계부 목록 생성 */}
+                {bookList && bookList.map((book, index) => (
+                  <div key={index} className="book-wrapper">
+                    <Link href="#">
+                      <div className="book-check" />
+                    </Link>
+                    <div className="text-wrapper">{book.bookTitle}</div>
+                  </div>
+                ))}
+                <div className="book-wrapper">
+                  {/* 가계부 추가 Dialog */}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div className="add-button">+ 가계부 추가</div>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[700px]">
+                      <DialogHeader>
+                        <DialogTitle>새 가계부 만들기</DialogTitle>
+                      </DialogHeader>
+                      <div className="grid gap-6 py-4">
+                        <div className="flex items-center justify-between gap-4 flex-nowrap">
+                          <Label
+                            htmlFor="ledgerName"
+                            className="whitespace-nowrap"
+                          >
+                            가계부 이름
+                          </Label>
+                          <Input
+                            className="w-full"
+                            id="ledgerName"
+                            placeholder="Enter ledger name"
+                            type="text"
+                          />
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-sm font-medium">가계부 색상</div>
+                          <div className="h-8 w-8 rounded-full bg-[#5c6ac4]" />
                           <Button size="sm" variant="outline">
-                            Invite
+                            Change Color
                           </Button>
                         </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-[#de3618]" />
-                            <div className="text-sm">John</div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-sm font-medium">나의 색상</div>
+                          <div className="h-8 w-8 rounded-full bg-[#5ccac4]" />
+                          <Button size="sm" variant="outline">
+                            Change Color
+                          </Button>
+                        </div>
+                        <div className="grid gap-2">
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm font-medium">
+                              Team Colors
+                            </div>
+                            <Button size="sm" variant="outline">
+                              Invite
+                            </Button>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-[#f1c40f]" />
-                            <div className="text-sm">Sarah</div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex items-center gap-2">
+                              <div className="h-8 w-8 rounded-full bg-[#de3618]" />
+                              <div className="text-sm">John</div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="h-8 w-8 rounded-full bg-[#f1c40f]" />
+                              <div className="text-sm">Sarah</div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="h-8 w-8 rounded-full bg-[#2ecc71]" />
+                              <div className="text-sm">Alex</div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="h-8 w-8 rounded-full bg-[#9b59b6]" />
+                              <div className="text-sm">Emily</div>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-[#2ecc71]" />
-                            <div className="text-sm">Alex</div>
+                        </div>
+                        <div className="grid gap-2">
+                          <div className="flex items-center justify-between">
+                            <Label htmlFor="monthlyGoal">Monthly Goal</Label>
+                            <Input
+                              className="w-24"
+                              id="monthlyGoal"
+                              type="number"
+                            />
                           </div>
-                          <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-[#9b59b6]" />
-                            <div className="text-sm">Emily</div>
+                          <div className="flex items-center justify-between">
+                            <Label htmlFor="annualGoal">Annual Goal</Label>
+                            <Input
+                              className="w-24"
+                              id="annualGoal"
+                              type="number"
+                            />
                           </div>
                         </div>
                       </div>
-                      <div className="grid gap-2">
-                        <div className="flex items-center justify-between">
-                          <Label htmlFor="monthlyGoal">Monthly Goal</Label>
-                          <Input
-                            className="w-24"
-                            id="monthlyGoal"
-                            type="number"
-                          />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <Label htmlFor="annualGoal">Annual Goal</Label>
-                          <Input
-                            className="w-24"
-                            id="annualGoal"
-                            type="number"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <Button variant="ghost">Cancel</Button>
-                      <Button type="submit">Save</Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                      <DialogFooter>
+                        <Button variant="ghost">Cancel</Button>
+                        <Button type="submit">Save</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
-            </div>
           </div>
           <Link href="/api/boards">
             <div className="overlap-1">
