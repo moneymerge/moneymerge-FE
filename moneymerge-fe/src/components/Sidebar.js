@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import React from "react";
+import { useRouter } from 'next/navigation';
 import "./style/sidebar.css";
 import {
   DialogTrigger,
@@ -15,6 +16,30 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 const Sidebar = ({data}) => {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/users/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        document.cookie = 'AccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        router.push('/api/login');
+      } else {
+        console.error('Failed to log out');
+      }
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   return (
     <div className="box">
       <div className="group">
@@ -26,7 +51,7 @@ const Sidebar = ({data}) => {
               <Link href="/">머니머지</Link>
             </div>
             {/* 프로필 */}
-            <Link href="/api/profile/1">
+            <Link href="/api/profile">
             <div className="ellipse" style={{ backgroundImage: `url(${data ? data.profileUrl : "s3://moneymerge/profile/default_profile_image.jpg"})`, backgroundSize: 'cover' }} />
               <div className="text-wrapper-5">
                 {data ? data.username : "Loading..."}
@@ -143,21 +168,19 @@ const Sidebar = ({data}) => {
               <div className="text-wrapper-6">커뮤니티</div>
             </div>
           </Link>
-          <Link href="/api/point/1">
+          <Link href="/api/points">
             <div className="overlap-2">
               <div className="text-wrapper-6">내 포인트</div>
             </div>
           </Link>
-          <Link href="#">
+          <Link href="/api/receipts">
             <div className="overlap-3">
               <div className="text-wrapper-6">하루 영수증</div>
             </div>
           </Link>
-          <Link href="/api/login">
-            <div className="overlap-4">
+            <div className="overlap-4" onClick={handleLogout}>
               <div className="text-wrapper-7">로그아웃</div>
             </div>
-          </Link>
         </div>
       </div>
     </div>
