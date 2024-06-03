@@ -9,12 +9,13 @@ import {
   Dialog,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
-const Footer = () => {
+const Footer = ({ data }) => {
+  const [receipt, setReceipt] = useState(null);
   const [character, setCharacter] = useState(null);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/users/character", {
@@ -32,6 +33,30 @@ const Footer = () => {
       .catch((error) => console.error("Error fetching character data:", error));
   }, []);
 
+  const handlePostClick = () => {
+    if (data && data.receivedReceiptId !== null) {
+      fetch(`http://localhost:8080/api/receipts/${data.receivedReceiptId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+        .then((result) => result.json())
+        .then((result) => {
+          setReceipt(result.data);
+          if (result.data) {
+            setTotal(result.data.positive + result.data.negative);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching receipt data:", error);
+        });
+    } else {
+      setReceipt(null);
+    }
+  };
+
   return (
     <div
       style={{
@@ -42,312 +67,314 @@ const Footer = () => {
       }}
     >
       {/* 다마고치 */}
-      <div style={{ position: "relative" }}>
-        <div
-          style={{
-            position:
-              "absolute" /* 절대 위치로 설정하여 두 번째 div 위에 겹치도록 함 */,
-            top: "61.5%" /* 부모 요소의 50% 위치에 맞춤 */,
-            left: "50%" /* 부모 요소의 50% 위치에 맞춤 */,
-            transform: "translate(-50%, -50%)" /* 가운데 정렬 */,
-            width: "90px",
-            height: "78px",
-            borderRadius: "11px",
-            backgroundImage: `url(${
-              character
-                ? character.image
-                : "s3://moneymerge/profile/default_profile_image.jpg"
-            })`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        ></div>
-        <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="189"
-            height="266"
-            fill="none"
-          >
-            <path
-              fill="#FFD7DD"
-              stroke="#000"
-              d="M187.584 165.633c0 54.636-41.906 98.879-93.542 98.879S.5 220.269.5 165.633s41.906-98.88 93.542-98.88 93.542 44.244 93.542 98.88Z"
-            />
-            <ellipse
-              cx="94.347"
-              cy="167.811"
-              fill="#FFAFBC"
-              rx="85.825"
-              ry="92.3"
-            />
-            <g filter="url(#a)">
+      <Link href="/api/characters">
+        <div style={{ position: "relative" }}>
+          <div
+            style={{
+              position:
+                "absolute" /* 절대 위치로 설정하여 두 번째 div 위에 겹치도록 함 */,
+              top: "61.5%" /* 부모 요소의 50% 위치에 맞춤 */,
+              left: "50%" /* 부모 요소의 50% 위치에 맞춤 */,
+              transform: "translate(-50%, -50%)" /* 가운데 정렬 */,
+              width: "90px",
+              height: "78px",
+              borderRadius: "11px",
+              backgroundImage: `url(${
+                character
+                  ? character.image
+                  : "s3://moneymerge/profile/default_profile_image.jpg"
+              })`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          ></div>
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="189"
+              height="266"
+              fill="none"
+            >
+              <path
+                fill="#FFD7DD"
+                stroke="#000"
+                d="M187.584 165.633c0 54.636-41.906 98.879-93.542 98.879S.5 220.269.5 165.633s41.906-98.88 93.542-98.88 93.542 44.244 93.542 98.88Z"
+              />
+              <ellipse
+                cx="94.347"
+                cy="167.811"
+                fill="#FFAFBC"
+                rx="85.825"
+                ry="92.3"
+              />
+              <g filter="url(#a)">
+                <path
+                  fill="#fff"
+                  d="M28.608 203.586C3.796 144.338 73.632 84.223 93.13 83.951c19.497-.273 87.237 52.004 67.024 119.635-17.992 60.204-106.733 59.248-131.545 0Z"
+                />
+              </g>
+              <g filter="url(#b)">
+                <rect
+                  width="91.303"
+                  height="81.682"
+                  x="48.695"
+                  y="122.886"
+                  fill="#D9D9D9"
+                  rx="10"
+                />
+              </g>
+              <rect
+                width="90.303"
+                height="80.682"
+                x="49.195"
+                y="123.386"
+                stroke="#000"
+                rx="9.5"
+              />
+              <g filter="url(#c)">
+                <ellipse
+                  cx="129.034"
+                  cy="225.996"
+                  fill="#FFAFBC"
+                  rx="10.935"
+                  ry="11.042"
+                />
+                <path
+                  stroke="#000"
+                  d="M139.469 225.996c0 5.827-4.676 10.543-10.435 10.543-5.758 0-10.435-4.716-10.435-10.543 0-5.826 4.677-10.542 10.435-10.542 5.759 0 10.435 4.716 10.435 10.542Z"
+                />
+              </g>
+              <g filter="url(#d)">
+                <ellipse
+                  cx="96.958"
+                  cy="230.413"
+                  fill="#FFAFBC"
+                  rx="10.935"
+                  ry="11.042"
+                />
+                <path
+                  stroke="#000"
+                  d="M107.393 230.413c0 5.827-4.676 10.542-10.435 10.542-5.758 0-10.435-4.715-10.435-10.542s4.677-10.542 10.435-10.542c5.759 0 10.435 4.715 10.435 10.542Z"
+                />
+              </g>
+              <g filter="url(#e)">
+                <ellipse
+                  cx="64.882"
+                  cy="225.996"
+                  fill="#FFAFBC"
+                  rx="10.935"
+                  ry="11.042"
+                />
+                <path
+                  stroke="#000"
+                  d="M75.317 225.996c0 5.827-4.677 10.543-10.435 10.543-5.759 0-10.436-4.716-10.436-10.543 0-5.826 4.677-10.542 10.436-10.542 5.758 0 10.435 4.716 10.435 10.542Z"
+                />
+              </g>
               <path
                 fill="#fff"
-                d="M28.608 203.586C3.796 144.338 73.632 84.223 93.13 83.951c19.497-.273 87.237 52.004 67.024 119.635-17.992 60.204-106.733 59.248-131.545 0Z"
+                fill-opacity=".72"
+                d="M146.042 89.818c-3.758-3.938-8.876-3.696-6.403 3.436 14.417 14.852 19.458 23.677 26.624 39.716 4.105 2.356 6.967 1.601 6.403-3.435-8.544-17.768-14.192-26.686-26.624-39.717Z"
               />
-            </g>
-            <g filter="url(#b)">
               <rect
-                width="91.303"
-                height="81.682"
-                x="48.695"
-                y="122.886"
-                fill="#D9D9D9"
-                rx="10"
+                width="25.476"
+                height="10.676"
+                x="-.317"
+                y=".634"
+                fill="#fff"
+                stroke="#000"
+                rx="5.338"
+                transform="matrix(.31323 .94968 -.94783 .31877 85.808 37.54)"
               />
-            </g>
-            <rect
-              width="90.303"
-              height="80.682"
-              x="49.195"
-              y="123.386"
-              stroke="#000"
-              rx="9.5"
-            />
-            <g filter="url(#c)">
-              <ellipse
-                cx="129.034"
-                cy="225.996"
-                fill="#FFAFBC"
-                rx="10.935"
-                ry="11.042"
+              <rect
+                width="25.496"
+                height="10.667"
+                x="-.568"
+                y=".42"
+                fill="#fff"
+                stroke="#000"
+                rx="5.333"
+                transform="rotate(98.41 57.25 59.544) skewX(-.163)"
+              />
+              <rect
+                width="25.48"
+                height="10.674"
+                x="-.621"
+                y=".334"
+                fill="#fff"
+                stroke="#000"
+                rx="5.337"
+                transform="matrix(-.28507 .9585 -.95696 -.29021 118.845 44.166)"
+              />
+              <rect
+                width="25.486"
+                height="10.671"
+                x="-.365"
+                y=".607"
+                fill="#fff"
+                stroke="#000"
+                rx="5.335"
+                transform="matrix(.23952 .9709 -.96979 .24395 77.24 6.703)"
               />
               <path
+                fill="#fff"
                 stroke="#000"
-                d="M139.469 225.996c0 5.827-4.676 10.543-10.435 10.543-5.758 0-10.435-4.716-10.435-10.543 0-5.826 4.677-10.542 10.435-10.542 5.759 0 10.435 4.716 10.435 10.542Z"
+                d="M70.943 2.208c0 .949-.76 1.709-1.687 1.709s-1.687-.76-1.687-1.709c0-.948.76-1.708 1.687-1.708s1.687.76 1.687 1.708ZM79.69 36.071c0 .948-.759 1.709-1.686 1.709-.927 0-1.687-.76-1.687-1.709 0-.948.76-1.708 1.687-1.708s1.687.76 1.687 1.708ZM91.355 65.517c0 .948-.76 1.708-1.687 1.708s-1.687-.76-1.687-1.708.76-1.708 1.687-1.708 1.687.76 1.687 1.708ZM114.683 37.543c0 .949-.76 1.709-1.687 1.709s-1.687-.76-1.687-1.709c0-.948.76-1.708 1.687-1.708s1.687.76 1.687 1.708ZM120.515 3.68c0 .949-.76 1.71-1.687 1.71s-1.687-.761-1.687-1.71c0-.947.76-1.708 1.687-1.708s1.687.76 1.687 1.709Z"
               />
-            </g>
-            <g filter="url(#d)">
-              <ellipse
-                cx="96.958"
-                cy="230.413"
-                fill="#FFAFBC"
-                rx="10.935"
-                ry="11.042"
-              />
-              <path
-                stroke="#000"
-                d="M107.393 230.413c0 5.827-4.676 10.542-10.435 10.542-5.758 0-10.435-4.715-10.435-10.542s4.677-10.542 10.435-10.542c5.759 0 10.435 4.715 10.435 10.542Z"
-              />
-            </g>
-            <g filter="url(#e)">
-              <ellipse
-                cx="64.882"
-                cy="225.996"
-                fill="#FFAFBC"
-                rx="10.935"
-                ry="11.042"
-              />
-              <path
-                stroke="#000"
-                d="M75.317 225.996c0 5.827-4.677 10.543-10.435 10.543-5.759 0-10.436-4.716-10.436-10.543 0-5.826 4.677-10.542 10.436-10.542 5.758 0 10.435 4.716 10.435 10.542Z"
-              />
-            </g>
-            <path
-              fill="#fff"
-              fill-opacity=".72"
-              d="M146.042 89.818c-3.758-3.938-8.876-3.696-6.403 3.436 14.417 14.852 19.458 23.677 26.624 39.716 4.105 2.356 6.967 1.601 6.403-3.435-8.544-17.768-14.192-26.686-26.624-39.717Z"
-            />
-            <rect
-              width="25.476"
-              height="10.676"
-              x="-.317"
-              y=".634"
-              fill="#fff"
-              stroke="#000"
-              rx="5.338"
-              transform="matrix(.31323 .94968 -.94783 .31877 85.808 37.54)"
-            />
-            <rect
-              width="25.496"
-              height="10.667"
-              x="-.568"
-              y=".42"
-              fill="#fff"
-              stroke="#000"
-              rx="5.333"
-              transform="rotate(98.41 57.25 59.544) skewX(-.163)"
-            />
-            <rect
-              width="25.48"
-              height="10.674"
-              x="-.621"
-              y=".334"
-              fill="#fff"
-              stroke="#000"
-              rx="5.337"
-              transform="matrix(-.28507 .9585 -.95696 -.29021 118.845 44.166)"
-            />
-            <rect
-              width="25.486"
-              height="10.671"
-              x="-.365"
-              y=".607"
-              fill="#fff"
-              stroke="#000"
-              rx="5.335"
-              transform="matrix(.23952 .9709 -.96979 .24395 77.24 6.703)"
-            />
-            <path
-              fill="#fff"
-              stroke="#000"
-              d="M70.943 2.208c0 .949-.76 1.709-1.687 1.709s-1.687-.76-1.687-1.709c0-.948.76-1.708 1.687-1.708s1.687.76 1.687 1.708ZM79.69 36.071c0 .948-.759 1.709-1.686 1.709-.927 0-1.687-.76-1.687-1.709 0-.948.76-1.708 1.687-1.708s1.687.76 1.687 1.708ZM91.355 65.517c0 .948-.76 1.708-1.687 1.708s-1.687-.76-1.687-1.708.76-1.708 1.687-1.708 1.687.76 1.687 1.708ZM114.683 37.543c0 .949-.76 1.709-1.687 1.709s-1.687-.76-1.687-1.709c0-.948.76-1.708 1.687-1.708s1.687.76 1.687 1.708ZM120.515 3.68c0 .949-.76 1.71-1.687 1.71s-1.687-.761-1.687-1.71c0-.947.76-1.708 1.687-1.708s1.687.76 1.687 1.709Z"
-            />
-            <defs>
-              <filter
-                id="a"
-                width="140.536"
-                height="168.432"
-                x="23.341"
-                y="83.95"
-                color-interpolation-filters="sRGB"
-                filterUnits="userSpaceOnUse"
-              >
-                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                <feBlend
-                  in="SourceGraphic"
-                  in2="BackgroundImageFix"
-                  result="shape"
-                />
-                <feColorMatrix
-                  in="SourceAlpha"
-                  result="hardAlpha"
-                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                />
-                <feOffset dy="4" />
-                <feGaussianBlur stdDeviation="2" />
-                <feComposite
-                  in2="hardAlpha"
-                  k2="-1"
-                  k3="1"
-                  operator="arithmetic"
-                />
-                <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                <feBlend in2="shape" result="effect1_innerShadow_350_1335" />
-              </filter>
-              <filter
-                id="b"
-                width="91.303"
-                height="85.682"
-                x="48.695"
-                y="122.886"
-                color-interpolation-filters="sRGB"
-                filterUnits="userSpaceOnUse"
-              >
-                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                <feBlend
-                  in="SourceGraphic"
-                  in2="BackgroundImageFix"
-                  result="shape"
-                />
-                <feColorMatrix
-                  in="SourceAlpha"
-                  result="hardAlpha"
-                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                />
-                <feOffset dy="4" />
-                <feGaussianBlur stdDeviation="2" />
-                <feComposite
-                  in2="hardAlpha"
-                  k2="-1"
-                  k3="1"
-                  operator="arithmetic"
-                />
-                <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                <feBlend in2="shape" result="effect1_innerShadow_350_1335" />
-              </filter>
-              <filter
-                id="c"
-                width="29.87"
-                height="30.084"
-                x="114.099"
-                y="214.954"
-                color-interpolation-filters="sRGB"
-                filterUnits="userSpaceOnUse"
-              >
-                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                <feColorMatrix
-                  in="SourceAlpha"
-                  result="hardAlpha"
-                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                />
-                <feOffset dy="4" />
-                <feGaussianBlur stdDeviation="2" />
-                <feComposite in2="hardAlpha" operator="out" />
-                <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                <feBlend
-                  in2="BackgroundImageFix"
-                  result="effect1_dropShadow_350_1335"
-                />
-                <feBlend
-                  in="SourceGraphic"
-                  in2="effect1_dropShadow_350_1335"
-                  result="shape"
-                />
-              </filter>
-              <filter
-                id="d"
-                width="29.87"
-                height="30.084"
-                x="82.023"
-                y="219.371"
-                color-interpolation-filters="sRGB"
-                filterUnits="userSpaceOnUse"
-              >
-                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                <feColorMatrix
-                  in="SourceAlpha"
-                  result="hardAlpha"
-                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                />
-                <feOffset dy="4" />
-                <feGaussianBlur stdDeviation="2" />
-                <feComposite in2="hardAlpha" operator="out" />
-                <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                <feBlend
-                  in2="BackgroundImageFix"
-                  result="effect1_dropShadow_350_1335"
-                />
-                <feBlend
-                  in="SourceGraphic"
-                  in2="effect1_dropShadow_350_1335"
-                  result="shape"
-                />
-              </filter>
-              <filter
-                id="e"
-                width="29.87"
-                height="30.084"
-                x="49.947"
-                y="214.954"
-                color-interpolation-filters="sRGB"
-                filterUnits="userSpaceOnUse"
-              >
-                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                <feColorMatrix
-                  in="SourceAlpha"
-                  result="hardAlpha"
-                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                />
-                <feOffset dy="4" />
-                <feGaussianBlur stdDeviation="2" />
-                <feComposite in2="hardAlpha" operator="out" />
-                <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                <feBlend
-                  in2="BackgroundImageFix"
-                  result="effect1_dropShadow_350_1335"
-                />
-                <feBlend
-                  in="SourceGraphic"
-                  in2="effect1_dropShadow_350_1335"
-                  result="shape"
-                />
-              </filter>
-            </defs>
-          </svg>
+              <defs>
+                <filter
+                  id="a"
+                  width="140.536"
+                  height="168.432"
+                  x="23.341"
+                  y="83.95"
+                  color-interpolation-filters="sRGB"
+                  filterUnits="userSpaceOnUse"
+                >
+                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                  <feBlend
+                    in="SourceGraphic"
+                    in2="BackgroundImageFix"
+                    result="shape"
+                  />
+                  <feColorMatrix
+                    in="SourceAlpha"
+                    result="hardAlpha"
+                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                  />
+                  <feOffset dy="4" />
+                  <feGaussianBlur stdDeviation="2" />
+                  <feComposite
+                    in2="hardAlpha"
+                    k2="-1"
+                    k3="1"
+                    operator="arithmetic"
+                  />
+                  <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+                  <feBlend in2="shape" result="effect1_innerShadow_350_1335" />
+                </filter>
+                <filter
+                  id="b"
+                  width="91.303"
+                  height="85.682"
+                  x="48.695"
+                  y="122.886"
+                  color-interpolation-filters="sRGB"
+                  filterUnits="userSpaceOnUse"
+                >
+                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                  <feBlend
+                    in="SourceGraphic"
+                    in2="BackgroundImageFix"
+                    result="shape"
+                  />
+                  <feColorMatrix
+                    in="SourceAlpha"
+                    result="hardAlpha"
+                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                  />
+                  <feOffset dy="4" />
+                  <feGaussianBlur stdDeviation="2" />
+                  <feComposite
+                    in2="hardAlpha"
+                    k2="-1"
+                    k3="1"
+                    operator="arithmetic"
+                  />
+                  <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+                  <feBlend in2="shape" result="effect1_innerShadow_350_1335" />
+                </filter>
+                <filter
+                  id="c"
+                  width="29.87"
+                  height="30.084"
+                  x="114.099"
+                  y="214.954"
+                  color-interpolation-filters="sRGB"
+                  filterUnits="userSpaceOnUse"
+                >
+                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                  <feColorMatrix
+                    in="SourceAlpha"
+                    result="hardAlpha"
+                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                  />
+                  <feOffset dy="4" />
+                  <feGaussianBlur stdDeviation="2" />
+                  <feComposite in2="hardAlpha" operator="out" />
+                  <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+                  <feBlend
+                    in2="BackgroundImageFix"
+                    result="effect1_dropShadow_350_1335"
+                  />
+                  <feBlend
+                    in="SourceGraphic"
+                    in2="effect1_dropShadow_350_1335"
+                    result="shape"
+                  />
+                </filter>
+                <filter
+                  id="d"
+                  width="29.87"
+                  height="30.084"
+                  x="82.023"
+                  y="219.371"
+                  color-interpolation-filters="sRGB"
+                  filterUnits="userSpaceOnUse"
+                >
+                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                  <feColorMatrix
+                    in="SourceAlpha"
+                    result="hardAlpha"
+                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                  />
+                  <feOffset dy="4" />
+                  <feGaussianBlur stdDeviation="2" />
+                  <feComposite in2="hardAlpha" operator="out" />
+                  <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+                  <feBlend
+                    in2="BackgroundImageFix"
+                    result="effect1_dropShadow_350_1335"
+                  />
+                  <feBlend
+                    in="SourceGraphic"
+                    in2="effect1_dropShadow_350_1335"
+                    result="shape"
+                  />
+                </filter>
+                <filter
+                  id="e"
+                  width="29.87"
+                  height="30.084"
+                  x="49.947"
+                  y="214.954"
+                  color-interpolation-filters="sRGB"
+                  filterUnits="userSpaceOnUse"
+                >
+                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                  <feColorMatrix
+                    in="SourceAlpha"
+                    result="hardAlpha"
+                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                  />
+                  <feOffset dy="4" />
+                  <feGaussianBlur stdDeviation="2" />
+                  <feComposite in2="hardAlpha" operator="out" />
+                  <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+                  <feBlend
+                    in2="BackgroundImageFix"
+                    result="effect1_dropShadow_350_1335"
+                  />
+                  <feBlend
+                    in="SourceGraphic"
+                    in2="effect1_dropShadow_350_1335"
+                    result="shape"
+                  />
+                </filter>
+              </defs>
+            </svg>
+          </div>
         </div>
-      </div>
+      </Link>
       {/* 알림 */}
       <Link href="/api/notifications">
         <div>
@@ -382,7 +409,7 @@ const Footer = () => {
       </Link>
       {/* 우체통 */}
       <Dialog>
-        <DialogTrigger asChild>
+        <DialogTrigger onClick={handlePostClick}>
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -494,77 +521,132 @@ const Footer = () => {
             </svg>
           </div>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[700px]">
-          <DialogHeader>
-            <DialogTitle>새 가계부 만들기</DialogTitle>
+        <DialogContent
+          style={{
+            width: "450px",
+            height: "700px",
+            border: "1px solid black",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <DialogHeader
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <DialogTitle
+              style={{
+                fontSize: "20px",
+                paddingTop: "20px",
+              }}
+            >
+              [ 누군가의 하루 영수증 ]
+            </DialogTitle>
+            <div>MoneyMerge</div>
           </DialogHeader>
-          <div className="grid gap-6 py-4">
-            <div className="flex items-center justify-between gap-4 flex-nowrap">
-              <Label htmlFor="ledgerName" className="whitespace-nowrap">
-                가계부 이름
-              </Label>
-              <Input
-                className="w-full"
-                id="ledgerName"
-                placeholder="Enter ledger name"
-                type="text"
-              />
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="text-sm font-medium">가계부 색상</div>
-              <div className="h-8 w-8 rounded-full bg-[#5c6ac4]" />
-              <Button size="sm" variant="outline">
-                Change Color
-              </Button>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="text-sm font-medium">나의 색상</div>
-              <div className="h-8 w-8 rounded-full bg-[#5ccac4]" />
-              <Button size="sm" variant="outline">
-                Change Color
-              </Button>
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-medium">Team Colors</div>
-                <Button size="sm" variant="outline">
-                  Invite
-                </Button>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-[#de3618]" />
-                  <div className="text-sm">John</div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-[#f1c40f]" />
-                  <div className="text-sm">Sarah</div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-[#2ecc71]" />
-                  <div className="text-sm">Alex</div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-[#9b59b6]" />
-                  <div className="text-sm">Emily</div>
-                </div>
+          {receipt === null && (
+            <div
+              className="grid gap-6 py-4"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <div>---------------------------------</div>
+              <div className="flex items-center justify-between gap-4 flex-nowrap">
+                <Label htmlFor="ledgerName" className="whitespace-nowrap">
+                  받은 영수증이 없습니다.
+                </Label>
               </div>
             </div>
-            <div className="grid gap-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="monthlyGoal">Monthly Goal</Label>
-                <Input className="w-24" id="monthlyGoal" type="number" />
+          )}
+          {receipt !== null && (
+            <div
+              className="grid gap-6 py-4"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <div>---------------------------------</div>
+              <div>
+                <div
+                  style={{
+                    width: "300px",
+                  }}
+                >
+                  발행일: {receipt.date}
+                </div>
+                <div
+                  style={{
+                    width: "300px",
+                  }}
+                >
+                  하루 내역:
+                </div>
               </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="annualGoal">Annual Goal</Label>
-                <Input className="w-24" id="annualGoal" type="number" />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "300px",
+                  paddingBottom: "30px",
+                  fontSize: "15px",
+                }}
+              >
+                {receipt.content}
+              </div>
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "300px",
+                  }}
+                >
+                  <div>긍정적 기분</div>
+                  <div>{receipt.positive}</div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "300px",
+                  }}
+                >
+                  <div>부정적 기분</div>
+                  <div>{receipt.negative}</div>
+                </div>
+              </div>
+              <div>---------------------------------</div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "300px",
+                  paddingBottom: "30px",
+                }}
+              >
+                <div>합계:</div>
+                <div>{total}</div>
               </div>
             </div>
+          )}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              paddingBottom: "30px",
+            }}
+          >
+            <Button>좋아요</Button>
           </div>
-          <DialogFooter>
-            <Button variant="ghost">Cancel</Button>
-            <Button type="submit">Save</Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

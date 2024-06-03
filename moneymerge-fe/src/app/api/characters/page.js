@@ -1,3 +1,4 @@
+"use client"
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/5Tknzmll2fc
@@ -5,7 +6,7 @@
  */
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import RootLayout from "../../../../components/layout.js";
+import RootLayout from "../../../components/layout.js";
 
 export default function Component() {
   return (

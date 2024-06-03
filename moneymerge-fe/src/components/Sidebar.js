@@ -13,30 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
 
-const Sidebar = () => {
-  const [userData, setUserData] = useState(null);
-  const [bookList, setBookList] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:8080/api/users", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include", // 쿠키를 포함하여 요청
-    })
-      .then((result) => result.json())
-      .then((result) => {
-        console.log("Received user data:", result.data);
-        console.log("Received book data:", result.data.bookList);
-        setUserData(result.data);
-        setBookList(result.data.bookList);
-      })
-      .catch((error) => console.error("Error fetching user data:", error));
-  }, []);
-
+const Sidebar = ({data}) => {
   return (
     <div className="box">
       <div className="group">
@@ -49,15 +27,15 @@ const Sidebar = () => {
             </div>
             {/* 프로필 */}
             <Link href="/api/profile/1">
-            <div className="ellipse" style={{ backgroundImage: `url(${userData ? userData.profileUrl : "s3://moneymerge/profile/default_profile_image.jpg"})`, backgroundSize: 'cover' }} />
+            <div className="ellipse" style={{ backgroundImage: `url(${data ? data.profileUrl : "s3://moneymerge/profile/default_profile_image.jpg"})`, backgroundSize: 'cover' }} />
               <div className="text-wrapper-5">
-                {userData ? userData.username : "Loading..."}
+                {data ? data.username : "Loading..."}
               </div>
             </Link>
             <div className="text-wrapper-1">내 가계부</div>
               <div className="book-list">
                 {/* 서버에서 받은 bookList 데이터를 사용하여 가계부 목록 생성 */}
-                {bookList && bookList.map((book, index) => (
+                {data && data.bookList.map((book, index) => (
                   <div key={index} className="book-wrapper">
                     <Link href="#">
                       <div className="book-check" />

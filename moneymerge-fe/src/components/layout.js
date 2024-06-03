@@ -2,6 +2,7 @@ import "./global.css";
 import Sidebar from "./Sidebar";
 import Article from "./Article";
 import Footer from "./Footer";
+import { useEffect, useState } from "react";
 
 // export const metadata = {
 //   title: "Create Next App",
@@ -10,6 +11,24 @@ import Footer from "./Footer";
 //export default function RootLayout({ children }) {
 
 function RootLayout({ children }) {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // 쿠키를 포함하여 요청
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        console.log("Received user data:", result.data);
+        setUserData(result.data);
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  }, []);
+
   return (
     <html lang="en">
       <head></head>
@@ -36,7 +55,7 @@ function RootLayout({ children }) {
             className="flex-grow-[1] m-[auto] relative"
             style={{ marginLeft: "30px" }}
           >
-            <Sidebar />
+            <Sidebar data={userData} />
           </div>
           {/* 메인 Article */}
           <div className="flex-grow-[2.5] m-[auto] relative">
@@ -56,7 +75,7 @@ function RootLayout({ children }) {
           </div>
           {/* 푸터 */}
           <div className="flex-grow-[1]" style={{ marginRight: "20px" }}>
-            <Footer />
+            <Footer data={userData} />
           </div>
         </div>
       </body>
