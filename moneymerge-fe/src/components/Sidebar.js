@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import "./style/sidebar.css";
 import {
   DialogTrigger,
@@ -14,29 +14,33 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
+import { SketchPicker } from "react-color";
 
-const Sidebar = ({data}) => {
+const Sidebar = ({ data }) => {
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/users/logout', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8080/api/users/logout", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       });
 
       if (response.ok) {
-        document.cookie = 'AccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        document.cookie = 'RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        router.push('/api/login');
+        document.cookie =
+          "AccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie =
+          "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        router.push("/api/login");
       } else {
-        console.error('Failed to log out');
+        console.error("Failed to log out");
       }
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error("Error logging out:", error);
     }
   };
 
@@ -52,15 +56,26 @@ const Sidebar = ({data}) => {
             </div>
             {/* 프로필 */}
             <Link href="/api/profile">
-            <div className="ellipse" style={{ backgroundImage: `url(${data ? data.profileUrl : "s3://moneymerge/profile/default_profile_image.jpg"})`, backgroundSize: 'cover' }} />
+              <div
+                className="ellipse"
+                style={{
+                  backgroundImage: `url(${
+                    data
+                      ? data.profileUrl
+                      : "s3://moneymerge/profile/default_profile_image.jpg"
+                  })`,
+                  backgroundSize: "cover",
+                }}
+              />
               <div className="text-wrapper-5">
                 {data ? data.username : "Loading..."}
               </div>
             </Link>
             <div className="text-wrapper-1">내 가계부</div>
-              <div className="book-list">
-                {/* 서버에서 받은 bookList 데이터를 사용하여 가계부 목록 생성 */}
-                {data && data.bookList.map((book, index) => (
+            <div className="book-list">
+              {/* 서버에서 받은 bookList 데이터를 사용하여 가계부 목록 생성 */}
+              {data &&
+                data.bookList.map((book, index) => (
                   <div key={index} className="book-wrapper">
                     <Link href="#">
                       <div className="book-check" />
@@ -68,100 +83,16 @@ const Sidebar = ({data}) => {
                     <div className="text-wrapper">{book.bookTitle}</div>
                   </div>
                 ))}
-                <div className="book-wrapper">
-                  {/* 가계부 추가 Dialog */}
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <div className="add-button">+ 가계부 추가</div>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[700px]">
-                      <DialogHeader>
-                        <DialogTitle>새 가계부 만들기</DialogTitle>
-                      </DialogHeader>
-                      <div className="grid gap-6 py-4">
-                        <div className="flex items-center justify-between gap-4 flex-nowrap">
-                          <Label
-                            htmlFor="ledgerName"
-                            className="whitespace-nowrap"
-                          >
-                            가계부 이름
-                          </Label>
-                          <Input
-                            className="w-full"
-                            id="ledgerName"
-                            placeholder="Enter ledger name"
-                            type="text"
-                          />
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <div className="text-sm font-medium">가계부 색상</div>
-                          <div className="h-8 w-8 rounded-full bg-[#5c6ac4]" />
-                          <Button size="sm" variant="outline">
-                            Change Color
-                          </Button>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <div className="text-sm font-medium">나의 색상</div>
-                          <div className="h-8 w-8 rounded-full bg-[#5ccac4]" />
-                          <Button size="sm" variant="outline">
-                            Change Color
-                          </Button>
-                        </div>
-                        <div className="grid gap-2">
-                          <div className="flex items-center justify-between">
-                            <div className="text-sm font-medium">
-                              Team Colors
-                            </div>
-                            <Button size="sm" variant="outline">
-                              Invite
-                            </Button>
-                          </div>
-                          <div className="grid grid-cols-2 gap-2">
-                            <div className="flex items-center gap-2">
-                              <div className="h-8 w-8 rounded-full bg-[#de3618]" />
-                              <div className="text-sm">John</div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="h-8 w-8 rounded-full bg-[#f1c40f]" />
-                              <div className="text-sm">Sarah</div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="h-8 w-8 rounded-full bg-[#2ecc71]" />
-                              <div className="text-sm">Alex</div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="h-8 w-8 rounded-full bg-[#9b59b6]" />
-                              <div className="text-sm">Emily</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="grid gap-2">
-                          <div className="flex items-center justify-between">
-                            <Label htmlFor="monthlyGoal">Monthly Goal</Label>
-                            <Input
-                              className="w-24"
-                              id="monthlyGoal"
-                              type="number"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <Label htmlFor="annualGoal">Annual Goal</Label>
-                            <Input
-                              className="w-24"
-                              id="annualGoal"
-                              type="number"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button variant="ghost">Cancel</Button>
-                        <Button type="submit">Save</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
+              <div className="book-wrapper">
+                {/* 가계부 추가 Dialog */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="add-button">+ 가계부 추가</div>
+                  </DialogTrigger>
+                  <BookForm />
+                </Dialog>
               </div>
+            </div>
           </div>
           <Link href="/api/boards">
             <div className="overlap-1">
@@ -178,9 +109,9 @@ const Sidebar = ({data}) => {
               <div className="text-wrapper-6">하루 영수증</div>
             </div>
           </Link>
-            <div className="overlap-4" onClick={handleLogout}>
-              <div className="text-wrapper-7">로그아웃</div>
-            </div>
+          <div className="overlap-4" onClick={handleLogout}>
+            <div className="text-wrapper-7">로그아웃</div>
+          </div>
         </div>
       </div>
     </div>
@@ -188,3 +119,322 @@ const Sidebar = ({data}) => {
 };
 
 export default Sidebar;
+
+function BookForm() {
+  const [book, setBook] = useState();
+  const [bookColor, setBookColor] = useState("#5c6ac4");
+  const [userColor, setUserColor] = useState("#5c6ac4");
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
+  const [searchList, setSearchList] = useState([]);
+  const [email, setEmail] = useState();
+  const [userList, setUserList] = useState([]);
+  const [clickedButton, setClickedButton] = useState();
+
+  const handleClick = (e) => {
+    e.preventDefault(); // 기본 양식 제출 방지
+    setDisplayColorPicker(!displayColorPicker);
+    setClickedButton(e.target.innerText);
+  };
+
+  const handleClose = () => {
+    setDisplayColorPicker(false);
+  };
+
+  const handleBookChange = (color) => {
+    setBookColor(color.hex);
+    console.log(bookColor);
+  };
+
+  const handleUserChange = (color) => {
+    setUserColor(color.hex);
+    console.log(userColor);
+  };
+
+  const handleUserClick = (user, e) => {
+    e.preventDefault(); // 기본 양식 제출 방지
+    console.log(user);
+    setUserList((prevUserList) => {
+      if (
+        prevUserList.some((existingUser) => existingUser.userId === user.userId)
+      ) {
+        console.log("User already exists");
+        return prevUserList;
+      }
+
+      const newUserList = [...prevUserList, user];
+      console.log(newUserList);
+      return newUserList;
+    });
+  };
+
+  const handleDeleteUser = (index) => {
+    setUserList((prevUserList) => {
+      const newUserList = prevUserList.filter((_, i) => i !== index);
+      return newUserList;
+    });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setBook({ ...book, [name]: value });
+    setBook((prevBook) => {
+      const userIdList = userList.map((user) => user.userId);
+      return {
+        ...prevBook,
+        userColor: userColor,
+        bookColor: bookColor,
+        userList: userIdList,
+      };
+    });
+    console.log(book);
+  };
+
+  const handleSearchInput = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    handleSearchClick(value);
+  };
+
+  const handleSearchClick = (email) => {
+    if (email) {
+      fetch(`http://localhost:8080/api/users/search?email=${email}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+        .then((result) => result.json())
+        .then((result) => {
+          console.log(result.data);
+          setSearchList(result.data.userSearchList);
+        })
+        .catch((error) => {
+          console.error("Error fetching receipt data:", error);
+        });
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newBook = {
+      ...book,
+      userColor: userColor,
+      bookColor: bookColor,
+      userList: userList.map((user) => user.userId),
+    };
+
+    if (newBook.title === "" || /^\s+$/.test(newBook.title)) {
+      alert("가계부 제목을 입력해주세요.");
+      return;
+    }
+
+    fetch("http://localhost:8080/api/books", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(newBook),
+    }).then((response) => {
+      console.log(response)
+      if (response.ok) {
+        window.location.reload();
+      } else if(response.status === 403) {
+        alert("모두 입력해주세요.");
+      } else {
+        alert("Error:" + response.status);
+      }
+    })
+    .catch((error) => {
+      alert("Fetch error:" + error);
+    });;
+  };
+
+  return (
+    <>
+      <DialogContent className="sm:max-w-[700px]">
+        <form onSubmit={handleSubmit}>
+          <DialogHeader>
+            <DialogTitle>새 가계부 만들기</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-6 py-4">
+            <div className="flex items-center justify-between gap-4 flex-nowrap">
+              <Label htmlFor="ledgerName" className="whitespace-nowrap">
+                가계부 이름
+              </Label>
+              <Input
+                className="w-full"
+                id="ledgerName"
+                placeholder="Enter ledger name"
+                type="text"
+                name="title"
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div className="text-sm font-medium">가계부 색상</div>
+              <div
+                className="h-8 w-8 rounded-full"
+                style={{ backgroundColor: bookColor }}
+              />
+              <Button size="sm" variant="outline" onClick={handleClick}>
+                Change Book Color
+              </Button>
+              {displayColorPicker && clickedButton === "Change Book Color" ? (
+                <div style={{ position: "absolute", zIndex: 2 }}>
+                  <div
+                    style={{
+                      position: "fixed",
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      left: 0,
+                    }}
+                    onClick={handleClose}
+                  />
+                  <SketchPicker color={bookColor} onChange={handleBookChange} />
+                </div>
+              ) : null}
+            </div>
+            <input type="hidden" name="bookColor" value={bookColor} />
+
+            <div className="flex items-center gap-4">
+              <div className="text-sm font-medium">나의 색상</div>
+              <div
+                className="h-8 w-8 rounded-full"
+                style={{ backgroundColor: userColor }}
+              />
+              <Button size="sm" variant="outline" onClick={handleClick}>
+                Change My Color
+              </Button>
+              {displayColorPicker && clickedButton === "Change My Color" ? (
+                <div style={{ position: "absolute", zIndex: 2 }}>
+                  <div
+                    style={{
+                      position: "fixed",
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      left: 0,
+                    }}
+                    onClick={handleClose}
+                  />
+                  <SketchPicker color={userColor} onChange={handleUserChange} />
+                </div>
+              ) : null}
+            </div>
+            <input type="hidden" name="userColor" value={userColor} />
+
+            <div className="grid gap-2">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-medium">가계부 멤버 초대하기</div>
+                <div>
+                  {userList.length > 0 &&
+                    userList.map((user, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <div>{user.username}</div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDeleteUser(index)}
+                        >
+                          삭제
+                        </Button>
+                      </div>
+                    ))}
+                </div>
+              </div>
+              <Input
+                className="w-full"
+                id="email"
+                placeholder="Enter email"
+                type="text"
+                name="email"
+                value={email}
+                onChange={handleSearchInput}
+              />
+              <div>
+                {searchList.length > 0 &&
+                  searchList.map((user, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginBottom: "10px",
+                      }}
+                    >
+                      <img
+                        src={user.profileUrl}
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          marginRight: "10px",
+                        }}
+                      />
+                      <button onClick={(e) => handleUserClick(user, e)}>
+                        {user.username}
+                      </button>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            <div className="grid gap-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="startDate">가계부 시작일</Label>
+                <Input
+                  className="w-24"
+                  id="startDate"
+                  type="number"
+                  name="startDate"
+                  min="1"
+                  max="31"
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="monthlyGoal">Monthly Goal</Label>
+                <Input
+                  className="w-24"
+                  id="monthlyGoal"
+                  type="number"
+                  name="monthGoal"
+                  min="0"
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="annualGoal">Annual Goal</Label>
+                <Input
+                  className="w-24"
+                  id="annualGoal"
+                  type="number"
+                  name="yearGoal"
+                  min="0"
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="submit">
+              Save
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </>
+  );
+}

@@ -16,9 +16,10 @@ const Footer = ({ data }) => {
   const [receipt, setReceipt] = useState(null);
   const [character, setCharacter] = useState(null);
   const [total, setTotal] = useState(0);
+  const [likes, setLikes] = useState(0);
 
   useEffect(() => {
-    fetch("http://43.203.66.36:8080/api/users/character", {
+    fetch("http://localhost:8080/api/users/character", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +47,9 @@ const Footer = ({ data }) => {
         .then((result) => {
           setReceipt(result.data);
           if (result.data) {
+            setReceipt(result.data);
             setTotal(result.data.positive + result.data.negative);
+            setLikes(result.data.likeCount);
           }
         })
         .catch((error) => {
@@ -54,6 +57,30 @@ const Footer = ({ data }) => {
         });
     } else {
       setReceipt(null);
+    }
+  };
+
+  const HandleReceiptLikeClick = () => {
+    if (data && data.receivedReceiptId !== null) {
+      fetch(
+        `http://localhost:8080/api/receipts/${data.receivedReceiptId}/likes`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
+        .then((result) => result.json())
+        .then((result) => {
+          if (result.data) {
+            setLikes(result.data.likeCount);
+          }
+        })
+        .catch((error) => {
+          console.error("Error clicking receipt like button:", error);
+        });
     }
   };
 
@@ -645,7 +672,7 @@ const Footer = ({ data }) => {
               paddingBottom: "30px",
             }}
           >
-            <Button>좋아요</Button>
+            <Button onClick={HandleReceiptLikeClick}>{likes} 좋아요</Button>
           </div>
         </DialogContent>
       </Dialog>

@@ -101,7 +101,7 @@
   .box .book-list {
     background-color: #ffe9e9;
     border-radius: 10px;
-    height: 99px;
+    height: 150px;
     left: 13px;
     position: absolute;
     top: 100px;
@@ -222,7 +222,7 @@
     height: 26px;
     left: 13px;
     position: absolute;
-    top: 215px;
+    top: 265px;
     width: 150px;
   }
   
@@ -232,7 +232,7 @@
     height: 26px;
     left: 13px;
     position: absolute;
-    top: 255px;
+    top: 305px;
     width: 150px;
   }
   
@@ -242,7 +242,7 @@
     height: 26px;
     left: 13px;
     position: absolute;
-    top: 295px;
+    top: 345px;
     width: 150px;
   }
   
@@ -252,6 +252,6 @@
     height: 26px;
     left: 13px;
     position: absolute;
-    top: 335px;
+    top: 385px;
     width: 150px;
   }
