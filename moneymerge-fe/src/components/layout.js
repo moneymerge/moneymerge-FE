@@ -2,7 +2,6 @@ import "./global.css";
 import Sidebar from "./Sidebar";
 import Article from "./Article";
 import Footer from "./Footer";
-import { ScissorsLineDashed } from "lucide-react";
 
 // export const metadata = {
 //   title: "Create Next App",
