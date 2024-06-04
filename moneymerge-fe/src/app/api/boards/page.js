@@ -19,6 +19,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import {
   PaginationPrevious,
+  PaginationNext,
   PaginationItem,
   PaginationLink,
   PaginationContent,
@@ -31,49 +32,95 @@ import { useState, useEffect } from "react";
 export default function Component() {
   const [boards, setBoards] = useState([]);
   const [boardType, setBoardType] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [range, setRange] = useState(null);
 
   useEffect(() => {
     let url = "http://localhost:8080/api/boards";
-    if (boardType) {
-      url += `?boardType=${boardType}`; // boardType이 설정되면 쿼리 파라미터 추가
-    }
+    let countUrl = "http://localhost:8080/api/boards/count";
 
+    if (currentPage) {
+      url += `?page=${currentPage}`;
+    }
+    if (boardType) {
+      url += `&boardType=${boardType}`;
+      countUrl += `?boardType=${boardType}`;
+    }
     fetch(url)
       .then((result) => result.json())
       .then((result) => {
         setBoards(result.data);
       });
-  }, [boardType]);
+
+    fetch(countUrl)
+      .then((result) => result.json())
+      .then((result) => {
+        setTotalPages(Math.ceil(result / 10));
+      });
+  }, [boardType, currentPage]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <RootLayout>
-      <div className="bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
+      <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
         {/* <header className="px-6 mt-[-40px] items-center justify-between">
           <h1 className="text-2 font-bold">게시판</h1>
         </header> */}
         <main>
-          <div className="h-full max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
+          <div className="max-w-6xl mx-auto bg-white rounded-lg  p-8 space-y-6">
             {/* <div className="flex flex-col items-center justify-between"> */}
             <div>
               <div className="flex items-center gap-1">
-                <Button variant="outline" onClick={() => setBoardType(null)}>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBoardType(null);
+                    handlePageChange(1);
+                  }}
+                >
                   {/* <ListIcon className="h-5 w-5 mr-2" /> */}
                   전체
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => setBoardType("INFORMATION")}
+                  onClick={() => {
+                    setBoardType("INFORMATION");
+                    handlePageChange(1);
+                  }}
                 >
                   {/* <SignpostIcon className="h-5 w-5 mr-2" /> */}
                   정보 나눔
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => setBoardType("CERTIFICATION")}
+                  onClick={() => {
+                    setBoardType("CERTIFICATION");
+                    handlePageChange(1);
+                  }}
                 >
                   인증
                 </Button>
-                <Button variant="outline" onClick={() => setBoardType("FREE")}>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBoardType("FREE");
+                    handlePageChange(1);
+                  }}
+                >
                   {/* <FileQuestionIcon className="h-5 w-5 mr-2" /> */}
                   자유
                 </Button>
@@ -181,7 +228,7 @@ export default function Component() {
                             {row.boardType}
                           </Badge>
                         </td>
-                        <td className="px-4 py-3 text-xs">{row.username}</td>
+                        <td className="px-4 py-3 text-xs">{row.author}</td>
                         <td className="px-4 py-3 text-xs">{row.createdAt}</td>
                         <td className="px-4 py-3 text-xs">{row.likes}</td>
                         <td className="px-4 py-3 text-xs">
@@ -189,26 +236,6 @@ export default function Component() {
                         </td>
                       </tr>
                     ))}
-                  {/* <tr className="border-b">
-                  <td className="px-4 py-3">
-                    <Link className="font-medium hover:text-[#333]" href="#">
-                      이벤트 안내
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge
-                      className="bg-[#f9f5e7] text-[#333]"
-                      variant="secondary"
-                    >
-                      공지사항
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3">관리자</td>
-                  <td className="px-4 py-3">2023-05-25</td>
-                  <td className="px-4 py-3">5</td>
-                  <td className="px-4 py-3">2</td>
-                </tr>
-                */}
                 </tbody>
               </table>
             </div>
@@ -216,15 +243,29 @@ export default function Component() {
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious href="#" />
+                    <PaginationPrevious
+                      href="#"
+                      onClick={handlePrevPage}
+                      disabled={currentPage === 1}
+                    />
                   </PaginationItem>
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <PaginationItem key={i + 1}>
+                      <PaginationLink
+                        href="#"
+                        isActive={currentPage === i + 1} // 현재 페이지 버튼 활성화
+                        onClick={() => handlePageChange(i + 1)}
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
                   <PaginationItem>
-                    <PaginationLink href="#">1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" isActive>
-                      2
-                    </PaginationLink>
+                    <PaginationNext
+                      href="#"
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                    />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>

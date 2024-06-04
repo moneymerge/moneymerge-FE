@@ -77,7 +77,7 @@ const Sidebar = ({ data }) => {
               {data &&
                 data.bookList.map((book, index) => (
                   <div key={index} className="book-wrapper">
-                    <Link href="#">
+                    <Link href={`/api/books/${book.bookId}`}>
                       <div className="book-check" />
                     </Link>
                     <div className="text-wrapper">{book.bookTitle}</div>
