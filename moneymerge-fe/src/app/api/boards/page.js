@@ -77,9 +77,6 @@ export default function Component() {
   return (
     <RootLayout>
       <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
-        {/* <header className="px-6 mt-[-40px] items-center justify-between">
-          <h1 className="text-2 font-bold">게시판</h1>
-        </header> */}
         <div
           className="fixed pt-4 px-4 flex items-center justify-between"
           style={{

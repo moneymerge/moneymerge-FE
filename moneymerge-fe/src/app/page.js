@@ -7,13 +7,13 @@ export default function Home() {
   const params = useParams();
   const [board, setBoard] = useState({});
 
-  useEffect(() => {
-    console.log("useEffect called"); // 디버깅을 위한 콘솔 로그
-    // fetch(`http://43.203.66.36:8080/api/boards/${params.boardId}`)
-    fetch(`http://43.203.66.36:8080/api/boards/1`)
-      .then((result) => result.json())
-      .then((result) => setBoard(result.data));
-  }, []);
+  // useEffect(() => {
+  //   console.log("useEffect called"); // 디버깅을 위한 콘솔 로그
+  //   // fetch(`http://43.203.66.36:8080/api/boards/${params.boardId}`)
+  //   fetch(`http://localhost:8080/api/boards/1`)
+  //     .then((result) => result.json())
+  //     .then((result) => setBoard(result.data));
+  // }, []);
 
   return (
     <RootLayout/>

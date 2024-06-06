@@ -78,9 +78,30 @@ const Sidebar = ({ data }) => {
                 data.bookList.map((book, index) => (
                   <div key={index} className="book-wrapper">
                     <Link href={`/api/books/${book.bookId}`}>
-                      <div className="book-check" />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                           alignItems: "center",
+                           gap: "10px"
+                        }}
+                      >
+                        <div className="book-check" />
+                        <div style={{
+                          width: "70%",
+                          fontSize: "13px",
+                          color: `${book.bookColor}`
+                        }}>{book.bookTitle}</div>
+                        {/* <div
+                          style={{
+                            backgroundColor: `${book.bookColor}`,
+                            borderRadius: "7px",
+                            height: "14px",
+                            width: "14px",
+                          }}
+                        /> */}
+                      </div>
                     </Link>
-                    <div className="text-wrapper">{book.bookTitle}</div>
                   </div>
                 ))}
               <div className="book-wrapper">

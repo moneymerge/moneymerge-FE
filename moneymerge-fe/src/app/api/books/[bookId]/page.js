@@ -106,13 +106,20 @@ export default function Component() {
           setMonth(arg.start.getMonth() + 1);
         }}
       />
-
-      <Link
-        className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-        href="/api/boards/create"
+      <div
+        className="fixed"
+        style={{
+          bottom: "180px",
+          right: "480px",
+        }}
       >
-        <PlusIcon className="h-5 w-5 mr-2" />글 작성
-      </Link>
+        <Link
+          className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+          href="/api/boards/create"
+        >
+          <PlusIcon className="h-5 w-5 mr-2" />기록 작성
+        </Link>
+      </div>
     </RootLayout>
   );
 }
