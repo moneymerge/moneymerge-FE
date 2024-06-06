@@ -62,13 +62,13 @@ const Sidebar = ({ data }) => {
                   backgroundImage: `url(${
                     data
                       ? data.profileUrl
-                      : "s3://moneymerge/profile/default_profile_image.jpg"
+                      : "https://moneymerge.s3.ap-northeast-2.amazonaws.com/profile/default_profile_image.jpg"
                   })`,
                   backgroundSize: "cover",
                 }}
               />
               <div className="text-wrapper-5">
-                {data ? data.username : "Loading..."}
+                {data ? data.username : "  Loading..."}
               </div>
             </Link>
             <div className="text-wrapper-1">내 가계부</div>

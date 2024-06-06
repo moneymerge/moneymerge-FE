@@ -15,9 +15,11 @@ export default function Component() {
   const params = useParams();
   const [board, setBoard] = useState({});
   const [likes, setLikes] = useState(0);
-  const [comment, setComment] = useState();
+  const [comment, setComment] = useState({
+    content: "",
+  });
   const [commentLikes, setCommentLikes] = useState({});
-  const [editStates, setEditStates] = useState({} );
+  const [editStates, setEditStates] = useState({});
   const [editedContents, setEditedContents] = useState({});
   const [comments, setComments] = useState({});
 
@@ -29,12 +31,36 @@ export default function Component() {
 
     setEditedContents((prevEditedContents) => ({
       ...prevEditedContents,
-      [commentId]: comments.find(comment => comment.boardCommentId === commentId).content,
+      [commentId]: comments.find(
+        (comment) => comment.boardCommentId === commentId
+      ).content,
     }));
   };
 
   const handleSaveButtonClick = (commentId) => {
-    // 수정된 댓글을 서버에 저장하는 로직 구현
+    comment.content = editedContents[commentId];
+
+    fetch(
+      `http://localhost:8080/api/boards/${board.boardId}/comments/${commentId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(comment),
+        credentials: "include",
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          window.location.href = `/api/boards/${board.boardId}`;
+        } else {
+          alert("Error:" + response.status);
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating comment:", error);
+      });
 
     setEditStates((prevEditStates) => ({
       ...prevEditStates,
@@ -50,7 +76,9 @@ export default function Component() {
 
     setEditedContents((prevEditedContents) => ({
       ...prevEditedContents,
-      [commentId]: comments.find(comment => comment.boardCommentid === commentId).content,
+      [commentId]: comments.find(
+        (comment) => comment.boardCommentId === commentId
+      ).content,
     }));
   };
 
@@ -283,41 +311,68 @@ export default function Component() {
             </div>
             <div className="border-t pt-6">
               <h3 className="text-lg font-bold mb-4">댓글</h3>
+              <form className="mt-6" onSubmit={handleSubmit}>
+                <Textarea
+                  className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
+                  placeholder="댓글을 입력하세요"
+                  name="content"
+                  onChange={handleChange}
+                />
+                <div className="flex justify-end mt-2">
+                  <Button variant="outline">저장</Button>
+                </div>
+              </form>
               {board.commentGetResList &&
                 board.commentGetResList.map((comment, index) => (
                   <div className="space-y-4" key={comment.boardCommentId}>
                     {editStates[comment.boardCommentId] ? (
-                      <div>
+                      <div className="mt-6">
                         <textarea
+                          className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
+                          placeholder="댓글을 입력하세요"
+                          name="content"
                           value={editedContents[comment.boardCommentId]}
-                          onChange={(e) => handleContentChange(comment.boardCommentId, e)}
+                          onChange={(e) =>
+                            handleContentChange(comment.boardCommentId, e)
+                          }
                         />
-                        <button onClick={() => handleSaveButtonClick(comment.boardCommentId)}>
-                          저장
-                        </button>
-                        <button onClick={() => handleCancelButtonClick(comment.boardCommentId)}>
-                          취소
-                        </button>
+                        <div className="flex justify-end mt-2 gap-4">
+                          <button
+                            onClick={() =>
+                              handleSaveButtonClick(comment.boardCommentId)
+                            }
+                          >
+                            저장
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleCancelButtonClick(comment.boardCommentId)
+                            }
+                          >
+                            취소
+                          </button>
+                        </div>
                       </div>
                     ) : (
-                      <div className="flex items-start gap-4">
-                        <Link href="/api/profile">
-                          <div
-                            className="ellipse"
-                            style={{
-                              backgroundImage: `url(${
-                                comment
-                                  ? comment.profileUrl
-                                  : "s3://moneymerge/profile/default_profile_image.jpg"
-                              })`,
-                              backgroundSize: "cover",
-                            }}
-                          />
-                        </Link>
+                      <div className="gap-4 pt-4">
                         <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <div className="font-medium">
-                              {comment.username}
+                          <div className="flex justify-between">
+                            <div className="flex justify-between gap-2">
+                              <Link href="/api/profile">
+                                <div
+                                  style={{
+                                    backgroundColor: "#ffe9e9",
+                                    borderRadius: "13px",
+                                    height: "26px",
+                                    width: "26px",
+                                    backgroundImage: `url(${comment.profileUrl})`,
+                                    backgroundSize: "cover",
+                                  }}
+                                />
+                              </Link>
+                              <div className="font-medium">
+                                {comment.username}
+                              </div>
                             </div>
                             <div className="flex items-center">
                               <div className="text-sm text-gray-500  mr-4">
@@ -342,7 +397,9 @@ export default function Component() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => handleEditButtonClick(comment.boardCommentId)}
+                              onClick={() =>
+                                handleEditButtonClick(comment.boardCommentId)
+                              }
                             >
                               수정
                             </Button>
@@ -361,18 +418,6 @@ export default function Component() {
                     )}
                   </div>
                 ))}
-
-              <form className="mt-6" onSubmit={handleSubmit}>
-                <Textarea
-                  className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
-                  placeholder="댓글을 입력하세요"
-                  name="content"
-                  onChange={handleChange}
-                />
-                <div className="flex justify-end mt-2">
-                  <Button variant="outline">저장</Button>
-                </div>
-              </form>
             </div>
           </div>
         </main>
