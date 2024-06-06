@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   const handleNaverLogin = () => {
     router.push(
-      "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=http://43.203.66.36:8080/auth/naver/callback&state=test"
+      "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=http://localhost:8080/auth/naver/callback&state=test"
     );
   };
 

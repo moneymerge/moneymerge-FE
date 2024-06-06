@@ -1,3 +1,4 @@
+"use client";
 import "./global.css";
 import Sidebar from "./Sidebar";
 import Article from "./Article";

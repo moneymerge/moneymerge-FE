@@ -237,19 +237,20 @@ function BookForm() {
       },
       credentials: "include",
       body: JSON.stringify(newBook),
-    }).then((response) => {
-      console.log(response)
-      if (response.ok) {
-        window.location.reload();
-      } else if(response.status === 403) {
-        alert("모두 입력해주세요.");
-      } else {
-        alert("Error:" + response.status);
-      }
     })
-    .catch((error) => {
-      alert("Fetch error:" + error);
-    });;
+      .then((response) => {
+        console.log(response);
+        if (response.ok) {
+          window.location.reload();
+        } else if (response.status === 403) {
+          alert("모두 입력해주세요.");
+        } else {
+          alert("Error:" + response.status);
+        }
+      })
+      .catch((error) => {
+        alert("Fetch error:" + error);
+      });
   };
 
   return (
@@ -429,9 +430,7 @@ function BookForm() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">
-              Save
-            </Button>
+            <Button type="submit">Save</Button>
           </DialogFooter>
         </form>
       </DialogContent>

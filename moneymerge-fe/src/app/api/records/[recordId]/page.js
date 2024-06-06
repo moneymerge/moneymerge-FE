@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
-import RootLayout from "../../../components/layout.js";
+import RootLayout from "../../../../components/layout";
 
 export default function Component() {
   return (
