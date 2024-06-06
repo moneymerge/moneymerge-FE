@@ -1,5 +1,5 @@
-import Link from "next/link";
 import styled from "styled-components";
+import { useState, useEffect } from "react";
 
 const OverlayDiv = styled.div`
   position: absolute;
@@ -11,8 +11,16 @@ const OverlayDiv = styled.div`
 `;
 
 const Article = ({ children }) => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false); 
+    }, 0);
+  }, []);
+
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative"}}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="652"
@@ -57,7 +65,7 @@ const Article = ({ children }) => {
           transform="matrix(.73109 -.68228 .83573 .54914 601.284 30.706)"
         />
       </svg>
-      <OverlayDiv>{children}</OverlayDiv>
+      <OverlayDiv style={{ visibility: loading ? 'hidden' : 'visible' }}>{children}</OverlayDiv>
     </div>
   );
 };

@@ -24,7 +24,7 @@ const Footer = ({ data }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include", // 쿠키를 포함하여 요청
+      credentials: "include",
     })
       .then((result) => result.json())
       .then((result) => {

@@ -9,16 +9,23 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
-import RootLayout from "../../../../components/layout.js";
-import { useState } from "react";
+import RootLayout from "../../../../../components/layout.js";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
 export default function Component() {
-  const [board, setBoard] = useState({
-    title: "",
-    content: "",
-    boardType: "",
-  });
-  const [file, setFile] = useState(null);
+  const params = useParams();
+  const [ board, setBoard ] = useState({});
+  const [ file, setFile ] = useState(null);
+
+  // 해당 게시글 데이터 가져오기
+  useEffect(() => {
+    fetch(`http://localhost:8080/api/boards/${params.boardId}`)
+      .then((result) => result.json())
+      .then((result) => {
+        setBoard(result.data);
+      });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,14 +59,14 @@ export default function Component() {
     let formData = new FormData();
     formData.append("title", board.title);
     formData.append("content", board.content);
-    console.log(board.boardType)
-    formData.append("boardType", board.boardType);
+    console.log(board.boardType);
+    formData.append("boardType", mapBoardType(board.boardType));
     if (file) {
-      formData.append('multipartFile', file);
+      formData.append("multipartFile", file);
     }
 
-    fetch("http://localhost:8080/api/boards", {
-      method: "POST",
+    fetch(`http://localhost:8080/api/boards/${board.boardId}`, {
+      method: "PUT",
       credentials: "include",
       body: formData,
     })
@@ -78,6 +85,20 @@ export default function Component() {
       });
   };
 
+  const mapBoardType = (originalType) => {
+    switch (originalType) {
+      case "자유":
+        return "FREE";
+      case "정보나눔":
+        return "INFORMATION";
+      case "인증":
+        return "CERTIFICATION";
+
+      default:
+        return originalType;
+    }
+  };
+
   return (
     <RootLayout>
       <div className="bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
@@ -90,7 +111,7 @@ export default function Component() {
           <div className="fixed flex items-center gap-4">
             <Link className="flex items-center gap-2" href="/api/boards">
               <ArrowLeftIcon className="h-5 w-5" />
-              <h1 className="text-2xl font-bold">게시글 작성</h1>
+              <h1 className="text-2xl font-bold">게시글 수정</h1>
             </Link>
           </div>
         </div>
@@ -102,7 +123,7 @@ export default function Component() {
             <div className="flex items-center gap-4">
               <select
                 name="boardType"
-                value={board.boardType}
+                value={mapBoardType(board.boardType)} 
                 onChange={(e) => handleChange(e)}
               >
                 <option value="">게시판 종류</option>
@@ -119,6 +140,7 @@ export default function Component() {
                   id="title"
                   placeholder="제목을 입력하세요"
                   name="title"
+                  value={board.title}
                   onChange={handleChange}
                 />
               </div>
@@ -130,6 +152,7 @@ export default function Component() {
                 placeholder="내용을 입력하세요"
                 rows={7}
                 name="content"
+                value={board.content}
                 onChange={handleChange}
               />
             </div>
@@ -144,12 +167,17 @@ export default function Component() {
                   height: "35px",
                 }}
               />
+              {board.image && (
+                <div>
+                  <img src={board.image} alt="File Preview" style={{ maxWidth: '200px', maxHeight: '200px' }} />
+                </div>
+              )}
             </div>
             <div className="flex justify-center gap-4">
-              <Link href="/api/boards">
+              <Link href={`/api/boards/${board.boardId}`}>
                 <Button variant="outline">취소</Button>
               </Link>
-              <Button>저장</Button>
+              <Button>수정</Button>
             </div>
           </form>
         </main>

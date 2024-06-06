@@ -6,136 +6,373 @@
  */
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import RootLayout from "../../../../components/layout.js";
-
-// import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function Component() {
-  // const [boards, setBoards] = useState([]);
-  // //const boards = [{boardId : 1, boardType : "INFORMATION", title : "제목1", content : "내용1", image : "#", userId : 1, username : "홍길동", createdAt: "2024-05-21T17:24:54.391282", modifiedAt: "2024-05-21T17:44:56.058967", likes: 1, commentGetResList : []}];
-  // useEffect(() => {
-  //   fetch("http://localhost:8080/api/boards")
-  //     .then((result) => result.json())
-  //     .then((result) => setBoards(result.data));
-  // }, []);
+  const params = useParams();
+  const [board, setBoard] = useState({});
+  const [likes, setLikes] = useState(0);
+  const [comment, setComment] = useState();
+  const [commentLikes, setCommentLikes] = useState({});
+  const [editStates, setEditStates] = useState({} );
+  const [editedContents, setEditedContents] = useState({});
+  const [comments, setComments] = useState({});
+
+  const handleEditButtonClick = (commentId) => {
+    setEditStates((prevEditStates) => ({
+      ...prevEditStates,
+      [commentId]: true,
+    }));
+
+    setEditedContents((prevEditedContents) => ({
+      ...prevEditedContents,
+      [commentId]: comments.find(comment => comment.boardCommentId === commentId).content,
+    }));
+  };
+
+  const handleSaveButtonClick = (commentId) => {
+    // 수정된 댓글을 서버에 저장하는 로직 구현
+
+    setEditStates((prevEditStates) => ({
+      ...prevEditStates,
+      [commentId]: false,
+    }));
+  };
+
+  const handleCancelButtonClick = (commentId) => {
+    setEditStates((prevEditStates) => ({
+      ...prevEditStates,
+      [commentId]: false,
+    }));
+
+    setEditedContents((prevEditedContents) => ({
+      ...prevEditedContents,
+      [commentId]: comments.find(comment => comment.boardCommentid === commentId).content,
+    }));
+  };
+
+  const handleContentChange = (commentId, e) => {
+    setEditedContents((prevEditedContents) => ({
+      ...prevEditedContents,
+      [commentId]: e.target.value,
+    }));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setComment({ [name]: value });
+    console.log(comment);
+  };
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/api/boards/${params.boardId}`)
+      .then((result) => result.json())
+      .then((result) => {
+        setBoard(result.data);
+        setLikes(result.data.likes);
+        console.log(result.data);
+        if (result.data.commentGetResList) {
+          const initialLikes = result.data.commentGetResList.reduce(
+            (acc, comment) => {
+              acc[comment.boardCommentId] = comment.likes;
+              return acc;
+            },
+            {}
+          );
+          const initialComments = result.data.commentGetResList.reduce(
+            (acc, comment) => {
+              acc[comment.boardCommentId] = comment.content;
+              return acc;
+            },
+            {}
+          );
+          setCommentLikes(initialLikes);
+          setEditedContents(initialComments);
+          setComments(result.data.commentGetResList);
+        }
+      });
+  }, []);
+
+  const HandleBoardLikeClick = () => {
+    console.log(board.boardId);
+    if (board !== null) {
+      fetch(`http://localhost:8080/api/boards/${board.boardId}/likes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+        .then((result) => result.json())
+        .then((result) => {
+          if (result.data) {
+            setLikes(result.data.likes);
+            console.log(likes);
+          }
+        })
+        .catch((error) => {
+          console.error("Error clicking receipt like button:", error);
+        });
+    }
+  };
+
+  const handleDeleteClick = () => {
+    const confirmDelete = window.confirm("게시물을 삭제하시겠습니까?");
+
+    if (confirmDelete) {
+      fetch(`http://localhost:8080/api/boards/${board.boardId}`, {
+        method: "DELETE",
+        credentials: "include",
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.ok) {
+            window.location.href = `/api/boards`;
+          } else {
+            alert("Error:" + response.status + "\n" + response.message);
+          }
+        })
+        .catch((error) => {
+          alert("Fetch error:" + error);
+        });
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (comment.content === "" || /^\s+$/.test(comment.content)) {
+      alert("내용을 입력해주세요.");
+      return;
+    }
+
+    fetch(`http://localhost:8080/api/boards/${board.boardId}/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(comment),
+    })
+      .then((response) => {
+        console.log(response);
+        if (response.ok) {
+          window.location.href = `/api/boards/${board.boardId}`;
+        } else {
+          alert("Error:" + response.status);
+        }
+      })
+      .catch((error) => {
+        alert("Fetch error:" + error);
+      });
+  };
+
+  const HandleCommentLikeClick = (commentId) => {
+    if (commentId !== null) {
+      fetch(
+        `http://localhost:8080/api/boards/${board.boardId}/comments/${commentId}/likes`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
+        .then((result) => result.json())
+        .then((result) => {
+          if (result.data) {
+            setCommentLikes((prevLikes) => ({
+              ...prevLikes,
+              [commentId]: result.data.likes,
+            }));
+            console.log(likes);
+          }
+        })
+        .catch((error) => {
+          console.error("Error clicking receipt like button:", error);
+        });
+    }
+  };
+
+  const handleCommentDeleteClick = (commentId) => {
+    const confirmDelete = window.confirm("댓글을 삭제하시겠습니까?");
+
+    if (confirmDelete) {
+      fetch(
+        `http://localhost:8080/api/boards/${board.boardId}/comments/${commentId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      )
+        .then((response) => {
+          console.log(response);
+          if (response.ok) {
+            window.location.href = `/api/boards/${board.boardId}`;
+          } else {
+            alert("Error:" + response.status + "\n" + response.message);
+          }
+        })
+        .catch((error) => {
+          alert("Fetch error:" + error);
+        });
+    }
+  };
 
   return (
     <RootLayout>
       <div className="bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
+        <div
+          className="fixed pt-4 px-4 flex items-center justify-between"
+          style={{
+            top: "200px",
+          }}
+        >
+          <div className="fixed flex items-center gap-4">
+            <Link className="flex items-center gap-2" href="/api/boards">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold">커뮤니티</h1>
+            </Link>
+          </div>
+        </div>
         <main>
           <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold">새로운 기능 업데이트</h2>
+                <h2 className="text-2xl font-bold">{board.title}</h2>
                 <p className="text-sm text-gray-500">
-                  공지사항 | 작성자: 관리자 | 2023-05-26
+                  {board.boardType} 게시판 | 작성자: {board.author} |{" "}
+                  {board.createdAt}
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline">
+                <Button variant="outline" onClick={HandleBoardLikeClick}>
                   <HeartIcon className="h-5 w-5 mr-2" />
-                  <span className="ml-2">10</span>
+                  <span className="ml-2">{likes}</span>
                 </Button>
               </div>
             </div>
+            {board.image && (
+              <div
+                style={{
+                  width: "550px",
+                  height: "200px",
+                  backgroundImage: `url(${board.image})`,
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                }}
+              ></div>
+            )}
             <div className="prose prose-gray">
-              <p>새로운 기능이 추가되었습니다. 사용자 경험이 향상되었습니다.</p>
-              <p>이번 업데이트를 통해 다음과 같은 기능이 추가되었습니다:</p>
-              <ul>
-                <li>기능 A</li>
-                <li>기능 B</li>
-                <li>기능 C</li>
-              </ul>
-              <p>
-                앞으로도 지속적인 업데이트를 통해 더 나은 서비스를
-                제공하겠습니다.
-              </p>
+              <p>{board.content}</p>
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline">수정</Button>
-              <Button variant="outline">삭제</Button>
+              <Link href={`/api/boards/${board.boardId}/edit`}>
+                <Button size="sm" variant="outline">
+                  수정
+                </Button>
+              </Link>
+              <Button variant="outline" onClick={handleDeleteClick}>
+                삭제
+              </Button>
             </div>
             <div className="border-t pt-6">
               <h3 className="text-lg font-bold mb-4">댓글</h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <Avatar className="w-10 h-10 border">
-                    <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
-                    <AvatarFallback>AC</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div className="font-medium">John Doe</div>
-                      <div className="flex items-center">
-                        <div className="text-sm text-gray-500  mr-4">
-                          2023-05-26
-                        </div>
-                        <Button size="sm" variant="outline">
-                          <HeartIcon className="h-4 w-4" />
-                          <span className="ml-2">10</span>
-                        </Button>
+              {board.commentGetResList &&
+                board.commentGetResList.map((comment, index) => (
+                  <div className="space-y-4" key={comment.boardCommentId}>
+                    {editStates[comment.boardCommentId] ? (
+                      <div>
+                        <textarea
+                          value={editedContents[comment.boardCommentId]}
+                          onChange={(e) => handleContentChange(comment.boardCommentId, e)}
+                        />
+                        <button onClick={() => handleSaveButtonClick(comment.boardCommentId)}>
+                          저장
+                        </button>
+                        <button onClick={() => handleCancelButtonClick(comment.boardCommentId)}>
+                          취소
+                        </button>
                       </div>
-                    </div>
-                    <p className="mt-2">
-                      Great update! I'm excited to try out the new features.
-                    </p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Button size="sm" variant="outline">
-                        <DeleteIcon className="h-4 w-4 mr-2" />
-                        수정
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Trash2Icon className="h-4 w-4 mr-2" />
-                        삭제
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Avatar className="w-10 h-10 border">
-                    <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div className="font-medium">Jane Doe</div>
-                      <div className="flex items-center">
-                        <div className="text-sm text-gray-500 mr-4">
-                          2023-05-27
+                    ) : (
+                      <div className="flex items-start gap-4">
+                        <Link href="/api/profile">
+                          <div
+                            className="ellipse"
+                            style={{
+                              backgroundImage: `url(${
+                                comment
+                                  ? comment.profileUrl
+                                  : "s3://moneymerge/profile/default_profile_image.jpg"
+                              })`,
+                              backgroundSize: "cover",
+                            }}
+                          />
+                        </Link>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <div className="font-medium">
+                              {comment.username}
+                            </div>
+                            <div className="flex items-center">
+                              <div className="text-sm text-gray-500  mr-4">
+                                {comment.createdAt}
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  HandleCommentLikeClick(comment.boardCommentId)
+                                }
+                              >
+                                <HeartIcon className="h-4 w-4" />
+                                <span className="ml-2">
+                                  {commentLikes[comment.boardCommentId]}
+                                </span>
+                              </Button>
+                            </div>
+                          </div>
+                          <p className="mt-2">{comment.content}</p>
+                          <div className="flex items-center gap-2 mt-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleEditButtonClick(comment.boardCommentId)}
+                            >
+                              수정
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                handleCommentDeleteClick(comment.boardCommentId)
+                              }
+                            >
+                              삭제
+                            </Button>
+                          </div>
                         </div>
-                        <Button size="sm" variant="outline">
-                          <HeartIcon className="h-4 w-4" />
-                          <span className="ml-2">10</span>
-                        </Button>
                       </div>
-                    </div>
-                    <p className="mt-2">
-                      Awesome, can't wait to see what else is in store!
-                    </p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Button size="sm" variant="outline">
-                        <DeleteIcon className="h-4 w-4 mr-2" />
-                        수정
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Trash2Icon className="h-4 w-4 mr-2" />
-                        삭제
-                      </Button>
-                    </div>
+                    )}
                   </div>
-                </div>
-              </div>
-              <div className="mt-6">
+                ))}
+
+              <form className="mt-6" onSubmit={handleSubmit}>
                 <Textarea
                   className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
-                  placeholder="Write your comment..."
+                  placeholder="댓글을 입력하세요"
+                  name="content"
+                  onChange={handleChange}
                 />
                 <div className="flex justify-end mt-2">
-                  <Button variant="outline">Submit</Button>
+                  <Button variant="outline">저장</Button>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </main>
@@ -164,27 +401,6 @@ function ArrowLeftIcon(props) {
   );
 }
 
-function DeleteIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z" />
-      <line x1="18" x2="12" y1="9" y2="15" />
-      <line x1="12" x2="18" y1="9" y2="15" />
-    </svg>
-  );
-}
-
 function HeartIcon(props) {
   return (
     <svg
@@ -200,29 +416,6 @@ function HeartIcon(props) {
       strokeLinejoin="round"
     >
       <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-    </svg>
-  );
-}
-
-function Trash2Icon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 6h18" />
-      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-      <line x1="10" x2="10" y1="11" y2="17" />
-      <line x1="14" x2="14" y1="11" y2="17" />
     </svg>
   );
 }

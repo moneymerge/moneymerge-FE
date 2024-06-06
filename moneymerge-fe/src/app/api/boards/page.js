@@ -34,7 +34,7 @@ export default function Component() {
   const [boardType, setBoardType] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [range, setRange] = useState(null);
+
 
   useEffect(() => {
     let url = "http://localhost:8080/api/boards";
@@ -80,6 +80,19 @@ export default function Component() {
         {/* <header className="px-6 mt-[-40px] items-center justify-between">
           <h1 className="text-2 font-bold">게시판</h1>
         </header> */}
+        <div
+          className="fixed pt-4 px-4 flex items-center justify-between"
+          style={{
+            top: "200px",
+          }}
+        >
+          <div className="fixed flex items-center gap-4">
+            <Link className="flex items-center gap-2" href="/">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold">커뮤니티</h1>
+            </Link>
+          </div>
+        </div>
         <main>
           <div className="max-w-6xl mx-auto bg-white rounded-lg  p-8 space-y-6">
             {/* <div className="flex flex-col items-center justify-between"> */}
@@ -232,7 +245,7 @@ export default function Component() {
                         <td className="px-4 py-3 text-xs">{row.createdAt}</td>
                         <td className="px-4 py-3 text-xs">{row.likes}</td>
                         <td className="px-4 py-3 text-xs">
-                          {row.commentGetResList.length}
+                          {row.comments}
                         </td>
                       </tr>
                     ))}
@@ -272,7 +285,10 @@ export default function Component() {
             </div>
           </div>
         </main>
-        <div className="fixed bottom-8 right-8">
+        <div className="fixed" style={{
+          bottom: "180px",
+          right: "480px"
+        }}>
           <Link
             className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
             href="/api/boards/create"
