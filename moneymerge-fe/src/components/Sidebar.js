@@ -17,12 +17,8 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { SketchPicker } from "react-color";
 
-const Sidebar = ({ data, bookIdProp }) => {
+const Sidebar = ({ data }) => {
   const router = useRouter();
-  const [bookId, setBookId] = useState(null);
-  const func = () => {
-    bookIdProp(bookId);
-  };
 
   const handleLogout = async () => {
     try {
@@ -81,16 +77,9 @@ const Sidebar = ({ data, bookIdProp }) => {
               {data &&
                 data.bookList.map((book, index) => (
                   <div key={index} className="book-wrapper">
-                    <Link
-                      href={`/api/books/${book.bookId}`}
-                      onClick={(e) => {
-                        setBookId(book.bookId);
-                      }}
-                    >
-                      {/* <div>{bookId}!!!</div> */}
+                    <Link href={`/api/books/${book.bookId}`}>
                       <div className="book-check" />
                     </Link>
-
                     <div className="text-wrapper">{book.bookTitle}</div>
                   </div>
                 ))}
