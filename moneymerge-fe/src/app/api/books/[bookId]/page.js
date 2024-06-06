@@ -21,8 +21,10 @@ import koLocale from "@fullcalendar/core/locales/ko";
 import "../../books/book.css";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Component() {
+  const router = useRouter();
   const [events, setEvents] = useState([]);
   const bookId = 1;
   const [year, setYear] = useState(new Date().getFullYear());
@@ -64,6 +66,14 @@ export default function Component() {
       });
   }, [year, month]);
 
+  const handleEventClick = (clickInfo) => {
+    const recordId = clickInfo.event.id;
+    router.push(`/api/records/${recordId}`);
+  };
+  const handleDateClick = () => {
+    // 모달
+  };
+
   return (
     <RootLayout>
       <FullCalendar
@@ -74,8 +84,8 @@ export default function Component() {
         dayCellContent={(e) => e.dayNumberText.replace("일", "")} // 날짜 형식 변경
         timeFormat=""
         events={events} // 캘린더에 표시할 이벤트 데이터를 정의합니다.
-        // dateClick={handleDateClick} // 날짜를 클릭했을 때 실행할 콜백 함수를 정의합니다.
-        // eventClick={handleEventClick} // 이벤트를 클릭했을 때 실행할 콜백 함수를 정의합니다.
+        dateClick={handleDateClick} // 날짜를 클릭했을 때 실행할 콜백 함수를 정의합니다.
+        eventClick={handleEventClick} // 이벤트를 클릭했을 때 실행할 콜백 함수를 정의합니다.
         editable={true} // 이벤트의 드래그 앤 드롭, 리사이징, 이동을 허용합니다.
         droppable={true} // 캘린더에 요소를 드롭하여 이벤트를 생성할 수 있도록 허용합니다.
         selectable={true} // 사용자가 일정 범위를 선택하여 이벤트를 추가할 수 있도록 허용합니다.
