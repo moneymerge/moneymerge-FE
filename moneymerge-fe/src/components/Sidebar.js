@@ -68,7 +68,7 @@ const Sidebar = ({ data }) => {
                 }}
               />
               <div className="text-wrapper-5">
-                {data ? data.username : "  Loading..."}
+                {data ? data.username : "로그인 해주세요."}
               </div>
             </Link>
             <div className="text-wrapper-1">내 가계부</div>

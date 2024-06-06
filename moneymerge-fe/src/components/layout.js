@@ -59,7 +59,7 @@ function RootLayout({ children }) {
           </div>
           {/* 메인 Article */}
           <div className="flex-grow-[2.5] m-[auto] relative">
-            <Article>{children}</Article>
+            <Article data={userData}>{children}</Article>
           </div>
           {/* 푸터 */}
           <div className="flex-grow-[1]" style={{ marginRight: "20px" }}>

@@ -10,6 +10,14 @@ import { Textarea } from "@/components/ui/textarea";
 import RootLayout from "../../../../components/layout.js";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import {
+  DialogTrigger,
+  DialogTitle,
+  DialogHeader,
+  DialogFooter,
+  DialogContent,
+  Dialog,
+} from "@/components/ui/dialog";
 
 export default function Component() {
   const params = useParams();
@@ -22,6 +30,41 @@ export default function Component() {
   const [editStates, setEditStates] = useState({});
   const [editedContents, setEditedContents] = useState({});
   const [comments, setComments] = useState({});
+  const [profile, setProfile] = useState(null);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        console.log("Received user data:", result.data);
+        setUserData(result.data);
+        console.log(result.data);
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  }, []);
+
+  const fetchUserProfile = (userId) => {
+    console.log(userId);
+    fetch(`http://localhost:8080/api/users/${userId}`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        setProfile(result.data);
+        console.log(profile);
+      })
+      .catch((error) => {
+        console.error("Error fetching profile data:", error);
+      });
+  };
 
   const handleEditButtonClick = (commentId) => {
     setEditStates((prevEditStates) => ({
@@ -299,16 +342,19 @@ export default function Component() {
             <div className="prose prose-gray">
               <p>{board.content}</p>
             </div>
-            <div className="flex justify-end gap-2">
-              <Link href={`/api/boards/${board.boardId}/edit`}>
-                <Button size="sm" variant="outline">
-                  수정
+            {userData && board.userId === userData.userId && (
+              <div className="flex justify-end gap-2">
+                <Link href={`/api/boards/${board.boardId}/edit`}>
+                  <Button size="sm" variant="outline">
+                    수정
+                  </Button>
+                </Link>
+                <Button variant="outline" onClick={handleDeleteClick}>
+                  삭제
                 </Button>
-              </Link>
-              <Button variant="outline" onClick={handleDeleteClick}>
-                삭제
-              </Button>
-            </div>
+              </div>
+            )}
+
             <div className="border-t pt-6">
               <h3 className="text-lg font-bold mb-4">댓글</h3>
               <form className="mt-6" onSubmit={handleSubmit}>
@@ -336,6 +382,7 @@ export default function Component() {
                             handleContentChange(comment.boardCommentId, e)
                           }
                         />
+
                         <div className="flex justify-end mt-2 gap-4">
                           <button
                             onClick={() =>
@@ -358,18 +405,101 @@ export default function Component() {
                         <div className="flex-1">
                           <div className="flex justify-between">
                             <div className="flex justify-between gap-2">
-                              <Link href="/api/profile">
-                                <div
+                              <Dialog>
+                                <DialogTrigger>
+                                  <div
+                                    onClick={() =>
+                                      fetchUserProfile(comment.userId)
+                                    }
+                                    style={{
+                                      backgroundColor: "#ffe9e9",
+                                      borderRadius: "13px",
+                                      height: "26px",
+                                      width: "26px",
+                                      backgroundImage: `url(${comment.profileUrl})`,
+                                      backgroundSize: "cover",
+                                    }}
+                                  />
+                                </DialogTrigger>
+                                <DialogContent
                                   style={{
-                                    backgroundColor: "#ffe9e9",
-                                    borderRadius: "13px",
-                                    height: "26px",
-                                    width: "26px",
-                                    backgroundImage: `url(${comment.profileUrl})`,
-                                    backgroundSize: "cover",
+                                    width: "450px",
+                                    height: "500px",
+                                    border: "1px solid black",
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                                   }}
-                                />
-                              </Link>
+                                >
+                                  <DialogHeader
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    <DialogTitle
+                                      style={{
+                                        fontSize: "20px",
+                                        paddingTop: "20px",
+                                      }}
+                                    >
+                                      Profile
+                                    </DialogTitle>
+                                  </DialogHeader>
+                                  {profile && (
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        gap: "40px",
+                                      }}
+                                    >
+                                      <div
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                          alignItems: "center",
+                                          gap: "10px",
+                                        }}
+                                      >
+                                        <div
+                                          style={{
+                                            backgroundColor: "#ffe9e9",
+                                            borderRadius: "100px",
+                                            height: "200px",
+                                            width: "200px",
+                                            backgroundImage: `url(${profile.profileUrl})`,
+                                            backgroundSize: "cover",
+                                          }}
+                                        />
+                                        {profile.username}
+                                      </div>
+                                      <div
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "row",
+                                          alignItems: "center",
+                                          gap: "10px",
+                                        }}
+                                      >
+                                        <div>
+                                          소유 캐릭터: {profile.characterName}
+                                        </div>
+                                        <div
+                                          style={{
+                                            backgroundColor: "#ffe9e9",
+                                            borderRadius: "25px",
+                                            height: "50px",
+                                            width: "50px",
+                                            backgroundImage: `url(${profile.characterImage})`,
+                                            backgroundSize: "cover",
+                                          }}
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                                </DialogContent>
+                              </Dialog>
                               <div className="font-medium">
                                 {comment.username}
                               </div>
@@ -393,26 +523,30 @@ export default function Component() {
                             </div>
                           </div>
                           <p className="mt-2">{comment.content}</p>
-                          <div className="flex items-center gap-2 mt-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() =>
-                                handleEditButtonClick(comment.boardCommentId)
-                              }
-                            >
-                              수정
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() =>
-                                handleCommentDeleteClick(comment.boardCommentId)
-                              }
-                            >
-                              삭제
-                            </Button>
-                          </div>
+                          {userData && userData.userId === comment.userId && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleEditButtonClick(comment.boardCommentId)
+                                }
+                              >
+                                수정
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleCommentDeleteClick(
+                                    comment.boardCommentId
+                                  )
+                                }
+                              >
+                                삭제
+                              </Button>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
