@@ -23,28 +23,46 @@ import "../../books/book.css";
 import { useState, useEffect } from "react";
 
 export default function Component() {
-  // const [records, setRecords] = useState([]);
-  // const [currentDate, setCurrentDate] = useState({
-  //   year: new Date().getFullYear(),
-  //   month: new Date().getMonth() + 1,
-  // });
+  const [events, setEvents] = useState([]);
+  const bookId = 1;
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
 
-  // const fetchEvents = async (year, month) => {
-  //   const url = `http://localhost:8080/api/books/1/records/${year}/${month}`;
-  //   const result = await fetch(url);
-  //   const data = await result.json();
-  //   setRecords(data.data);
-  // };
-
-  // useEffect(() => {
-  //   fetchEvents(currentDate.year, currentDate.month);
-  // }, [currentDate]);
-
-  // const handleDatesSet = (dateInfo) => {
-  //   const year = dateInfo.start.getFullYear();
-  //   const month = dateInfo.start.getMonth() + 1; // 월은 0부터 시작하므로 +1
-  //   setCurrentDate({ year, month });
-  // };
+  useEffect(() => {
+    // Fetch data from the backend
+    // let url = "http://localhost:8080/api/books/1/records/2024/5";
+    let url = `http://localhost:8080/api/books/${bookId}/records/${year}/${
+      month + 1
+    }`;
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // 쿠키를 포함하여 요청
+    })
+      .then((result) => {
+        if (!result.ok) {
+          throw new Error("Failed to fetch events");
+        }
+        return result.json();
+      })
+      .then((result) => {
+        if (result.data && result.data.length > 0) {
+          const eventList = result.data.map((record) => ({
+            id: record.recordId,
+            title: `${record.userId}번 ${record.amount}`,
+            start: `${record.date}T00:00:00`, //'2024-03-12T21:00:00',
+          }));
+          setEvents(eventList);
+        } else {
+          console.error("No data returned from the server");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching events:", error);
+      });
+  }, [year, month]);
 
   return (
     <RootLayout>
@@ -54,22 +72,8 @@ export default function Component() {
         locale="ko"
         // dayHeaderFormat={{ weekday: "short" }} // 요일 형식 지정
         dayCellContent={(e) => e.dayNumberText.replace("일", "")} // 날짜 형식 변경
-        events={[
-          {
-            id: 1,
-            title: "방청소",
-            start: "2024-03-10T09:00:00",
-            end: "2024-03-10T12:00:00",
-            allDay: false,
-          },
-          {
-            id: 2,
-            title: "저녁 약속",
-            start: "2024-03-12T18:00:00",
-            end: "2024-03-12T21:00:00",
-            allDay: false,
-          },
-        ]} // 캘린더에 표시할 이벤트 데이터를 정의합니다.
+        timeFormat=""
+        events={events} // 캘린더에 표시할 이벤트 데이터를 정의합니다.
         // dateClick={handleDateClick} // 날짜를 클릭했을 때 실행할 콜백 함수를 정의합니다.
         // eventClick={handleEventClick} // 이벤트를 클릭했을 때 실행할 콜백 함수를 정의합니다.
         editable={true} // 이벤트의 드래그 앤 드롭, 리사이징, 이동을 허용합니다.
@@ -77,14 +81,19 @@ export default function Component() {
         selectable={true} // 사용자가 일정 범위를 선택하여 이벤트를 추가할 수 있도록 허용합니다.
         selectMirror={true} // 이벤트를 추가할 때 선택한 영역을 표시합니다.
         nowIndicator={true} // 현재 시간을 표시하는 인디케이터를 활성화합니다.
-        eventBackgroundColor="#ff0000" // 이벤트의 배경색을 설정합니다.
-        eventBorderColor="#0000ff" // 이벤트의 테두리 색을 설정합니다.
-        allDay={true} // 이벤트가 하루 종일인지 여부를 지정합니다.
+        eventBackgroundColor="#ffff00" // 이벤트의 배경색을 설정합니다.
+        // eventBorderColor="#0000ff" // 이벤트의 테두리 색을 설정합니다.
+        allDay={false} // 이벤트가 하루 종일인지 여부를 지정합니다.
         timeZone="UTC" // 캘린더의 시간대를 UTC로 설정합니다.
         headerToolbar={{
           left: "",
           center: "prevYear,prev,title,next,nextYear",
           right: "today",
+        }}
+        datesSet={(arg) => {
+          // 표시된 년도와 월을 useState로 설정합니다.
+          setYear(arg.start.getFullYear());
+          setMonth(arg.start.getMonth() + 1);
         }}
       />
     </RootLayout>

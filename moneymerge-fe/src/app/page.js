@@ -10,7 +10,7 @@ export default function Home() {
   useEffect(() => {
     console.log("useEffect called"); // 디버깅을 위한 콘솔 로그
     // fetch(`http://43.203.66.36:8080/api/boards/${params.boardId}`)
-    fetch(`http://43.203.66.36:8080/api/boards/1`)
+    fetch(`http://localhost:8080/api/boards/2`)
       .then((result) => result.json())
       .then((result) => setBoard(result.data));
   }, []);
