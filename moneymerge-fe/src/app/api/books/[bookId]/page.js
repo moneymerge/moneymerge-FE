@@ -21,12 +21,14 @@ import koLocale from "@fullcalendar/core/locales/ko";
 import "../../books/book.css";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 export default function Component() {
   const router = useRouter();
+  const params = useParams();
+  console.log(params);
   const [events, setEvents] = useState([]);
-  const bookId = 1;
+  const bookId = params.bookId;
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
 
@@ -68,7 +70,7 @@ export default function Component() {
 
   const handleEventClick = (clickInfo) => {
     const recordId = clickInfo.event.id;
-    router.push(`/api/records/${recordId}`);
+    router.push(`/api/books/${bookId}/records/${recordId}`);
   };
   const handleDateClick = () => {
     // 모달
@@ -109,9 +111,10 @@ export default function Component() {
 
       <Link
         className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-        href="/api/boards/create"
+        href={`/api/books/${params.bookId}/records/create`}
       >
-        <PlusIcon className="h-5 w-5 mr-2" />글 작성
+        <PlusIcon className="h-5 w-5 mr-2" />
+        레코드 작성
       </Link>
     </RootLayout>
   );
