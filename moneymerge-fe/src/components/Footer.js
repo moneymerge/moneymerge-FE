@@ -109,7 +109,7 @@ const Footer = ({ data }) => {
               backgroundImage: `url(${
                 character
                   ? character.image
-                  : "https://moneymerge.s3.ap-northeast-2.amazonaws.com/profile/default_profile_image.jpg"
+                  : "https://moneymerge.s3.ap-northeast-2.amazonaws.com/character/%EC%84%9C%EC%9E%88%EB%8A%94%EC%88%AD%EC%9D%B4.png"
               })`,
               backgroundSize: "cover",
               backgroundPosition: "center",
