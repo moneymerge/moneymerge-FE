@@ -52,10 +52,10 @@ export default function Component() {
     let formData = new FormData();
     formData.append("title", board.title);
     formData.append("content", board.content);
-    console.log(board.boardType)
+    console.log(board.boardType);
     formData.append("boardType", board.boardType);
     if (file) {
-      formData.append('multipartFile', file);
+      formData.append("multipartFile", file);
     }
 
     fetch("http://localhost:8080/api/boards", {
