@@ -1,97 +1,205 @@
-"use client"
+"use client";
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/99Qgkbq6jqE
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 import { Button } from "@/components/ui/button";
-import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
 import Link from "next/link";
 import RootLayout from "../../../components/layout.js";
+import { useState, useEffect } from "react";
+import {
+  PaginationPrevious,
+  PaginationNext,
+  PaginationItem,
+  PaginationLink,
+  PaginationContent,
+  Pagination,
+} from "@/components/ui/pagination";
 
 export default function Component() {
+  const [character, setCharacter] = useState({});
+  const [point, setPoint] = useState(0);
+  const [pointLog, setPointLog] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/users/character", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        console.log("Received character data:", result.data);
+        setCharacter(result.data);
+      })
+      .catch((error) => console.error("Error fetching character data:", error));
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/users/point", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        console.log("Received point data:", result.data);
+        setPoint(result.data.points);
+      })
+      .catch((error) => console.error("Error fetching point data:", error));
+  }, []);
+
+  useEffect(() => {
+    let url = "http://localhost:8080/api/points";
+
+    if (currentPage) {
+      url += `?page=${currentPage}`;
+    }
+
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        console.log(result.data);
+        setPointLog(result.data.content);
+        setTotalPages(result.data.totalPages);
+      });
+  }, [currentPage]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   return (
     <RootLayout>
-      <div className="flex flex-col items-center justify-center h-screen">
-        <div className="relative w-[300px] h-[450px] rounded-full overflow-hidden">
-          <img
-            alt="Business Icon"
-            className="object-cover w-full h-full"
-            height={450}
-            src="/placeholder.svg"
-            style={{
-              aspectRatio: "300/500",
-              objectFit: "cover",
-            }}
-            width={300}
-          />
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <RocketIcon className="text-white w-20 h-20" />
+      <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto items-center">
+        <div className="px-4 flex items-center justify-between">
+          <div
+            className="flex items-center gap-4"
+            style={{ position: "absolute", top: "-45px" }}
+          >
+            <Link className="flex items-center gap-2" href="/api/boards">
+              <h1 className="text-2xl font-bold w-[100px]">내 포인트</h1>
+            </Link>
           </div>
         </div>
-
-        <div
-          className="flex w-full justify-center gap-4"
-          style={{ marginTop: 40 }}
+        <main
+          style={{
+            height: "432px",
+            width: "100%",
+          }}
         >
-          <p style={{ marginTop: 5 }}>내 캐릭터: 곰돌쓰</p>
-          <Link className="flex items-center gap-2" href="/api/characters/1">
-            <Button size="sm" variant="outline">
-              변경
-            </Button>
-          </Link>
-          <Link
-            className="flex items-center gap-2"
-            href="/api/characters/shop/1"
+          <div className="flex w-full justify-center">
+            <img
+              className="w-[200px] h-[200px] rounded-full mt-4"
+              src={character.image}
+            />
+          </div>
+          <div
+            className="flex w-full justify-center gap-4"
+            style={{ marginTop: 40 }}
           >
-            <Button size="sm" variant="outline">
-              구매
-            </Button>
-          </Link>
-        </div>
-        <div>내 포인트: 100 P</div>
-
-        <div className="mt-8 w-full max-w-4xl">
-          <Card>
-            <CardHeader>
-              <CardTitle>Point Usage History</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <PlusIcon className="text-green-500 w-5 h-5" />
-                  <div className="font-medium">Point Earned</div>
-                  <div className="text-sm text-gray-500">2023-04-15</div>
-                </div>
-                <div className="font-medium text-green-500">+500 pts</div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <MinusIcon className="text-red-500 w-5 h-5" />
-                  <div className="font-medium">Point Used</div>
-                  <div className="text-sm text-gray-500">2023-05-01</div>
-                </div>
-                <div className="font-medium text-red-500">-200 pts</div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <ClockIcon className="text-gray-500 w-5 h-5" />
-                  <div className="font-medium">Point Expired</div>
-                  <div className="text-sm text-gray-500">2023-06-30</div>
-                </div>
-                <div className="font-medium text-gray-500">-50 pts</div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <PlusIcon className="text-green-500 w-5 h-5" />
-                  <div className="font-medium">Point Earned</div>
-                  <div className="text-sm text-gray-500">2023-07-15</div>
-                </div>
-                <div className="font-medium text-green-500">+300 pts</div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            <p style={{ marginTop: 5 }}>내 캐릭터: {character.name}</p>
+            <Link className="flex items-center gap-2" href="/api/characters/my">
+              <Button size="sm" variant="outline">
+                변경
+              </Button>
+            </Link>
+            <Link
+              className="flex items-center gap-2"
+              href="/api/characters/shop"
+            >
+              <Button size="sm" variant="outline">
+                구매
+              </Button>
+            </Link>
+          </div>
+          <div className="flex w-full justify-center">
+            <div className="mt-4">내 포인트: {point}</div>
+          </div>
+          <div className="mt-8 w-full">
+            <div className="overflow-x-auto">
+              <table className="w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-100 dark:bg-gray-800">
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      날짜
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      포인트
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      내역
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pointLog &&
+                    pointLog.map((row) => (
+                      <tr className="border-b">
+                        <td className="px-4 py-3 text-xs">{row.createdAt}</td>
+                        <td className="px-4 py-3 text-xs">{row.points}</td>
+                        <td className="px-4 py-3 text-xs">{row.detail}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex justify-center">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={handlePrevPage}
+                      disabled={currentPage === 1}
+                    />
+                  </PaginationItem>
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <PaginationItem key={i + 1}>
+                      <PaginationLink
+                        href="#"
+                        isActive={currentPage === i + 1} // 현재 페이지 버튼 활성화
+                        onClick={() => handlePageChange(i + 1)}
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          </div>
+        </main>
       </div>
     </RootLayout>
   );

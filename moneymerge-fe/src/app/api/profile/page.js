@@ -88,12 +88,12 @@ export default function Component() {
       credentials: "include",
       body: JSON.stringify({ username }),
     })
+      .then((response) => response.json())
       .then((response) => {
-        if (response.ok) {
+        if (response.statusCode === 0) {
           window.location.reload();
         } else {
-          const responseData = response.json();
-          const errorMessage = responseData.data;
+          const errorMessage = response.message;
           console.error(errorMessage);
           alert(errorMessage);
         }
@@ -176,7 +176,7 @@ export default function Component() {
             "AccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           document.cookie =
             "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            window.location.href = "/api/login";
+          window.location.href = "/api/login";
         } else {
           console.error("Failed to withdrawal");
         }
