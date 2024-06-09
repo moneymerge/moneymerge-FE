@@ -80,8 +80,8 @@ export default function Component() {
 
   return (
     <RootLayout>
-      <div className="bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
-        <div
+      <div className="w-full h-full bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
+        {/* <div
           className="fixed pt-4 px-4 flex items-center justify-between"
           style={{
             top: "200px",
@@ -93,10 +93,21 @@ export default function Component() {
               <h1 className="text-2xl font-bold">게시글 작성</h1>
             </Link>
           </div>
+        </div> */}
+        <div className="px-4 flex items-center justify-between">
+          <div
+            className="flex items-center gap-4"
+            style={{ position: "absolute", top: "-45px" }}
+          >
+            <Link className="flex items-center gap-2" href="/api/boards">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold w-[120px]">게시글 작성</h1>
+            </Link>
+          </div>
         </div>
-        <main className="flex-1 p-4">
+        <main className="w-full h-full flex-1">
           <form
-            className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-4 space-y-6"
+            className="w-full h-full max-w-3xl mx-auto bg-white shadow-lg p-4 space-y-6" //rounded-lg
             onSubmit={handleSubmit}
           >
             <div className="flex items-center gap-4">

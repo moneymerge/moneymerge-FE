@@ -35,7 +35,6 @@ export default function Component() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-
   useEffect(() => {
     let url = "http://localhost:8080/api/boards";
     let countUrl = "http://localhost:8080/api/boards/count";
@@ -77,16 +76,13 @@ export default function Component() {
   return (
     <RootLayout>
       <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
-        <div
-          className="fixed pt-4 px-4 flex items-center justify-between"
-          style={{
-            top: "200px",
-          }}
-        >
-          <div className="fixed flex items-center gap-4">
-            <Link className="flex items-center gap-2" href="/">
-              <ArrowLeftIcon className="h-5 w-5" />
-              <h1 className="text-2xl font-bold">커뮤니티</h1>
+        <div className="px-4 flex items-center justify-between">
+          <div
+            className="flex items-center gap-4"
+            style={{ position: "absolute", top: "-45px" }}
+          >
+            <Link className="flex items-center gap-2" href="/api/boards">
+              <h1 className="text-2xl font-bold w-[100px]">커뮤니티</h1>
             </Link>
           </div>
         </div>
@@ -241,9 +237,7 @@ export default function Component() {
                         <td className="px-4 py-3 text-xs">{row.author}</td>
                         <td className="px-4 py-3 text-xs">{row.createdAt}</td>
                         <td className="px-4 py-3 text-xs">{row.likes}</td>
-                        <td className="px-4 py-3 text-xs">
-                          {row.comments}
-                        </td>
+                        <td className="px-4 py-3 text-xs">{row.comments}</td>
                       </tr>
                     ))}
                 </tbody>
@@ -282,10 +276,13 @@ export default function Component() {
             </div>
           </div>
         </main>
-        <div className="fixed" style={{
-          bottom: "180px",
-          right: "480px"
-        }}>
+        <div
+          className="absolute"
+          style={{
+            bottom: "-40px",
+            right: "-40px",
+          }}
+        >
           <Link
             className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
             href="/api/boards/create"
