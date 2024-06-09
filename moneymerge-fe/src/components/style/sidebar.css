@@ -111,15 +111,8 @@
   }
   .box .book-wrapper {
     width: 70%;
-
     margin-left: 20px;
     margin-top: 7px;
-  }
-  .box .book-check {
-    background-color: #f1ff9d;
-    border-radius: 3px;
-    height: 16px;
-    width: 16px;
   }
   .box .book-check:hover {
     background-color: pink;

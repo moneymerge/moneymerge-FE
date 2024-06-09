@@ -6,14 +6,37 @@
  */
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch"
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
 import RootLayout from "../../../../components/layout.js";
 
 export default function Component() {
   return (
     <RootLayout>
-      <div className="flex flex-col w-full min-h-screen">
-        <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] bg-gray-100/40 flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 dark:bg-gray-800/40">
+      <div
+        style={{
+          position: "absolute",
+          top: "10px",
+          left: "15.264px",
+          width: "615.401px",
+          height: "478px",
+          boxSizing: "border-box",
+        }}
+      >
+        <div>
+          <Link className="flex items-center gap-2" href="">
+            <ArrowLeftIcon className="h-5 w-5" />
+            <h1 className="text-2xl font-bold">가계부 환경설정</h1>
+          </Link>
+        </div>
+        <main
+          className="bg-white"
+          style={{
+            marginTop: "13px",
+            height: "432px",
+            overflow: "auto",
+          }}
+        >
           <div className="max-w-6xl w-full mx-auto grid gap-2">
             <h1 className="font-semibold text-3xl">가계부 환경설정</h1>
             <p className="text-gray-500 dark:text-gray-400">
@@ -264,4 +287,24 @@ function PencilIcon(props) {
       <path d="m15 5 4 4" />
     </svg>
   );
+}
+
+function ArrowLeftIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m12 19-7-7 7-7" />
+      <path d="M19 12H5" />
+    </svg>
+  )
 }

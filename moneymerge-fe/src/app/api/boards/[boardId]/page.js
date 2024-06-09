@@ -296,22 +296,27 @@ export default function Component() {
 
   return (
     <RootLayout>
-      <div className="bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
-        <div
-          className="fixed pt-4 px-4 flex items-center justify-between"
-          style={{
-            top: "200px",
-          }}
-        >
-          <div className="fixed flex items-center gap-4">
-            <Link className="flex items-center gap-2" href="/api/boards">
-              <ArrowLeftIcon className="h-5 w-5" />
-              <h1 className="text-2xl font-bold">커뮤니티</h1>
-            </Link>
-          </div>
+      <div style={{
+          position: "absolute",
+          top: "10px",
+          left: "15.264px",
+          width: "615.401px",
+          height: "478px",
+          boxSizing: "border-box",
+        }}>
+      <div>
+          <Link className="flex items-center gap-2" href="/api/boards">
+            <ArrowLeftIcon className="h-5 w-5" />
+            <h1 className="text-2xl font-bold">커뮤니티</h1>
+          </Link>
         </div>
-        <main>
-          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
+        <main className="bg-white"
+          style={{
+            marginTop: "13px",
+            height: "432px",
+            overflow: "auto",
+          }}>
+          <div className="max-w-3xl p-4 space-y-6">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold">{board.title}</h2>

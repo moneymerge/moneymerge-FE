@@ -19,6 +19,14 @@ import { SketchPicker } from "react-color";
 
 const Sidebar = ({ data }) => {
   const router = useRouter();
+  const [checkedBooks, setCheckBooks] = useState({});
+
+  const handleCheckboxClick = (bookId) => {
+    setCheckBooks((prev) => ({
+      ...prev,
+      [bookId]: !prev[bookId],
+    }));
+  };
 
   const handleLogout = async () => {
     try {
@@ -82,24 +90,51 @@ const Sidebar = ({ data }) => {
                         style={{
                           display: "flex",
                           flexDirection: "row",
-                           alignItems: "center",
-                           gap: "10px"
+                          alignItems: "center",
+                          gap: "10px",
                         }}
                       >
-                        <div className="book-check" />
-                        <div style={{
-                          width: "70%",
-                          fontSize: "13px",
-                          color: `${book.bookColor}`
-                        }}>{book.bookTitle}</div>
-                        {/* <div
-                          style={{
-                            backgroundColor: `${book.bookColor}`,
-                            borderRadius: "7px",
-                            height: "14px",
-                            width: "14px",
+                        <div
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleCheckboxClick(book.bookId);
                           }}
-                        /> */}
+                          style={{
+                            backgroundColor: book.bookColor,
+                            borderRadius: "3px",
+                            height: "16px",
+                            width: "16px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {checkedBooks[book.bookId] && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="12"
+                              height="12"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="feather feather-check"
+                            >
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                          )}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "12px",
+                            width: "70px",
+                          }}
+                        >
+                          {book.bookTitle}
+                        </div>
                       </div>
                     </Link>
                   </div>

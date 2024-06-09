@@ -80,25 +80,31 @@ export default function Component() {
 
   return (
     <RootLayout>
-      <div className="bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
-        <div
-          className="fixed pt-4 px-4 flex items-center justify-between"
+      <div
+        style={{
+          position: "absolute",
+          top: "10px",
+          left: "15.264px",
+          width: "615.401px",
+          height: "478px",
+          boxSizing: "border-box",
+        }}
+      >
+        <div>
+          <Link className="flex items-center gap-2" href="/api/boards">
+            <ArrowLeftIcon className="h-5 w-5" />
+            <h1 className="text-2xl font-bold">게시글 작성</h1>
+          </Link>
+        </div>
+        <main
+          className="bg-white"
           style={{
-            top: "200px",
+            marginTop: "13px",
+            height: "432px",
+            overflow: "auto",
           }}
         >
-          <div className="fixed flex items-center gap-4">
-            <Link className="flex items-center gap-2" href="/api/boards">
-              <ArrowLeftIcon className="h-5 w-5" />
-              <h1 className="text-2xl font-bold">게시글 작성</h1>
-            </Link>
-          </div>
-        </div>
-        <main className="flex-1 p-4">
-          <form
-            className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-4 space-y-6"
-            onSubmit={handleSubmit}
-          >
+          <form className="max-w-3xl p-4 space-y-6" onSubmit={handleSubmit}>
             <div className="flex items-center gap-4">
               <select
                 name="boardType"
@@ -128,7 +134,7 @@ export default function Component() {
               <Textarea
                 id="content"
                 placeholder="내용을 입력하세요"
-                rows={7}
+                rows={8}
                 name="content"
                 onChange={handleChange}
               />
