@@ -42,7 +42,7 @@ export default function Records() {
           console.error("Error fetching record:", error);
         });
     }
-  }, []);
+  }, [bookId, recordId]);
   console.log(records);
 
   const handleEditClick = (recordId) => {};
@@ -70,13 +70,61 @@ export default function Records() {
     }
   };
 
+  // const HandleRecordLikeClick = () => {
+  //   if (records !== null) {
+  //     fetch(
+  //       `http://localhost:8080/api/books/${bookId}/records/${records.recordId}/likes`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         credentials: "include",
+  //       }
+  //     )
+  //       .then((result) => result.json())
+  //       .then((result) => {
+  //         if (result.data) {
+  //           console.log(likes);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error clicking records like button:", error);
+  //       });
+  //   }
+  // };
+
+  // const HandleRecordDislikeClick = () => {
+  //   if (records !== null) {
+  //     fetch(
+  //       `http://localhost:8080/api/books/${bookId}/records/${records.recordId}/dislikes`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         credentials: "include",
+  //       }
+  //     )
+  //       .then((result) => result.json())
+  //       .then((result) => {
+  //         if (result.data) {
+  //           console.log(likes);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error clicking records like button:", error);
+  //       });
+  //   }
+  // };
+
   return (
     <RootLayout>
       <div className="w-full h-full max-w-6xl mx-auto overflow-auto">
-        <div className="fixed pt-4 px-4 flex items-center justify-between">
+        <div className="px-4 flex items-center justify-between">
           <div
             className="flex items-center gap-4"
-            style={{ position: "absolute", top: "-44px" }}
+            style={{ position: "absolute", top: "-45px" }}
           >
             <Link
               className="flex items-center gap-2"
@@ -158,38 +206,50 @@ export default function Records() {
                 </div>
               </CardContent>
               <CardFooter>
-                <div className="flex items-center gap-4">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => handleEditClick(records.recordId)}
-                  >
-                    <span className="">수정</span>
-                    <PencilIcon className="w-5 h-5" />
-                    <span className="sr-only ">Edit</span>
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => handleDeleteClick(records.recordId)}
-                  >
-                    삭제
-                    <TrashIcon className="w-5 h-5" />
-                    <span className="sr-only">Delete</span>
-                  </Button>
+                <div className="flex justify-between w-full">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="p-[0px]"
+                      // onClick={HandleRecordLikeClick}
+                    >
+                      <ThumbsUpIcon className="w-4 h-4" />
+                      <span className="sr-only">Like</span>
+                    </Button>
+                    <div className="text-gray-500">{records.likes}</div>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      // onClick={HandleRecordDislikeClick}
+                    >
+                      <ThumbsDownIcon className="w-4 h-4" />
+                      <span className="sr-only">Dislike</span>
+                    </Button>
+                    <div className="text-gray-500">{records.dislikes}</div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => handleEditClick(records.recordId)}
+                    >
+                      <span className="">수정</span>
+                      <PencilIcon className="w-5 h-5" />
+                      <span className="sr-only ">Edit</span>
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => handleDeleteClick(records.recordId)}
+                    >
+                      삭제
+                      <TrashIcon className="w-5 h-5" />
+                      <span className="sr-only">Delete</span>
+                    </Button>
+                  </div>
                 </div>
-                {/* <div className="flex items-center gap-2">
-                  <Button size="icon" variant="ghost">
-                    <ThumbsUpIcon className="w-4 h-4" />
-                    <span className="sr-only">Like</span>
-                  </Button>
-                  <div className="text-gray-500">12</div>
-                  <Button size="icon" variant="ghost">
-                    <ThumbsDownIcon className="w-4 h-4" />
-                    <span className="sr-only">Dislike</span>
-                  </Button>
-                  <div className="text-gray-500">3</div>
-                </div> */}
               </CardFooter>
             </Card>
           </div>

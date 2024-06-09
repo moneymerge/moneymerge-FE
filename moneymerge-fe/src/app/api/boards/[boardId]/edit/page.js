@@ -15,8 +15,8 @@ import { useParams } from "next/navigation";
 
 export default function Component() {
   const params = useParams();
-  const [ board, setBoard ] = useState({});
-  const [ file, setFile ] = useState(null);
+  const [board, setBoard] = useState({});
+  const [file, setFile] = useState(null);
 
   // 해당 게시글 데이터 가져오기
   useEffect(() => {
@@ -101,36 +101,40 @@ export default function Component() {
 
   return (
     <RootLayout>
-      <div
-        style={{
-          position: "absolute",
-          top: "10px",
-          left: "15.264px",
-          width: "615.401px",
-          height: "478px",
-          boxSizing: "border-box",
-        }}
-      >
-        <div>
-          <Link className="flex items-center gap-2" href={`/api/boards/${board.boardId}`}>
-            <ArrowLeftIcon className="h-5 w-5" />
-            <h1 className="text-2xl font-bold">게시글 수정</h1>
-          </Link>
-        </div>
-        <main className="bg-white"
+      <div className="w-full h-full bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
+        {/* <div
+          className="fixed pt-4 px-4 flex items-center justify-between"
           style={{
-            marginTop: "13px",
-            height: "432px",
-            overflow: "auto",
-          }}>
+            top: "200px",
+          }}
+        >
+          <div className="fixed flex items-center gap-4">
+            <Link className="flex items-center gap-2" href="/api/boards">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold">게시글 수정</h1>
+            </Link>
+          </div>
+        </div> */}
+        <div className="px-4 flex items-center justify-between">
+          <div
+            className="flex items-center gap-4"
+            style={{ position: "absolute", top: "-45px" }}
+          >
+            <Link className="flex items-center gap-2" href="/api/boards">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold w-[120px]">게시글 수정</h1>
+            </Link>
+          </div>
+        </div>
+        <main className="w-full h-full flex-1">
           <form
-            className="max-w-3xl p-4 space-y-6"
+            className="w-full h-full max-w-3xl mx-auto bg-white shadow-lg p-4 space-y-6"
             onSubmit={handleSubmit}
           >
             <div className="flex items-center gap-4">
               <select
                 name="boardType"
-                value={mapBoardType(board.boardType)} 
+                value={mapBoardType(board.boardType)}
                 onChange={(e) => handleChange(e)}
               >
                 <option value="">게시판 종류</option>
@@ -176,7 +180,11 @@ export default function Component() {
               />
               {board.image && (
                 <div>
-                  <img src={board.image} alt="File Preview" style={{ maxWidth: '200px', maxHeight: '200px' }} />
+                  <img
+                    src={board.image}
+                    alt="File Preview"
+                    style={{ maxWidth: "200px", maxHeight: "200px" }}
+                  />
                 </div>
               )}
             </div>

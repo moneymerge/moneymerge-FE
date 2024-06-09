@@ -57,6 +57,7 @@ export default function Component() {
             id: record.recordId,
             title: `${record.userId}번 ${record.amount}`,
             start: `${record.date}T00:00:00`, //'2024-03-12T21:00:00',
+            color: `${record.userColor}`,
           }));
           setEvents(eventList);
         } else {
@@ -93,7 +94,7 @@ export default function Component() {
         selectable={true} // 사용자가 일정 범위를 선택하여 이벤트를 추가할 수 있도록 허용합니다.
         selectMirror={true} // 이벤트를 추가할 때 선택한 영역을 표시합니다.
         nowIndicator={true} // 현재 시간을 표시하는 인디케이터를 활성화합니다.
-        eventBackgroundColor="#ffff00" // 이벤트의 배경색을 설정합니다.
+        // eventBackgroundColor={record.userColor} // 이벤트의 배경색을 설정합니다.
         // eventBorderColor="#0000ff" // 이벤트의 테두리 색을 설정합니다.
         allDay={false} // 이벤트가 하루 종일인지 여부를 지정합니다.
         timeZone="UTC" // 캘린더의 시간대를 UTC로 설정합니다.
@@ -109,17 +110,18 @@ export default function Component() {
         }}
       />
       <div
-        className="fixed"
+        className="absolute"
         style={{
-          bottom: "180px",
-          right: "480px",
+          bottom: "-40px",
+          right: "-40px",
         }}
       >
         <Link
           className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
           href={`/api/books/${params.bookId}/records/create`}
         >
-          <PlusIcon className="h-5 w-5 mr-2" />레코드 작성
+          <PlusIcon className="h-5 w-5 mr-2" />
+          레코드 작성
         </Link>
       </div>
     </RootLayout>

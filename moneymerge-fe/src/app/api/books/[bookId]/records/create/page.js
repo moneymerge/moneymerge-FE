@@ -57,14 +57,25 @@ export default function Component() {
     }
   };
   useEffect(() => {
-    const selectedBooks = [...checkItems].map((bookId) => ({ bookId }));
+    const selectedBooks = [...checkItems];
     setRecord((prevRecord) => ({ ...prevRecord, bookList: selectedBooks }));
   }, [checkItems]);
   console.log(checkItems);
   console.log(record);
 
+  // useEffect(() => {
+  //   setRecord((prevRecord) => ({
+  //     ...prevRecord,
+  //     date: format(date, "yyyy-MM-dd"),
+  //   }));
+  // }, [date]);
   useEffect(() => {
-    setRecord((prevRecord) => ({ ...prevRecord, date: date }));
+    if (date instanceof Date && !isNaN(date)) {
+      setRecord((prevRecord) => ({
+        ...prevRecord,
+        date: format(date, "yyyy-MM-dd"),
+      }));
+    }
   }, [date]);
 
   useEffect(() => {
@@ -162,7 +173,7 @@ export default function Component() {
     formData.append("content", record.content);
     formData.append("memo", record.memo);
     formData.append("bookList", record.bookList);
-    formData.append("category", record.categoryId);
+    formData.append("categoryId", record.categoryId);
     console.log({ record });
 
     fetch(`http://localhost:8080/api/books/${params.bookId}/records`, {
@@ -187,14 +198,9 @@ export default function Component() {
 
   return (
     <RootLayout>
-      <div className="bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
-        <div
-          className="fixed pt-4 px-4 flex items-center justify-between"
-          style={{
-            top: "200px",
-          }}
-        >
-          <div className="fixed flex items-center gap-4 mt-[-200px]">
+      <div className="w-full h-full bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
+        {/* <div className="px-4 flex items-center justify-between">
+          <div className="fixed flex items-center gap-4 mt-[-60px]">
             <Link
               className="flex items-center gap-2"
               href={`/api/books/${params.bookId}`}
@@ -203,10 +209,24 @@ export default function Component() {
               <h1 className="text-2xl font-bold ">레코드 작성</h1>
             </Link>
           </div>
+        </div> */}
+        <div className="px-4 flex items-center justify-between">
+          <div
+            className="flex items-center gap-4"
+            style={{ position: "absolute", top: "-45px" }}
+          >
+            <Link
+              className="flex items-center gap-2"
+              href={`/api/books/${params.bookId}`}
+            >
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold w-[120px]">레코드 작성</h1>
+            </Link>
+          </div>
         </div>
-        <main className="flex-1 p-4">
+        <main className="w-full h-full flex-1">
           <form
-            className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-4 space-y-6"
+            className="max-w-3xl mx-auto bg-white shadow-lg p-4 space-y-6"
             onSubmit={handleSubmit}
           >
             <div className="flex items-center flex-grow">

@@ -80,31 +80,36 @@ export default function Component() {
 
   return (
     <RootLayout>
-      <div
-        style={{
-          position: "absolute",
-          top: "10px",
-          left: "15.264px",
-          width: "615.401px",
-          height: "478px",
-          boxSizing: "border-box",
-        }}
-      >
-        <div>
-          <Link className="flex items-center gap-2" href="/api/boards">
-            <ArrowLeftIcon className="h-5 w-5" />
-            <h1 className="text-2xl font-bold">게시글 작성</h1>
-          </Link>
-        </div>
-        <main
-          className="bg-white"
+      <div className="w-full h-full bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
+        {/* <div
+          className="fixed pt-4 px-4 flex items-center justify-between"
           style={{
-            marginTop: "13px",
-            height: "432px",
-            overflow: "auto",
+            top: "200px",
           }}
         >
-          <form className="max-w-3xl p-4 space-y-6" onSubmit={handleSubmit}>
+          <div className="fixed flex items-center gap-4">
+            <Link className="flex items-center gap-2" href="/api/boards">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold">게시글 작성</h1>
+            </Link>
+          </div>
+        </div> */}
+        <div className="px-4 flex items-center justify-between">
+          <div
+            className="flex items-center gap-4"
+            style={{ position: "absolute", top: "-45px" }}
+          >
+            <Link className="flex items-center gap-2" href="/api/boards">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold w-[120px]">게시글 작성</h1>
+            </Link>
+          </div>
+        </div>
+        <main className="w-full h-full flex-1">
+          <form
+            className="w-full h-full max-w-3xl mx-auto bg-white shadow-lg p-4 space-y-6" //rounded-lg
+            onSubmit={handleSubmit}
+          >
             <div className="flex items-center gap-4">
               <select
                 name="boardType"

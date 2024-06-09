@@ -1,4 +1,4 @@
-"use client"
+"use client";
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/5Tknzmll2fc
