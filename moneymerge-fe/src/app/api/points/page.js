@@ -94,7 +94,7 @@ export default function Component() {
 
   return (
     <RootLayout>
-      <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto items-center">
+      <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
         <div className="px-4 flex items-center justify-between">
           <div
             className="flex items-center gap-4"
@@ -122,7 +122,7 @@ export default function Component() {
             style={{ marginTop: 40 }}
           >
             <p style={{ marginTop: 5 }}>내 캐릭터: {character.name}</p>
-            <Link className="flex items-center gap-2" href="/api/characters/my">
+            <Link className="flex items-center gap-2" href="/api/characters">
               <Button size="sm" variant="outline">
                 변경
               </Button>
