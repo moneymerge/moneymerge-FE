@@ -26,6 +26,32 @@ export default function Records() {
   const bookId = params.bookId;
   const recordId = params.recordId;
   const [records, setRecords] = useState([]);
+  const [likes, setLikes] = useState(0);
+  const [dislikes, setDislikes] = useState(0);
+  const [userData, setUserData] = useState(null);
+  const [comments, setComments] = useState({});
+  const [comment, setComment] = useState({
+    content: "",
+  });
+  const [editStates, setEditStates] = useState({});
+  const [editedContents, setEditedContents] = useState({});
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        console.log("Received user data:", result.data);
+        setUserData(result.data);
+        console.log(result.data);
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  }, []);
 
   useEffect(() => {
     if (recordId) {
@@ -37,15 +63,16 @@ export default function Records() {
         credentials: "include",
       })
         .then((result) => result.json())
-        .then((result) => setRecords(result.data))
+        .then((result) => {
+          setRecords(result.data);
+          setComments(result.data.commentList);
+        })
         .catch((error) => {
           console.error("Error fetching record:", error);
         });
     }
   }, [bookId, recordId]);
   console.log(records);
-
-  const handleEditClick = (recordId) => {};
 
   const handleDeleteClick = (recordId) => {
     const confirmDelete = window.confirm("레코드를 삭제하시겠습니까?");
@@ -70,53 +97,117 @@ export default function Records() {
     }
   };
 
-  // const HandleRecordLikeClick = () => {
-  //   if (records !== null) {
-  //     fetch(
-  //       `http://localhost:8080/api/books/${bookId}/records/${records.recordId}/likes`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         credentials: "include",
-  //       }
-  //     )
-  //       .then((result) => result.json())
-  //       .then((result) => {
-  //         if (result.data) {
-  //           console.log(likes);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error clicking records like button:", error);
-  //       });
-  //   }
-  // };
+  const HandleRecordLikeClick = () => {
+    if (records !== null) {
+      fetch(
+        `http://localhost:8080/api/books/${bookId}/records/${records.recordId}/likes`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
+        .then(() => {
+          fetch(
+            `http://localhost:8080/api/books/${bookId}/records/${recordId}/likes`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+            }
+          )
+            .then((result) => result.json())
+            .then((result) => {
+              setLikes(result.data.likes);
+            })
+            .catch((error) => {
+              console.error("Error fetching record likes:", error);
+            });
+        })
+        .catch((error) => {
+          console.error("Error clicking records like button:", error);
+        });
+    }
+  };
 
-  // const HandleRecordDislikeClick = () => {
-  //   if (records !== null) {
-  //     fetch(
-  //       `http://localhost:8080/api/books/${bookId}/records/${records.recordId}/dislikes`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         credentials: "include",
-  //       }
-  //     )
-  //       .then((result) => result.json())
-  //       .then((result) => {
-  //         if (result.data) {
-  //           console.log(likes);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error clicking records like button:", error);
-  //       });
-  //   }
-  // };
+  const HandleRecordDislikeClick = () => {
+    if (records !== null) {
+      fetch(
+        `http://localhost:8080/api/books/${bookId}/records/${records.recordId}/dislikes`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
+        .then(() => {
+          fetch(
+            `http://localhost:8080/api/books/${bookId}/records/${recordId}/dislikes`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+            }
+          )
+            .then((result) => result.json())
+            .then((result) => {
+              setDislikes(result.data.dislikes);
+            })
+            .catch((error) => {
+              console.error("Error fetching record likes:", error);
+            });
+        })
+        .catch((error) => {
+          console.error("Error clicking records like button:", error);
+        });
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (comment.content === "" || /^\s+$/.test(comment.content)) {
+      alert("내용을 입력해주세요.");
+      return;
+    }
+
+    fetch(
+      `http://localhost:8080/api/books/${bookId}/records/${recordId}/comments`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: comment,
+      }
+    )
+      .then((response) => {
+        console.log(response);
+        if (response.ok) {
+          window.location.href = `/api/books/${bookId}/records/${recordId}`;
+        } else {
+          alert("Error:" + response.status);
+        }
+      })
+      .catch((error) => {
+        alert("Fetch error:" + error);
+      });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setComment({ [name]: value });
+    console.log(comment);
+  };
 
   return (
     <RootLayout>
@@ -212,125 +303,172 @@ export default function Records() {
                       size="icon"
                       variant="ghost"
                       className="p-[0px]"
-                      // onClick={HandleRecordLikeClick}
+                      onClick={HandleRecordLikeClick}
                     >
                       <ThumbsUpIcon className="w-4 h-4" />
                       <span className="sr-only">Like</span>
                     </Button>
-                    <div className="text-gray-500">{records.likes}</div>
+                    <div className="text-gray-500">{likes}</div>
                     <Button
                       size="icon"
                       variant="ghost"
-                      // onClick={HandleRecordDislikeClick}
+                      onClick={HandleRecordDislikeClick}
                     >
                       <ThumbsDownIcon className="w-4 h-4" />
                       <span className="sr-only">Dislike</span>
                     </Button>
-                    <div className="text-gray-500">{records.dislikes}</div>
+                    <div className="text-gray-500">{dislikes}</div>
                   </div>
+                  {userData && records.userId === userData.userId && (
+                    <div className="flex items-center gap-4">
+                      <Link
+                        href={`/api/books/${params.bookId}/records/${records.recordId}/edit`}
+                      >
+                        <Button size="icon" variant="ghost">
+                          <span className="">수정</span>
+                          <PencilIcon className="w-5 h-5" />
+                          <span className="sr-only ">Edit</span>
+                        </Button>
+                      </Link>
 
-                  <div className="flex items-center gap-4">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => handleEditClick(records.recordId)}
-                    >
-                      <span className="">수정</span>
-                      <PencilIcon className="w-5 h-5" />
-                      <span className="sr-only ">Edit</span>
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => handleDeleteClick(records.recordId)}
-                    >
-                      삭제
-                      <TrashIcon className="w-5 h-5" />
-                      <span className="sr-only">Delete</span>
-                    </Button>
-                  </div>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => handleDeleteClick(records.recordId)}
+                      >
+                        삭제
+                        <TrashIcon className="w-5 h-5" />
+                        <span className="sr-only">Delete</span>
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardFooter>
             </Card>
           </div>
           {/* 댓글 */}
-          {/* <div className="grid gap-4">
-            <div className="font-medium">Comments</div>
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-md p-4">
-              <div className="grid gap-4">
-                <div className="flex items-start gap-4">
-                  <Avatar className="w-10 h-10 border">
-                    <AvatarImage
-                      alt="User Avatar"
-                      src="/placeholder-user.jpg"
-                    />
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                  <div className="grid gap-2">
-                    <div className="font-medium">John Doe</div>
-                    <div className="text-gray-500">
-                      Great job tracking your expenses! This will really help
-                      you stay on top of your finances.
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <div>2 hours ago</div>
-                      <div className="flex items-center gap-2">
-                        <Button size="icon" variant="ghost">
-                          <DeleteIcon className="w-4 h-4" />
-                          <span className="sr-only">Edit</span>
-                        </Button>
-                        <Button size="icon" variant="ghost">
-                          <TrashIcon className="w-4 h-4" />
-                          <span className="sr-only">Delete</span>
-                        </Button>
+
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-bold mb-4">댓글</h3>
+            <form className="mt-6" onSubmit={handleSubmit}>
+              <Textarea
+                className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
+                placeholder="댓글을 입력하세요"
+                name="comment"
+                onChange={handleChange}
+              />
+              <div className="flex justify-end mt-2">
+                <Button variant="outline">저장</Button>
+              </div>
+            </form>
+            {/* {records.commentList &&
+              records.commentList.map((comment) => (
+                <div key={comment.commentId} className="ml-3">
+                  <input type="checkbox"></input>
+                  <span className="font-medium">{comment.comment}</span>
+                  <div>ok</div>
+                </div>
+              ))} */}
+            {/* {records.commentList &&
+              records.commentList.map((comment, index) => (
+                <div className="space-y-4" key={comment.commentId}>
+                  {editStates[comment.commentId] ? (
+                    <div className="mt-6">
+                      <Textarea
+                        className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
+                        placeholder="댓글을 입력하세요"
+                        name="content"
+                        value={editedContents[comment.commentId]}
+                        onChange={(e) =>
+                          handleContentChange(comment.commentId, e)
+                        }
+                      />
+
+                      <div className="flex justify-end mt-2 gap-4">
+                        <button
+                          onClick={() =>
+                            handleSaveButtonClick(comment.commentId)
+                          }
+                        >
+                          저장
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleCancelButtonClick(comment.commentId)
+                          }
+                        >
+                          취소
+                        </button>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Avatar className="w-10 h-10 border">
-                    <AvatarImage
-                      alt="User Avatar"
-                      src="/placeholder-user.jpg"
-                    />
-                    <AvatarFallback>SA</AvatarFallback>
-                  </Avatar>
-                  <div className="grid gap-2">
-                    <div className="font-medium">Sarah Anderson</div>
-                    <div className="text-gray-500">
-                      Awesome, this is really helpful for keeping track of our
-                      household expenses. Let me know if you need any help with
-                      categorizing or budgeting.
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <div>1 day ago</div>
-                      <div className="flex items-center gap-2">
-                        <Button size="icon" variant="ghost">
-                          <DeleteIcon className="w-4 h-4" />
-                          <span className="sr-only">Edit</span>
-                        </Button>
-                        <Button size="icon" variant="ghost">
-                          <TrashIcon className="w-4 h-4" />
-                          <span className="sr-only">Delete</span>
-                        </Button>
+                  ) : (
+                    <div className="gap-4 pt-4">
+                      <div className="flex-1">
+                        <div className="flex justify-between">
+                          <div className="flex justify-between gap-2">
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: "40px",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                  gap: "10px",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    backgroundColor: "#ffffff", //user의 color...
+                                    borderRadius: "100px",
+                                    height: "100px",
+                                    width: "100px",
+                                  }}
+                                />
+                                {comment.username}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center">
+                            <div className="text-sm text-gray-500  mr-4">
+                              {comment.createdAt}
+                            </div>
+                          </div>
+                        </div>
+                        <p className="mt-2">{comment.content}</p>
+                        {userData && userData.userId === comment.userId && (
+                          <div className="flex items-center gap-2 mt-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                handleEditButtonClick(comment.commentId)
+                              }
+                            >
+                              수정
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                handleCommentDeleteClick(comment.commentId)
+                              }
+                            >
+                              삭제
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
-              </div>
-              <div className="mt-4 border-t pt-4">
-                <form>
-                  <Textarea
-                    className="w-full resize-none"
-                    placeholder="Write a comment..."
-                  />
-                  <div className="flex justify-end mt-2">
-                    <Button type="submit">Post Comment</Button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div> */}
+              ))} */}
+          </div>
         </div>
       </div>
     </RootLayout>

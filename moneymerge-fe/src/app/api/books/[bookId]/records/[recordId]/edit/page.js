@@ -22,27 +22,40 @@ import {
 // npx shadcn-ui@latest add calendar
 
 import Link from "next/link";
-import RootLayout from "../../../../../../components/layout.js";
+import RootLayout from "../../../../../../../components/layout";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
-export default function Component() {
+export default function RecordEdit() {
   const params = useParams();
-  const [record, setRecord] = useState({
-    date: "",
-    recordType: "",
-    amount: "",
-    assetType: "",
-    content: "",
-    memo: "",
-    bookList: "",
-    categoryId: "",
-  });
+  const [record, setRecord] = useState({});
   const [categories, setCategories] = useState([]);
   const [date, setDate] = useState(null);
   // const [date, setDate] = React.useState<Date>()
   const [userData, setUserData] = useState(null);
   const [checkItems, setCheckItems] = useState(new Set());
+
+  // 해당 게시글 데이터 가져오기
+  useEffect(() => {
+    fetch(
+      `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    )
+      .then((result) => result.json())
+      .then((result) => {
+        setRecord(result.data);
+        setCheckItems(() => {
+          const initialCheckedItems = new Set();
+          result.data.bookList.forEach((book) => {
+            initialCheckedItems.add(String(book.bookId));
+          });
+          return initialCheckedItems;
+        });
+      });
+  }, []);
 
   const checkItemHandler = (e) => {
     const { id, checked } = e.target;
@@ -60,15 +73,7 @@ export default function Component() {
     const selectedBooks = [...checkItems];
     setRecord((prevRecord) => ({ ...prevRecord, bookList: selectedBooks }));
   }, [checkItems]);
-  console.log(checkItems);
-  console.log(record);
 
-  // useEffect(() => {
-  //   setRecord((prevRecord) => ({
-  //     ...prevRecord,
-  //     date: format(date, "yyyy-MM-dd"),
-  //   }));
-  // }, [date]);
   useEffect(() => {
     if (date instanceof Date && !isNaN(date)) {
       setRecord((prevRecord) => ({
@@ -126,6 +131,29 @@ export default function Component() {
   }, []);
   console.log(categories);
 
+  const mapRecordType = (originalType) => {
+    switch (originalType) {
+      case "수입":
+        return "INCOME";
+      case "지출":
+        return "EXPENSE";
+      default:
+        return originalType;
+    }
+  };
+  const mapAssetType = (originalType) => {
+    switch (originalType) {
+      case "현금":
+        return "CASH";
+      case "카드":
+        return "CARD";
+      case "계좌":
+        return "ACCOUNT";
+      default:
+        return originalType;
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -167,24 +195,31 @@ export default function Component() {
 
     let formData = new FormData();
     formData.append("date", record.date);
-    formData.append("recordType", record.recordType);
+    formData.append("recordType", mapRecordType(record.recordType));
     formData.append("amount", record.amount);
-    formData.append("assetType", record.assetType);
+    formData.append("assetType", mapAssetType(record.assetType));
     formData.append("content", record.content);
     formData.append("memo", record.memo);
     formData.append("bookList", record.bookList);
     formData.append("categoryId", record.categoryId);
-    console.log({ record });
 
-    fetch(`http://localhost:8080/api/books/${params.bookId}/records`, {
-      method: "POST",
-      credentials: "include",
-      body: formData,
-    })
+    console.log("formData");
+    for (var value of formData.values()) {
+      console.log(value);
+    }
+
+    fetch(
+      `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}`,
+      {
+        method: "PUT",
+        credentials: "include",
+        body: formData,
+      }
+    )
       .then((response) => {
         console.log(response);
         if (response.ok) {
-          window.location.href = `/api/books/${params.bookId}`;
+          window.location.href = `/api/books/${params.bookId}/records/${params.recordId}`;
         } else if (response.status === 403) {
           alert("모두 입력해주세요.");
         } else {
@@ -199,17 +234,6 @@ export default function Component() {
   return (
     <RootLayout>
       <div className="w-full h-full bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
-        {/* <div className="px-4 flex items-center justify-between">
-          <div className="fixed flex items-center gap-4 mt-[-60px]">
-            <Link
-              className="flex items-center gap-2"
-              href={`/api/books/${params.bookId}`}
-            >
-              <ArrowLeftIcon className="h-5 w-5" />
-              <h1 className="text-2xl font-bold ">레코드 작성</h1>
-            </Link>
-          </div>
-        </div> */}
         <div className="px-4 flex items-center justify-between">
           <div
             className="flex items-center gap-4"
@@ -220,7 +244,7 @@ export default function Component() {
               href={`/api/books/${params.bookId}`}
             >
               <ArrowLeftIcon className="h-5 w-5" />
-              <h1 className="text-2xl font-bold w-[120px]">레코드 작성</h1>
+              <h1 className="text-2xl font-bold w-[120px]">레코드 수정</h1>
             </Link>
           </div>
         </div>
@@ -239,12 +263,12 @@ export default function Component() {
                     variant={"outline"}
                     className={cn(
                       "w-[280px] justify-start text-left font-normal",
-                      !date && "text-muted-foreground"
+                      !record.date && "text-muted-foreground"
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? (
-                      format(date, "yyyy-MM-dd") // ?
+                    {record.date ? (
+                      format(record.date, "yyyy-MM-dd") // ?
                     ) : (
                       <span>Pick a date</span>
                     )}
@@ -263,7 +287,7 @@ export default function Component() {
             <div className="flex items-center flex-grow">
               <select
                 name="recordType"
-                value={record.recordType}
+                value={mapRecordType(record.recordType)}
                 onChange={(e) => handleChange(e)}
               >
                 <option value="">수입/지출</option>
@@ -278,6 +302,7 @@ export default function Component() {
                 id="amount"
                 placeholder="금액을 입력하세요"
                 name="amount"
+                value={record.amount}
                 onChange={handleChange}
               />
             </div>
@@ -285,7 +310,7 @@ export default function Component() {
             <div className="flex items-center gap-4">
               <select
                 name="assetType"
-                value={record.assetType}
+                value={mapAssetType(record.assetType)}
                 onChange={(e) => handleChange(e)}
               >
                 <option value="">자산 종류</option>
@@ -319,6 +344,7 @@ export default function Component() {
                 placeholder="내용을 입력하세요"
                 rows={1}
                 name="content"
+                value={record.content}
                 onChange={handleChange}
               />
             </div>
@@ -329,6 +355,7 @@ export default function Component() {
                 placeholder="메모"
                 rows={1}
                 name="memo"
+                value={record.memo}
                 onChange={handleChange}
               />
             </div>
@@ -356,10 +383,12 @@ export default function Component() {
             </div>
 
             <div className="flex justify-center gap-4">
-              <Link href={`/api/books/${params.bookId}`}>
+              <Link
+                href={`/api/books/${params.bookId}/records/${params.recordId}`}
+              >
                 <Button variant="outline">취소</Button>
               </Link>
-              <Button>저장</Button>
+              <Button>수정</Button>
             </div>
           </form>
         </main>
