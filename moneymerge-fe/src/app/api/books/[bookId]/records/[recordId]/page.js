@@ -182,10 +182,14 @@ export default function Records() {
                       alt="Transaction Photo"
                       className="rounded-md"
                       src={records.image}
-                      // style={{
-                      //   aspectRatio: "200/200",
-                      //   objectFit: "cover",
-                      // }}
+                      style={{
+                        width: "200px",
+                        height: "200px",
+                        backgroundImage: `url(${records.image})`,
+                        backgroundSize: "contain",
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "center",
+                      }}
                     />
                   </div>
                   <div className="flex mt-3">
@@ -193,8 +197,19 @@ export default function Records() {
 
                     {records.bookList &&
                       records.bookList.map((book) => (
-                        <div key={book.bookId} className="ml-3">
-                          <input type="checkbox"></input>
+                        <div
+                          key={book.bookId}
+                          className="ml-3 flex items-center justify-between"
+                        >
+                          {/* <input type="checkbox"></input> */}
+                          <div
+                            style={{
+                              width: "10px",
+                              height: "10px",
+                              borderRadius: "5px",
+                              backgroundColor: book.bookColor,
+                            }}
+                          ></div>
                           <span className="font-medium">{book.bookTitle}</span>
                         </div>
                       ))}

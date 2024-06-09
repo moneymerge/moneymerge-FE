@@ -29,6 +29,12 @@ const Sidebar = ({ data }) => {
   };
 
   const handleLogout = async () => {
+    const userConfirmed = window.confirm("로그아웃 하시겠습니까?");
+
+    if (!userConfirmed) {
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8080/api/users/logout", {
         method: "POST",
@@ -165,7 +171,7 @@ const Sidebar = ({ data }) => {
               <div className="text-wrapper-6">하루 영수증</div>
             </div>
           </Link>
-          <div className="overlap-4" onClick={handleLogout}>
+          <div className="overlap-4 cursor-pointer" onClick={handleLogout}>
             <div className="text-wrapper-7">로그아웃</div>
           </div>
         </div>

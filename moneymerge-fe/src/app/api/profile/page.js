@@ -5,7 +5,7 @@
  */
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import RootLayout from "../../../../components/layout.js";
+import RootLayout from "../../../components/layout.js";
 
 export default function Component() {
   return (

@@ -43,6 +43,7 @@ export default function Component() {
   // const [date, setDate] = React.useState<Date>()
   const [userData, setUserData] = useState(null);
   const [checkItems, setCheckItems] = useState(new Set());
+  const [file, setFile] = useState(null);
 
   const checkItemHandler = (e) => {
     const { id, checked } = e.target;
@@ -100,6 +101,11 @@ export default function Component() {
     const { name, value } = e.target;
     setRecord((prevRecord) => ({ ...prevRecord, [name]: value }));
     console.log(record);
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    console.log(file);
   };
 
   useEffect(() => {
@@ -174,6 +180,9 @@ export default function Component() {
     formData.append("memo", record.memo);
     formData.append("bookList", record.bookList);
     formData.append("categoryId", record.categoryId);
+    if (file) {
+      formData.append("multipartFile", file);
+    }
     console.log({ record });
 
     fetch(`http://localhost:8080/api/books/${params.bookId}/records`, {
@@ -350,6 +359,18 @@ export default function Component() {
                     </Label>
                   </div>
                 ))}
+            </div>
+            <div>
+              <Label htmlFor="image">사진 첨부</Label>
+              <Input
+                id="image"
+                type="file"
+                name="multipartFile"
+                onChange={handleFileChange}
+                style={{
+                  height: "35px",
+                }}
+              />
             </div>
 
             <div className="flex justify-center gap-4">
