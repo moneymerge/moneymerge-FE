@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 const OverlayDiv = styled.div`
   position: absolute;
-  top: 44.491px;
+  top: 54.491px;
   left: 15.264px;
   width: 615.401px;
   height: 433.46px;
@@ -65,13 +65,13 @@ const Article = ({ children }) => {
           transform="matrix(.73109 -.68228 .83573 .54914 601.284 30.706)"
         />
       </svg>
-      <div
+      <OverlayDiv
         style={{
           visibility: loading ? "hidden" : "visible",
         }}
       >
         {children}
-      </div>
+      </OverlayDiv>
     </div>
   );
 };

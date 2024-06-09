@@ -105,9 +105,13 @@ export default function Component() {
             </Link>
           </div>
         </div>
-        <main className="w-full h-full flex-1">
+        <main style={{
+          height: "432px",
+          overflow: "auto",
+          backgroundColor: "white",
+        }}>
           <form
-            className="w-full h-full max-w-3xl mx-auto bg-white shadow-lg p-4 space-y-6" //rounded-lg
+            className="w-full h-full max-w-3xl mx-auto p-4 space-y-6" //rounded-lg
             onSubmit={handleSubmit}
           >
             <div className="flex items-center gap-4">
