@@ -98,6 +98,21 @@
     width: 96px;
     font-family: '양진체';
   }
+  .box .text-wrapper-8 {
+    color: #000000;
+    font-family: "DotGothic16-Regular", Helvetica;
+    font-size: 13px;
+    font-weight: 400;
+    height: 20px;
+    left: 140px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    text-align: center;
+    top: 78px;
+    width: 20px;
+    font-family: '양진체';
+  }
   .box .book-list {
     background-color: #ffe9e9;
     border-radius: 10px;
