@@ -100,12 +100,12 @@ const Footer = ({ data }) => {
             style={{
               position:
                 "absolute" /* 절대 위치로 설정하여 두 번째 div 위에 겹치도록 함 */,
-              top: "61.5%" /* 부모 요소의 50% 위치에 맞춤 */,
+              top: "62%" /* 부모 요소의 50% 위치에 맞춤 */,
               left: "50%" /* 부모 요소의 50% 위치에 맞춤 */,
               transform: "translate(-50%, -50%)" /* 가운데 정렬 */,
-              width: "90px",
-              height: "78px",
-              borderRadius: "11px",
+              width: "89px",
+              height: "79px",
+              borderRadius: "9px",
               backgroundImage: `url(${
                 character
                   ? character.image
@@ -588,6 +588,16 @@ const Footer = ({ data }) => {
                   받은 영수증이 없습니다.
                 </Label>
               </div>
+              <Link
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  paddingBottom: "30px",
+                }} href="/api/receipts/random"
+              >
+                <Button>영수증 뽑기</Button>
+              </Link>
             </div>
           )}
           {receipt !== null && (
@@ -662,18 +672,18 @@ const Footer = ({ data }) => {
                 <div>합계:</div>
                 <div>{total}</div>
               </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  paddingBottom: "30px",
+                }}
+              >
+                <Button onClick={HandleReceiptLikeClick}>{likes} 좋아요</Button>
+              </div>
             </div>
           )}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              paddingBottom: "30px",
-            }}
-          >
-            <Button onClick={HandleReceiptLikeClick}>{likes} 좋아요</Button>
-          </div>
         </DialogContent>
       </Dialog>
     </div>

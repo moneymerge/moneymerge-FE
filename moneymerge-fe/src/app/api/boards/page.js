@@ -26,7 +26,6 @@ import {
   Pagination,
 } from "@/components/ui/pagination";
 import RootLayout from "../../../components/layout.js";
-
 import { useState, useEffect } from "react";
 
 export default function Component() {

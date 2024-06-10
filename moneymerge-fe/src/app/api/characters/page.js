@@ -19,7 +19,6 @@ import {
 
 export default function Component() {
   const [character, setCharacter] = useState({});
-  const [point, setPoint] = useState(0);
   const [characterList, setCharacterList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -38,22 +37,6 @@ export default function Component() {
         setCharacter(result.data);
       })
       .catch((error) => console.error("Error fetching character data:", error));
-  }, []);
-
-  useEffect(() => {
-    fetch("http://localhost:8080/api/users/point", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    })
-      .then((result) => result.json())
-      .then((result) => {
-        console.log("Received point data:", result.data);
-        setPoint(result.data.points);
-      })
-      .catch((error) => console.error("Error fetching point data:", error));
   }, []);
 
   useEffect(() => {
@@ -92,7 +75,29 @@ export default function Component() {
     }
   };
 
-  const ChangeCharacter = (characterId) => {};
+  const ChangeCharacter = (characterId) => {
+    fetch("http://localhost:8080/api/characters", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ characterId }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.statusCode === 0) {
+          window.location.reload();
+        } else {
+          const errorMessage = response.message;
+          console.error(errorMessage);
+          alert(errorMessage);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <RootLayout>
@@ -102,9 +107,9 @@ export default function Component() {
             className="flex items-center gap-4"
             style={{ position: "absolute", top: "-45px" }}
           >
-            <Link className="flex items-center gap-2" href="/api/boards">
-              <h1 className="text-2xl font-bold w-[100px]">내 캐릭터</h1>
-            </Link>
+            <h1 className="flex items-center gap-2 text-2xl font-bold w-[100px]">
+              내 캐릭터
+            </h1>
           </div>
         </div>
         <main
@@ -128,35 +133,40 @@ export default function Component() {
               <div className="flex w-full justify-center">
                 <div className="mt-4">내 캐릭터 내역</div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 mb-4">
+              <div className="grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-4 ml-8 mr-8">
                 {characterList &&
                   characterList.map((row) => (
                     <div className="relative group overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-transform duration-300 ease-in-out hover:-translate-y-2">
                       <img
                         alt="Product 1"
-                        className="aspect-[3/4] object-cover w-full"
+                        className="aspect-[4/4] object-cover w-full"
                         src={row.image}
                       />
                       <div className="bg-white p-4 dark:bg-gray-950">
                         <h3 className="font-bold text-lg">{row.name}</h3>
                         <Button
-                          className="mt-2 bg-[#fde047] hover:bg-[#facc15] text-[#1f1f1f] dark:bg-[#fde047] dark:hover:bg-[#facc15] dark:text-[#1f1f1f]"
+                          className="mt-2 bg-[#ffafbc] hover:bg-[#facc15] text-[#1f1f1f] dark:bg-[#fde047] dark:hover:bg-[#facc15] dark:text-[#1f1f1f]"
                           size="sm"
-                          onClick={ChangeCharacter(row.characterId)}
+                          onClick={() => ChangeCharacter(row.characterId)}
                         >
-                          선택
+                          {row.characterId === character.characterId
+                            ? "선택됨"
+                            : "선택"}
                         </Button>
                       </div>
                     </div>
                   ))}
               </div>
             </div>
-            <div className="fixed bottom-12 right-16">
+            <div
+              className="absolute"
+              style={{
+                bottom: "-40px",
+                right: "-40px",
+              }}
+            >
               <Link href="/api/characters/shop">
-                <Button
-                  className="bg-[#fde047] hover:bg-[#fde047] text-[#1f1f1f] dark:bg-[#1f1f1f] dark:hover:bg-[#fde047] dark:text-[#fffbeb]"
-                  variant="outline"
-                >
+                <Button className="bg-[#ffafbc] hover:bg-[#facc15] text-[#1f1f1f] inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-medium text-gray-50 shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50">
                   상점 가기
                 </Button>
               </Link>
