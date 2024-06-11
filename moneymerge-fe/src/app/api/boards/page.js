@@ -33,30 +33,50 @@ export default function Component() {
   const [boardType, setBoardType] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState("latest");
+  const [keyword, setKeyword] = useState('');
+  const [range, setRange] = useState("titleAndContent");
+
+  const handleOrderChange = (value) => {
+    setSortBy(value);
+  };
+
+  const handleRangeChange = (value) => {
+    setRange(value);
+  };
 
   useEffect(() => {
     let url = "http://localhost:8080/api/boards";
-    let countUrl = "http://localhost:8080/api/boards/count";
+    // let countUrl = "http://localhost:8080/api/boards/count";
 
     if (currentPage) {
       url += `?page=${currentPage}`;
     }
     if (boardType) {
       url += `&boardType=${boardType}`;
-      countUrl += `?boardType=${boardType}`;
+      // countUrl += `?boardType=${boardType}`;
     }
+    if (sortBy === "latest") {
+      url += `&sortBy=createdAt&isAsc=false`;
+    } else if (sortBy === "oldest") {
+      url += `&sortBy=createdAt&isAsc=true`;
+    } else if (sortBy === "likes") {
+      url += `&sortBy=likes&isAsc=false`;
+    }
+
     fetch(url)
       .then((result) => result.json())
       .then((result) => {
-        setBoards(result.data);
+        setBoards(result.data.content);
+        setTotalPages(result.data.totalPages);
       });
 
-    fetch(countUrl)
-      .then((result) => result.json())
-      .then((result) => {
-        setTotalPages(Math.ceil(result / 10));
-      });
-  }, [boardType, currentPage]);
+    // fetch(countUrl)
+    //   .then((result) => result.json())
+    //   .then((result) => {
+    //     setTotalPages(Math.ceil(result / 10));
+    //   });
+  }, [boardType, sortBy, currentPage]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -69,6 +89,81 @@ export default function Component() {
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // 검색
+  const handleSearchInput = (e) => {
+    e.preventDefault();
+    const value = e.target.value;
+    setKeyword(value);
+  };
+
+  const handleSearchClick = (keyword, e) => {
+    e.preventDefault();
+    let searchUrl = "http://localhost:8080/api/boards/search";
+    let url = "http://localhost:8080/api/boards";
+    
+    if (currentPage) {
+      searchUrl += `?page=${currentPage}`;
+      url += `?page=${currentPage}`;
+    }
+    if (boardType) {
+      searchUrl += `&boardType=${boardType}`;
+      url += `&boardType=${boardType}`;
+    }
+    if (sortBy === "latest") {
+      searchUrl += `&sortBy=createdAt&isAsc=false`;
+      url += `&sortBy=createdAt&isAsc=false`;
+    } else if (sortBy === "oldest") {
+      searchUrl += `&sortBy=createdAt&isAsc=true`;
+      url += `&sortBy=createdAt&isAsc=true`;
+    } else if (sortBy === "likes") {
+      searchUrl += `&sortBy=likes&isAsc=false`;
+      url += `&sortBy=likes&isAsc=false`;
+    }
+    if (range) {
+      searchUrl += `&range=${range}`;
+    }
+    if (keyword) {
+      searchUrl += `&searchKeyword=${keyword}`;
+    }
+
+    if (keyword !== '') {
+    fetch(searchUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        console.log(result.data);
+        setBoards(result.data.content);
+        setTotalPages(result.data.totalPages);
+      })
+      .catch((error) => {
+        console.error("Error fetching receipt data:", error);
+      });
+    }
+    else {
+      fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+        .then((result) => result.json())
+        .then((result) => {
+          console.log(result.data);
+          setBoards(result.data.content);
+          setTotalPages(result.data.totalPages);
+        })
+        .catch((error) => {
+          console.error("Error fetching receipt data:", error);
+        });
     }
   };
 
@@ -85,12 +180,14 @@ export default function Component() {
             </Link>
           </div>
         </div>
-        <main className="bg-white"
+        <main
+          className="bg-white"
           style={{
             marginTop: "13px",
             height: "432px",
             overflow: "auto",
-          }}>
+          }}
+        >
           <div className="max-w-3xl p-4 space-y-6">
             <div>
               <div className="flex items-center gap-1">
@@ -140,6 +237,8 @@ export default function Component() {
                     className="w-[200px]"
                     placeholder="검색어를 입력하세요"
                     type="text"
+                    value={keyword}
+                    onChange={handleSearchInput}
                   />
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -149,9 +248,12 @@ export default function Component() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-[200px]">
-                      <DropdownMenuRadioGroup value="all">
-                        <DropdownMenuRadioItem value="all">
-                          전체
+                      <DropdownMenuRadioGroup
+                        value={range}
+                        onValueChange={handleRangeChange}
+                      >
+                        <DropdownMenuRadioItem value="titleAndContent">
+                          제목 및 내용
                         </DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="title">
                           제목
@@ -159,37 +261,39 @@ export default function Component() {
                         <DropdownMenuRadioItem value="content">
                           내용
                         </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="author">
+                        <DropdownMenuRadioItem value="user">
                           작성자
                         </DropdownMenuRadioItem>
                       </DropdownMenuRadioGroup>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline">
-                        <ArrowUpIcon className="h-5 w-5 mr-2" />
-                        정렬
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-[200px]">
-                      <DropdownMenuRadioGroup value="latest">
-                        <DropdownMenuRadioItem value="latest">
-                          최신순
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="oldest">
-                          오래된순
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="popular">
-                          좋아요순
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="views">
-                          댓글순
-                        </DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  <Button size="sm">검색</Button>
+                  <Button size="sm" onClick={(e) => handleSearchClick(keyword, e)}>검색</Button>
+                  <div className="w-48 flex justify-end">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline">
+                          <ArrowUpIcon className="h-5 w-5 mr-2" />
+                          정렬
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-[200px]">
+                        <DropdownMenuRadioGroup
+                          value={sortBy}
+                          onValueChange={handleOrderChange}
+                        >
+                          <DropdownMenuRadioItem value="latest">
+                            최신순
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="oldest">
+                            오래된순
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="likes">
+                            좋아요순
+                          </DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </div>
               </div>
             </div>
