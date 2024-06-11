@@ -36,7 +36,10 @@ export default function Component() {
             className="flex items-center gap-4"
             style={{ position: "absolute", top: "-45px" }}
           >
-            <h1 className="text-2xl font-bold">가계부 환경설정</h1>
+            <Link className="flex items-center gap-2" href="/">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold">가계부 환경설정</h1>
+            </Link>
           </div>
         </div>
         <main

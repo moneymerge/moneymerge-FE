@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import { DialogTrigger, DialogContent, Dialog } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 export default function Component() {
   const [profile, setProfile] = useState({});
@@ -188,9 +189,25 @@ export default function Component() {
 
   return (
     <RootLayout>
-      <div className="w-full h-full bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
-        <div className="bg-white rounded-3xl shadow-lg w-full max-w-2xl p-8">
-          <div className="flex flex-col items-center">
+      <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
+        <div className="px-4 flex items-center justify-between">
+          <div
+            className="flex items-center gap-4"
+            style={{ position: "absolute", top: "-45px" }}
+          >
+            <Link className="flex items-center gap-2" href="/">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold w-[100px]">내 프로필</h1>
+            </Link>
+          </div>
+        </div>
+        <main
+          style={{
+            height: "432px",
+            width: "100%",
+          }}
+        >
+          <div className="flex flex-col items-center bg-white w-full max-w-2xl p-8">
             <div className="relative">
               <div className="w-40 h-40 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
                 <img
@@ -283,9 +300,29 @@ export default function Component() {
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </RootLayout>
+  );
+}
+
+function ArrowLeftIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m12 19-7-7 7-7" />
+      <path d="M19 12H5" />
+    </svg>
   );
 }
 

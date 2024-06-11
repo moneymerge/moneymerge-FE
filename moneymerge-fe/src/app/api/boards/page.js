@@ -34,7 +34,7 @@ export default function Component() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [sortBy, setSortBy] = useState("latest");
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState("");
   const [range, setRange] = useState("titleAndContent");
 
   const handleOrderChange = (value) => {
@@ -103,7 +103,7 @@ export default function Component() {
     e.preventDefault();
     let searchUrl = "http://localhost:8080/api/boards/search";
     let url = "http://localhost:8080/api/boards";
-    
+
     if (currentPage) {
       searchUrl += `?page=${currentPage}`;
       url += `?page=${currentPage}`;
@@ -129,25 +129,24 @@ export default function Component() {
       searchUrl += `&searchKeyword=${keyword}`;
     }
 
-    if (keyword !== '') {
-    fetch(searchUrl, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    })
-      .then((result) => result.json())
-      .then((result) => {
-        console.log(result.data);
-        setBoards(result.data.content);
-        setTotalPages(result.data.totalPages);
+    if (keyword !== "") {
+      fetch(searchUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
       })
-      .catch((error) => {
-        console.error("Error fetching receipt data:", error);
-      });
-    }
-    else {
+        .then((result) => result.json())
+        .then((result) => {
+          console.log(result.data);
+          setBoards(result.data.content);
+          setTotalPages(result.data.totalPages);
+        })
+        .catch((error) => {
+          console.error("Error fetching receipt data:", error);
+        });
+    } else {
       fetch(url, {
         method: "GET",
         headers: {
@@ -175,7 +174,8 @@ export default function Component() {
             className="flex items-center gap-4"
             style={{ position: "absolute", top: "-45px" }}
           >
-            <Link className="flex items-center gap-2" href="/api/boards">
+            <Link className="flex items-center gap-2" href="/">
+              <ArrowLeftIcon className="h-5 w-5" />
               <h1 className="text-2xl font-bold w-[100px]">커뮤니티</h1>
             </Link>
           </div>
@@ -267,7 +267,12 @@ export default function Component() {
                       </DropdownMenuRadioGroup>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <Button size="sm" onClick={(e) => handleSearchClick(keyword, e)}>검색</Button>
+                  <Button
+                    size="sm"
+                    onClick={(e) => handleSearchClick(keyword, e)}
+                  >
+                    검색
+                  </Button>
                   <div className="w-48 flex justify-end">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
