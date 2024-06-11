@@ -54,13 +54,13 @@ const Article = ({ children }) => {
         <path fill="#050505" d="M554.613 18.963h12.48v11.076h-12.48z" />
         <path
           stroke="#000"
-          stroke-width="3"
+          strokeWidth="3"
           d="M0-1.5h25.438"
           transform="matrix(.73109 .68228 -.83573 .54914 599.005 13.35)"
         />
         <path
           stroke="#000"
-          stroke-width="3"
+          strokeWidth="3"
           d="M0-1.5h25.438"
           transform="matrix(.73109 -.68228 .83573 .54914 601.284 30.706)"
         />

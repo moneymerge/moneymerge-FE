@@ -17,16 +17,19 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import RootLayout from "../../../../../../components/layout.js";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
+
 import Link from "next/link";
 
 export default function Records() {
   const params = useParams();
+  const router = useRouter();
   console.log(params);
-  const bookId = params.bookId;
-  const recordId = params.recordId;
+  // const bookId = params.bookId;
+  // const recordId = params.recordId;
   const [records, setRecords] = useState([]);
   const [likes, setLikes] = useState(0);
+  const [userColor, setUserColor] = useState("");
   const [dislikes, setDislikes] = useState(0);
   const [userData, setUserData] = useState(null);
   const [comments, setComments] = useState({});
@@ -54,14 +57,36 @@ export default function Records() {
   }, []);
 
   useEffect(() => {
-    if (recordId) {
-      fetch(`http://localhost:8080/api/books/${bookId}/records/${recordId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
+    fetch(`http://localhost:8080/api/books/${params.bookId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        const user = result.data.userList.find(
+          (user) => user.userId === userData.userId
+        );
+        setUserColor(user.userColor);
+        console.log(result.data);
       })
+      .catch((error) => console.error("Error fetching user data:", error));
+  }, [userData, params.bookId]);
+
+  useEffect(() => {
+    if (params.recordId) {
+      fetch(
+        `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
         .then((result) => result.json())
         .then((result) => {
           setRecords(result.data);
@@ -71,7 +96,7 @@ export default function Records() {
           console.error("Error fetching record:", error);
         });
     }
-  }, [bookId, recordId]);
+  }, [params.bookId, params.recordId]);
   console.log(records);
 
   const handleDeleteClick = (recordId) => {
@@ -79,14 +104,17 @@ export default function Records() {
 
     if (confirmDelete) {
       // fetch(`http://localhost:8080/api/books/1/records/15`, {
-      fetch(`http://localhost:8080/api/books/${bookId}/records/${recordId}`, {
-        method: "DELETE",
-        credentials: "include",
-      })
+      fetch(
+        `http://localhost:8080/api/books/${params.bookId}/records/${recordId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      )
         .then((response) => {
           console.log(response);
           if (response.ok) {
-            window.location.href = `/api/books/${bookId}`;
+            window.location.href = `/api/books/${params.bookId}`;
           } else {
             alert("Error:" + response.status + "\n" + response.message);
           }
@@ -100,7 +128,7 @@ export default function Records() {
   const HandleRecordLikeClick = () => {
     if (records !== null) {
       fetch(
-        `http://localhost:8080/api/books/${bookId}/records/${records.recordId}/likes`,
+        `http://localhost:8080/api/books/${params.bookId}/records/${records.recordId}/likes`,
         {
           method: "POST",
           headers: {
@@ -111,7 +139,7 @@ export default function Records() {
       )
         .then(() => {
           fetch(
-            `http://localhost:8080/api/books/${bookId}/records/${recordId}/likes`,
+            `http://localhost:8080/api/books/${params.bookId}/records/${records.recordId}/likes`,
             {
               method: "GET",
               headers: {
@@ -137,7 +165,7 @@ export default function Records() {
   const HandleRecordDislikeClick = () => {
     if (records !== null) {
       fetch(
-        `http://localhost:8080/api/books/${bookId}/records/${records.recordId}/dislikes`,
+        `http://localhost:8080/api/books/${params.bookId}/records/${records.recordId}/dislikes`,
         {
           method: "POST",
           headers: {
@@ -148,7 +176,7 @@ export default function Records() {
       )
         .then(() => {
           fetch(
-            `http://localhost:8080/api/books/${bookId}/records/${recordId}/dislikes`,
+            `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}/dislikes`,
             {
               method: "GET",
               headers: {
@@ -180,20 +208,20 @@ export default function Records() {
     }
 
     fetch(
-      `http://localhost:8080/api/books/${bookId}/records/${recordId}/comments`,
+      `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}/comments`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: comment,
+        body: JSON.stringify(comment),
       }
     )
       .then((response) => {
         console.log(response);
         if (response.ok) {
-          window.location.href = `/api/books/${bookId}/records/${recordId}`;
+          window.location.href = `/api/books/${params.bookId}/records/${params.recordId}`;
         } else {
           alert("Error:" + response.status);
         }
@@ -203,15 +231,109 @@ export default function Records() {
       });
   };
 
+  ///////////////////////////
+  console.log("commment");
+  console.log(comment);
+  console.log(comment.content);
+  console.log(comment.comment);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setComment({ [name]: value });
     console.log(comment);
   };
 
+  const handleEditButtonClick = (commentId) => {
+    setEditStates((prevEditStates) => ({
+      ...prevEditStates,
+      [commentId]: true,
+    }));
+
+    setEditedContents((prevEditedContents) => ({
+      ...prevEditedContents,
+      [commentId]: comments.find((comment) => comment.commentId === commentId)
+        .content,
+    }));
+  };
+  const handleCommentDeleteClick = (commentId) => {
+    const confirmDelete = window.confirm("댓글을 삭제하시겠습니까?");
+
+    if (confirmDelete) {
+      fetch(
+        `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}/comments/${commentId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      )
+        .then((response) => {
+          console.log(response);
+          if (response.ok) {
+            window.location.href = `/api/books/${params.bookId}/records/${params.recordId}`;
+          } else {
+            alert("Error:" + response.status + "\n" + response.message);
+          }
+        })
+        .catch((error) => {
+          alert("Fetch error:" + error);
+        });
+    }
+  };
+
+  const handleSaveButtonClick = (commentId) => {
+    comment.content = editedContents[commentId];
+
+    fetch(
+      `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}/comments/${commentId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(comment),
+        credentials: "include",
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          window.location.href = `/api/books/${params.bookId}/records/${params.recordId}`;
+        } else {
+          alert("Error:" + response.status);
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating comment:", error);
+      });
+
+    setEditStates((prevEditStates) => ({
+      ...prevEditStates,
+      [commentId]: false,
+    }));
+  };
+
+  const handleCancelButtonClick = (commentId) => {
+    setEditStates((prevEditStates) => ({
+      ...prevEditStates,
+      [commentId]: false,
+    }));
+
+    setEditedContents((prevEditedContents) => ({
+      ...prevEditedContents,
+      [commentId]: comments.find((comment) => comment.commentId === commentId)
+        .content,
+    }));
+  };
+
+  const handleContentChange = (commentId, e) => {
+    setEditedContents((prevEditedContents) => ({
+      ...prevEditedContents,
+      [commentId]: e.target.value,
+    }));
+  };
+
   return (
     <RootLayout>
-      <div className="w-full h-full max-w-6xl mx-auto overflow-auto">
+      <div className="w-full h-full max-w-6xl mx-auto pb-8 overflow-auto bg-[#ffffff]">
         <div className="px-4 flex items-center justify-between">
           <div
             className="flex items-center gap-4"
@@ -226,265 +348,255 @@ export default function Records() {
             </Link>
           </div>
         </div>
-
-        <div className="flex flex-col gap-8">
-          <div className="grid gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>{records.date}</CardTitle>
-                <CardDescription>
-                  {records.recordType} : {records.amount} 원
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4">
-                  {/* <div>
-                      <div className="font-medium">Amount</div>
-                      <div className="text-gray-500">$50.00</div>
+        <main>
+          <div className="w-full h-full max-w-3xl mx-auto bg-white p-3 space-y-6">
+            <div className="grid gap-8">
+              <Card className="shadow-none">
+                <CardHeader>
+                  <CardTitle>{records.date}</CardTitle>
+                  <CardDescription>
+                    {records.recordType} : {records.amount} 원
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4">
+                    <div className="flex gap-8">
+                      <div className="font-medium">자산</div>
+                      <div className="text-gray-500">{records.assetType}</div>
                     </div>
+                    <div className="flex gap-8">
+                      <div className="font-medium">카테고리</div>
+                      <div className="text-gray-500">
+                        {records.categoryName}
+                      </div>
+                    </div>
+                    <div className="">
+                      <div className="font-medium">내용</div>
+                      <div className="border rounded-md p-4">
+                        <div className="text-gray-500">{records.content}</div>
+                      </div>
+                    </div>
+                    <div className="">
+                      <div className="font-medium">메모</div>
+                      <div className="border rounded-md p-4">
+                        <div className="text-gray-500">{records.memo}</div>
+                      </div>
+                    </div>
+
                     <div>
-                      <div className="font-medium">Account Type</div>
-                      <div className="text-gray-500">Checking</div>
-                    </div> */}
-                  <div className="flex gap-8">
-                    <div className="font-medium">자산</div>
-                    <div className="text-gray-500">{records.assetType}</div>
-                  </div>
-                  <div className="flex gap-8">
-                    <div className="font-medium">카테고리</div>
-                    <div className="text-gray-500">{records.categoryName}</div>
-                  </div>
-                  <div className="">
-                    <div className="font-medium">내용</div>
-                    <div className="border rounded-md p-4">
-                      <div className="text-gray-500">{records.content}</div>
+                      <div className="mt-3 font-medium">사진</div>
+                      <img
+                        alt="Transaction Photo"
+                        className="rounded-md"
+                        src={records.image}
+                        style={{
+                          width: "200px",
+                          height: "200px",
+                          backgroundImage: `url(${records.image})`,
+                          backgroundSize: "contain",
+                          backgroundRepeat: "no-repeat",
+                          backgroundPosition: "center",
+                        }}
+                      />
                     </div>
-                  </div>
-                  <div className="">
-                    <div className="font-medium">메모</div>
-                    <div className="border rounded-md p-4">
-                      <div className="text-gray-500">{records.memo}</div>
-                    </div>
-                  </div>
+                    <div className="flex mt-3">
+                      <div>가계부</div>
 
-                  <div>
-                    <div className="mt-3 font-medium">사진</div>
-                    <img
-                      alt="Transaction Photo"
-                      className="rounded-md"
-                      src={records.image}
-                      style={{
-                        width: "200px",
-                        height: "200px",
-                        backgroundImage: `url(${records.image})`,
-                        backgroundSize: "contain",
-                        backgroundRepeat: "no-repeat",
-                        backgroundPosition: "center",
-                      }}
-                    />
-                  </div>
-                  <div className="flex mt-3">
-                    <div>가계부</div>
-
-                    {records.bookList &&
-                      records.bookList.map((book) => (
-                        <div
-                          key={book.bookId}
-                          className="ml-3 flex items-center justify-between"
-                        >
-                          {/* <input type="checkbox"></input> */}
+                      {records.bookList &&
+                        records.bookList.map((book) => (
                           <div
-                            style={{
-                              width: "10px",
-                              height: "10px",
-                              borderRadius: "5px",
-                              backgroundColor: book.bookColor,
-                            }}
-                          ></div>
-                          <span className="font-medium">{book.bookTitle}</span>
-                        </div>
-                      ))}
+                            key={book.bookId}
+                            className="ml-3 flex items-center justify-between"
+                          >
+                            {/* <input type="checkbox"></input> */}
+                            <div
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                borderRadius: "5px",
+                                // backgroundColor:,
+                              }}
+                            ></div>
+                            <span className="font-medium">
+                              {book.bookTitle}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                    <div className="mt-3 flex gap-8">
+                      <div className="font-medium">기록한 사람</div>
+                      <div className="text-gray-500">{records.username}</div>
+                    </div>
                   </div>
-                  <div className="mt-3 flex gap-8">
-                    <div className="font-medium">기록한 사람</div>
-                    <div className="text-gray-500">{records.username}</div>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <div className="flex justify-between w-full">
-                  <div className="flex items-center gap-2">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="p-[0px]"
-                      onClick={HandleRecordLikeClick}
-                    >
-                      <ThumbsUpIcon className="w-4 h-4" />
-                      <span className="sr-only">Like</span>
-                    </Button>
-                    <div className="text-gray-500">{likes}</div>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={HandleRecordDislikeClick}
-                    >
-                      <ThumbsDownIcon className="w-4 h-4" />
-                      <span className="sr-only">Dislike</span>
-                    </Button>
-                    <div className="text-gray-500">{dislikes}</div>
-                  </div>
-                  {userData && records.userId === userData.userId && (
-                    <div className="flex items-center gap-4">
-                      <Link
-                        href={`/api/books/${params.bookId}/records/${records.recordId}/edit`}
-                      >
-                        <Button size="icon" variant="ghost">
-                          <span className="">수정</span>
-                          <PencilIcon className="w-5 h-5" />
-                          <span className="sr-only ">Edit</span>
-                        </Button>
-                      </Link>
-
+                </CardContent>
+                <CardFooter>
+                  <div className="flex justify-between w-full">
+                    <div className="flex items-center gap-2">
                       <Button
                         size="icon"
                         variant="ghost"
-                        onClick={() => handleDeleteClick(records.recordId)}
+                        className="p-[0px]"
+                        onClick={HandleRecordLikeClick}
                       >
-                        삭제
-                        <TrashIcon className="w-5 h-5" />
-                        <span className="sr-only">Delete</span>
+                        <ThumbsUpIcon className="w-4 h-4" />
+                        <span className="sr-only">Like</span>
                       </Button>
+                      <div className="text-gray-500">{likes}</div>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={HandleRecordDislikeClick}
+                      >
+                        <ThumbsDownIcon className="w-4 h-4" />
+                        <span className="sr-only">Dislike</span>
+                      </Button>
+                      <div className="text-gray-500">{dislikes}</div>
                     </div>
-                  )}
-                </div>
-              </CardFooter>
-            </Card>
-          </div>
-          {/* 댓글 */}
-
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-bold mb-4">댓글</h3>
-            <form className="mt-6" onSubmit={handleSubmit}>
-              <Textarea
-                className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
-                placeholder="댓글을 입력하세요"
-                name="comment"
-                onChange={handleChange}
-              />
-              <div className="flex justify-end mt-2">
-                <Button variant="outline">저장</Button>
-              </div>
-            </form>
-            {/* {records.commentList &&
-              records.commentList.map((comment) => (
-                <div key={comment.commentId} className="ml-3">
-                  <input type="checkbox"></input>
-                  <span className="font-medium">{comment.comment}</span>
-                  <div>ok</div>
-                </div>
-              ))} */}
-            {/* {records.commentList &&
-              records.commentList.map((comment, index) => (
-                <div className="space-y-4" key={comment.commentId}>
-                  {editStates[comment.commentId] ? (
-                    <div className="mt-6">
-                      <Textarea
-                        className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
-                        placeholder="댓글을 입력하세요"
-                        name="content"
-                        value={editedContents[comment.commentId]}
-                        onChange={(e) =>
-                          handleContentChange(comment.commentId, e)
-                        }
-                      />
-
-                      <div className="flex justify-end mt-2 gap-4">
-                        <button
-                          onClick={() =>
-                            handleSaveButtonClick(comment.commentId)
-                          }
+                    {userData && records.userId === userData.userId && (
+                      <div className="flex items-center gap-4">
+                        <Link
+                          href={`/api/books/${params.bookId}/records/${records.recordId}/edit`}
                         >
-                          저장
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleCancelButtonClick(comment.commentId)
-                          }
+                          <Button size="icon" variant="ghost">
+                            <span className="">수정</span>
+                            <PencilIcon className="w-5 h-5" />
+                            <span className="sr-only ">Edit</span>
+                          </Button>
+                        </Link>
+
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => handleDeleteClick(records.recordId)}
                         >
-                          취소
-                        </button>
+                          삭제
+                          <TrashIcon className="w-5 h-5" />
+                          <span className="sr-only">Delete</span>
+                        </Button>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="gap-4 pt-4">
-                      <div className="flex-1">
-                        <div className="flex justify-between">
-                          <div className="flex justify-between gap-2">
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                gap: "40px",
-                              }}
-                            >
+                    )}
+                  </div>
+                </CardFooter>
+              </Card>
+            </div>
+            {/* 댓글 */}
+
+            <div className="border-t pt-6 m-5">
+              <h3 className="text-lg font-bold mb-4">댓글</h3>
+              <form className="mt-6" onSubmit={handleSubmit}>
+                <Textarea
+                  className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
+                  placeholder="댓글을 입력하세요"
+                  name="content"
+                  onChange={handleChange}
+                />
+                <div className="flex justify-end mt-2">
+                  <Button variant="outline">저장</Button>
+                </div>
+              </form>
+
+              {records.commentList &&
+                records.commentList.map((comment, index) => (
+                  <div className="space-y-4" key={comment.commentId}>
+                    {editStates[comment.commentId] ? (
+                      <div className="mt-6">
+                        <Textarea
+                          className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
+                          placeholder="댓글을 입력하세요"
+                          name="content"
+                          value={editedContents[comment.commentId]}
+                          onChange={(e) =>
+                            handleContentChange(comment.commentId, e)
+                          }
+                        />
+
+                        <div className="flex justify-end mt-2 gap-4">
+                          <button
+                            onClick={() =>
+                              handleSaveButtonClick(comment.commentId)
+                            }
+                          >
+                            저장
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleCancelButtonClick(comment.commentId)
+                            }
+                          >
+                            취소
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="gap-4 pt-4">
+                        <div className="flex-1 pb-4">
+                          <div className="flex justify-between">
+                            <div className="flex justify-between gap-2">
                               <div
                                 style={{
                                   display: "flex",
                                   flexDirection: "column",
                                   alignItems: "center",
-                                  gap: "10px",
+                                  gap: "40px",
                                 }}
                               >
                                 <div
                                   style={{
-                                    backgroundColor: "#ffffff", //user의 color...
-                                    borderRadius: "100px",
-                                    height: "100px",
-                                    width: "100px",
+                                    display: "flex",
+
+                                    alignItems: "center",
+                                    gap: "10px",
                                   }}
-                                />
-                                {comment.username}
+                                >
+                                  <div
+                                    style={{
+                                      backgroundColor: `${userColor}`, //user의 color...
+                                      borderRadius: "50%",
+                                      height: "20px",
+                                      width: "20px",
+                                    }}
+                                  />
+                                  {comment.username}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="text-sm text-gray-500  mr-4">
+                                {comment.createdAt}
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center">
-                            <div className="text-sm text-gray-500  mr-4">
-                              {comment.createdAt}
+                          <p className="mt-2">{comment.content}</p>
+                          {userData && userData.userId === comment.userId && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleEditButtonClick(comment.commentId)
+                                }
+                              >
+                                수정
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleCommentDeleteClick(comment.commentId)
+                                }
+                              >
+                                삭제
+                              </Button>
                             </div>
-                          </div>
+                          )}
                         </div>
-                        <p className="mt-2">{comment.content}</p>
-                        {userData && userData.userId === comment.userId && (
-                          <div className="flex items-center gap-2 mt-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() =>
-                                handleEditButtonClick(comment.commentId)
-                              }
-                            >
-                              수정
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() =>
-                                handleCommentDeleteClick(comment.commentId)
-                              }
-                            >
-                              삭제
-                            </Button>
-                          </div>
-                        )}
                       </div>
-                    </div>
-                  )}
-                </div>
-              ))} */}
+                    )}
+                  </div>
+                ))}
+            </div>
           </div>
-        </div>
+        </main>
       </div>
     </RootLayout>
   );

@@ -44,6 +44,7 @@ export default function Component() {
   const [userData, setUserData] = useState(null);
   const [checkItems, setCheckItems] = useState(new Set());
   const [file, setFile] = useState(null);
+  const [newCategory, setNewCategory] = useState("");
 
   const checkItemHandler = (e) => {
     const { id, checked } = e.target;
@@ -64,12 +65,6 @@ export default function Component() {
   console.log(checkItems);
   console.log(record);
 
-  // useEffect(() => {
-  //   setRecord((prevRecord) => ({
-  //     ...prevRecord,
-  //     date: format(date, "yyyy-MM-dd"),
-  //   }));
-  // }, [date]);
   useEffect(() => {
     if (date instanceof Date && !isNaN(date)) {
       setRecord((prevRecord) => ({
@@ -108,6 +103,51 @@ export default function Component() {
     console.log(file);
   };
 
+  const handleCategorySubmit = (e) => {
+    e.preventDefault();
+    if (newCategory.trim() === "") {
+      alert("카테고리를 입력해주세요.");
+      return;
+    }
+    // 기존에 있는 카테고리인지
+    const existingCategory = categories.find(
+      (category) => category.category === newCategory
+    );
+
+    if (existingCategory) {
+      alert("이미 존재하는 카테고리입니다.");
+      return;
+    }
+
+    fetch(`http://localhost:8080/api/books/${params.bookId}/categories`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ category: newCategory }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to add category");
+        }
+        return response.json();
+      })
+      .then((result) => {
+        setCategories((prevCategories) => [...prevCategories, result.data]);
+        setNewCategory("");
+        alert("새 카테고리가 추가되었습니다.");
+        fetchCategories();
+      })
+      .catch((error) => {
+        console.error("Error adding category:", error);
+        alert("카테고리 추가 중 오류가 발생했습니다.");
+      });
+
+    console.log("새 카테고리 추가:", newCategory);
+    setNewCategory("");
+  };
+
   useEffect(() => {
     fetch(`http://localhost:8080/api/books/${params.bookId}/categories`, {
       method: "GET",
@@ -130,7 +170,31 @@ export default function Component() {
         }
       });
   }, []);
+  console.log("카테고리");
   console.log(categories);
+
+  const fetchCategories = () => {
+    fetch(`http://localhost:8080/api/books/${params.bookId}/categories`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => {
+        if (!result.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        return result.json();
+      })
+      .then((result) => {
+        if (result.data && result.data.length >= 0) {
+          setCategories(result.data);
+        } else {
+          console.error("No data returned from the server");
+        }
+      });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -205,20 +269,40 @@ export default function Component() {
       });
   };
 
+  const handleCategoryDelete = (categoryIdToDelete) => {
+    if (confirm("정말로 이 카테고리를 삭제하시겠습니까?")) {
+      fetch(
+        `http://localhost:8080/api/books/${params.bookId}/categories/${categoryIdToDelete}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to delete category");
+          }
+          setCategories((prevCategories) =>
+            prevCategories.filter(
+              (category) => category.categoryId !== categoryIdToDelete
+            )
+          );
+          alert("카테고리가 삭제되었습니다.");
+          fetchCategories();
+        })
+        .catch((error) => {
+          console.error("Error deleting category:", error);
+          alert("카테고리 삭제 중 오류가 발생했습니다.");
+        });
+    }
+  };
+
   return (
     <RootLayout>
       <div className="w-full h-full bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
-        {/* <div className="px-4 flex items-center justify-between">
-          <div className="fixed flex items-center gap-4 mt-[-60px]">
-            <Link
-              className="flex items-center gap-2"
-              href={`/api/books/${params.bookId}`}
-            >
-              <ArrowLeftIcon className="h-5 w-5" />
-              <h1 className="text-2xl font-bold ">레코드 작성</h1>
-            </Link>
-          </div>
-        </div> */}
         <div className="px-4 flex items-center justify-between">
           <div
             className="flex items-center gap-4"
@@ -304,22 +388,46 @@ export default function Component() {
               </select>
             </div>
             <div className="flex items-center gap-4">
-              <select
-                name="categoryId"
-                value={record.categoryId}
-                onChange={(e) => handleChange(e)}
-              >
-                <option value="">카테고리</option>
-                {categories &&
-                  categories.map((category) => (
-                    <option
-                      key={category.categoryId}
-                      value={category.categoryId}
-                    >
-                      {category.category}
-                    </option>
-                  ))}
-              </select>
+              <div className="flex items-center gap-2">
+                <select
+                  name="categoryId"
+                  value={record.categoryId}
+                  onChange={(e) => handleChange(e)}
+                >
+                  <option value="">카테고리</option>
+                  {categories &&
+                    categories.map((category) => (
+                      <option
+                        key={category.categoryId}
+                        value={category.categoryId}
+                      >
+                        {category.category}
+                      </option>
+                    ))}
+                </select>
+                <Button
+                  className="w-[10px] h-[20px]"
+                  onClick={() => handleCategoryDelete(record.categoryId)}
+                >
+                  삭제
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                <Input
+                  className="flex-grow w-[105px] center"
+                  id="category"
+                  placeholder="카테고리 추가"
+                  name="category"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                />
+                <Button
+                  className="w-[10px] h-[20px]"
+                  onClick={handleCategorySubmit}
+                >
+                  저장
+                </Button>
+              </div>
             </div>
             <div>
               <Label htmlFor="content">내용</Label>
@@ -339,6 +447,18 @@ export default function Component() {
                 rows={1}
                 name="memo"
                 onChange={handleChange}
+              />
+            </div>
+            <div>
+              <Label htmlFor="image">사진 첨부</Label>
+              <Input
+                id="image"
+                type="file"
+                name="multipartFile"
+                onChange={handleFileChange}
+                style={{
+                  height: "35px",
+                }}
               />
             </div>
 
@@ -363,24 +483,12 @@ export default function Component() {
                   </div>
                 ))}
             </div>
-            <div>
-              <Label htmlFor="image">사진 첨부</Label>
-              <Input
-                id="image"
-                type="file"
-                name="multipartFile"
-                onChange={handleFileChange}
-                style={{
-                  height: "35px",
-                }}
-              />
-            </div>
 
             <div className="flex justify-center gap-4">
               <Link href={`/api/books/${params.bookId}`}>
                 <Button variant="outline">취소</Button>
               </Link>
-              <Button>저장</Button>
+              <Button type="submit">저장</Button>
             </div>
           </form>
         </main>

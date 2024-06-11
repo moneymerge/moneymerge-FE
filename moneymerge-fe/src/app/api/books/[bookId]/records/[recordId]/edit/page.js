@@ -28,12 +28,27 @@ import { useParams } from "next/navigation";
 
 export default function RecordEdit() {
   const params = useParams();
-  const [record, setRecord] = useState({});
+  // const bookId = params.bookId;
+  // const recordId = params.recordId;
+  console.log("params");
+  console.log(params);
+  const [record, setRecord] = useState({
+    date: "",
+    recordType: "",
+    amount: "",
+    assetType: "",
+    content: "",
+    memo: "",
+    bookList: "",
+    categoryId: "",
+  });
   const [categories, setCategories] = useState([]);
   const [date, setDate] = useState(null);
   // const [date, setDate] = React.useState<Date>()
   const [userData, setUserData] = useState(null);
   const [checkItems, setCheckItems] = useState(new Set());
+  const [file, setFile] = useState(null);
+  const [newCategory, setNewCategory] = useState("");
 
   // 해당 게시글 데이터 가져오기
   useEffect(() => {
@@ -202,7 +217,9 @@ export default function RecordEdit() {
     formData.append("memo", record.memo);
     formData.append("bookList", record.bookList);
     formData.append("categoryId", record.categoryId);
-
+    if (file) {
+      formData.append("multipartFile", file);
+    }
     console.log("formData");
     for (var value of formData.values()) {
       console.log(value);
@@ -229,6 +246,107 @@ export default function RecordEdit() {
       .catch((error) => {
         alert("Fetch error:" + error);
       });
+  };
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    console.log(file);
+  };
+
+  const handleCategorySubmit = (e) => {
+    e.preventDefault();
+    if (newCategory.trim() === "") {
+      alert("카테고리를 입력해주세요.");
+      return;
+    }
+    // 기존에 있는 카테고리인지
+    const existingCategory = categories.find(
+      (category) => category.category === newCategory
+    );
+
+    if (existingCategory) {
+      alert("이미 존재하는 카테고리입니다.");
+      return;
+    }
+
+    fetch(`http://localhost:8080/api/books/${params.bookId}/categories`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ category: newCategory }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to add category");
+        }
+        return response.json();
+      })
+      .then((result) => {
+        setCategories((prevCategories) => [...prevCategories, result.data]);
+        setNewCategory("");
+        alert("새 카테고리가 추가되었습니다.");
+        fetchCategories();
+      })
+      .catch((error) => {
+        console.error("Error adding category:", error);
+        alert("카테고리 추가 중 오류가 발생했습니다.");
+      });
+
+    console.log("새 카테고리 추가:", newCategory);
+    setNewCategory("");
+  };
+  const fetchCategories = () => {
+    fetch(`http://localhost:8080/api/books/${params.bookId}/categories`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => {
+        if (!result.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        return result.json();
+      })
+      .then((result) => {
+        if (result.data && result.data.length >= 0) {
+          setCategories(result.data);
+        } else {
+          console.error("No data returned from the server");
+        }
+      });
+  };
+  const handleCategoryDelete = (categoryIdToDelete) => {
+    if (confirm("정말로 이 카테고리를 삭제하시겠습니까?")) {
+      fetch(
+        `http://localhost:8080/api/books/${params.bookId}/categories/${categoryIdToDelete}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to delete category");
+          }
+          setCategories((prevCategories) =>
+            prevCategories.filter(
+              (category) => category.categoryId !== categoryIdToDelete
+            )
+          );
+          alert("카테고리가 삭제되었습니다.");
+          fetchCategories();
+        })
+        .catch((error) => {
+          console.error("Error deleting category:", error);
+          alert("카테고리 삭제 중 오류가 발생했습니다.");
+        });
+    }
   };
 
   return (
@@ -320,23 +438,48 @@ export default function RecordEdit() {
               </select>
             </div>
             <div className="flex items-center gap-4">
-              <select
-                name="categoryId"
-                value={record.categoryId}
-                onChange={(e) => handleChange(e)}
-              >
-                <option value="">카테고리</option>
-                {categories &&
-                  categories.map((category) => (
-                    <option
-                      key={category.categoryId}
-                      value={category.categoryId}
-                    >
-                      {category.category}
-                    </option>
-                  ))}
-              </select>
+              <div className="flex items-center gap-2">
+                <select
+                  name="categoryId"
+                  value={record.categoryId}
+                  onChange={(e) => handleChange(e)}
+                >
+                  <option value="">카테고리</option>
+                  {categories &&
+                    categories.map((category) => (
+                      <option
+                        key={category.categoryId}
+                        value={category.categoryId}
+                      >
+                        {category.category}
+                      </option>
+                    ))}
+                </select>
+                <Button
+                  className="w-[10px] h-[20px]"
+                  onClick={() => handleCategoryDelete(record.categoryId)}
+                >
+                  삭제
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                <Input
+                  className="flex-grow w-[105px]"
+                  id="category"
+                  placeholder="카테고리 추가"
+                  name="category"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                />
+                <Button
+                  className="w-[10px] h-[20px]"
+                  onClick={handleCategorySubmit}
+                >
+                  저장
+                </Button>
+              </div>
             </div>
+
             <div>
               <Label htmlFor="content">내용</Label>
               <Textarea
@@ -357,6 +500,34 @@ export default function RecordEdit() {
                 name="memo"
                 value={record.memo}
                 onChange={handleChange}
+              />
+            </div>
+            <div>
+              <div className="mt-3 font-medium">사진</div>
+              <img
+                alt="Transaction Photo"
+                className="rounded-md"
+                src={record.image}
+                style={{
+                  width: "200px",
+                  height: "200px",
+                  backgroundImage: `url(${record.image})`,
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                }}
+              />
+            </div>
+            <div>
+              <Label htmlFor="image">사진 첨부</Label>
+              <Input
+                id="image"
+                type="file"
+                name="multipartFile"
+                onChange={handleFileChange}
+                style={{
+                  height: "35px",
+                }}
               />
             </div>
 

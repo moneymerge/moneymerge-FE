@@ -200,7 +200,7 @@ function BlueFolder() {
         fill="#F8C40F"
         d="M112.448 125 83.04 70.717h5.772L117.12 125h-4.672Z"
       />
-      <path stroke="#F8C40F" stroke-width="2" d="M20.528 69.634H90.04" />
+      <path stroke="#F8C40F" strokeWidth="2" d="M20.528 69.634H90.04" />
     </svg>
   );
 }
@@ -277,7 +277,7 @@ function PinkFolder() {
         fill="#F8C40F"
         d="M112.448 125 83.04 70.717h5.772L117.12 125h-4.672Z"
       />
-      <path stroke="#F8C40F" stroke-width="2" d="M20.528 69.634H90.04" />
+      <path stroke="#F8C40F" strokeWidth="2" d="M20.528 69.634H90.04" />
     </svg>
   );
 }

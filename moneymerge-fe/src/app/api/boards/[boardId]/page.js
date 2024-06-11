@@ -240,6 +240,8 @@ export default function Component() {
         alert("Fetch error:" + error);
       });
   };
+  console.log("content");
+  console.log(comment);
 
   const HandleCommentLikeClick = (commentId) => {
     if (commentId !== null) {
