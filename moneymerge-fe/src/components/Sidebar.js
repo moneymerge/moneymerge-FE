@@ -152,7 +152,7 @@ const Sidebar = ({ data }) => {
                 {/* 가계부 추가 Dialog */}
                 <Dialog>
                   <DialogTrigger asChild>
-                    <div className="add-button">+ 가계부 추가</div>
+                    <div className="add-button cursor-pointer">+ 가계부 추가</div>
                   </DialogTrigger>
                   <BookForm />
                 </Dialog>

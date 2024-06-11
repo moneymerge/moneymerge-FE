@@ -5,12 +5,29 @@
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
 import RootLayout from "../../../../components/layout.js";
+import { useState, useEffect } from "react";
 
 export default function Component() {
+  const [bookList, setBookList] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/books", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        console.log("Received book data:", result.data);
+        setBookList(result.data);
+      })
+      .catch((error) => console.error("Error fetching book data:", error));
+  }, []);
+
   return (
     <RootLayout>
       <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
@@ -31,78 +48,23 @@ export default function Component() {
           }}
         >
           <div className="grid gap-6 max-w-6xl w-full mx-auto">
-            <Card>
-              <CardHeader>
-                <CardTitle>Personal Budget</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      Track your personal expenses
-                    </p>
-                  </div>
-                  <Link className="text-primary" href="#">
-                    <PencilIcon className="w-5 h-5" />
-                    <span className="sr-only">Edit Personal Budget</span>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Household Budget</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      Track your household expenses
-                    </p>
-                  </div>
-                  <Link className="text-primary" href="#">
-                    <PencilIcon className="w-5 h-5" />
-                    <span className="sr-only">Edit Household Budget</span>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Travel Budget</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      Track your travel expenses
-                    </p>
-                  </div>
-                  <Link className="text-primary" href="#">
-                    <PencilIcon className="w-5 h-5" />
-                    <span className="sr-only">Edit Travel Budget</span>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Business Budget</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      Track your business expenses
-                    </p>
-                  </div>
-                  <Link className="text-primary" href="#">
-                    <PencilIcon className="w-5 h-5" />
-                    <span className="sr-only">Edit Business Budget</span>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+            {bookList &&
+              bookList.map((row) => (
+                <Card>
+                  <CardContent>
+                    <div className="flex items-center justify-between mt-4">
+                      <CardTitle>{row.bookTitle}</CardTitle>
+                      <Link
+                        className="text-primary"
+                        href={`/api/books/${row.bookId}/settings`}
+                      >
+                        <PencilIcon className="w-5 h-5" />
+                        <span className="sr-only">Edit Personal Budget</span>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </main>
       </div>

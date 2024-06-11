@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 
 const Footer = ({ data }) => {
   const [receipt, setReceipt] = useState(null);
-  const [character, setCharacter] = useState(null);
+  const [character, setCharacter] = useState({});
   const [total, setTotal] = useState(0);
   const [likes, setLikes] = useState(0);
 

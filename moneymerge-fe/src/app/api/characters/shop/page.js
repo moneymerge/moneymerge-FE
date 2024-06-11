@@ -173,7 +173,7 @@ export default function Component() {
                 <p>포인트: {point}p</p>
               </div>
               <div className="flex w-full justify-center">
-                <div className="mt-4">내 캐릭터 내역</div>
+                <div className="mt-4">캐릭터 내역</div>
               </div>
               <div className="grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-4 ml-8 mr-8">
                 {characterList &&
