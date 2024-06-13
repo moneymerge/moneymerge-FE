@@ -316,6 +316,31 @@ function BookForm() {
       .catch((error) => {
         alert("Fetch error:" + error);
       });
+
+      const notification = {
+        type : 'BOOK_INVITED',
+        detail: book.title
+      }
+
+      for (const user of userList) {
+        fetch(`http://localhost:8080/api/notifications/${user.userId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(notification),
+        })
+          .then((response) => {
+            if (response.ok) {
+            } else {
+              alert("Error:" + response.status);
+            }
+          })
+          .catch((error) => {
+            alert("Fetch error:" + error);
+          });
+      }
   };
 
   return (

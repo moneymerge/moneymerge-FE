@@ -207,6 +207,11 @@ export default function Records() {
       return;
     }
 
+    const notification = {
+      type : 'BOOK_GET_COMMENT',
+      detail: "\"" + comment.content + "\""
+    }
+
     fetch(
       `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}/comments`,
       {
@@ -229,6 +234,24 @@ export default function Records() {
       .catch((error) => {
         alert("Fetch error:" + error);
       });
+
+      fetch(`http://localhost:8080/api/notifications/${records.userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(notification),
+      })
+        .then((response) => {
+          if (response.ok) {
+          } else {
+            alert("Error:" + response.status);
+          }
+        })
+        .catch((error) => {
+          alert("Fetch error:" + error);
+        });
   };
 
   ///////////////////////////

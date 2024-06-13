@@ -403,6 +403,21 @@ const Footer = ({ data }) => {
         </div>
       </Link>
       {/* 알림 */}
+      {data && data.hasNewNotification && (
+        <div
+          className="absolute h-8 w-8 rounded-full flex items-center justify-center"
+          style={{
+            bottom: "440px",
+            right: "325px",
+            backgroundColor: "red",
+            color: "white",
+            border: "1px solid black",
+          }}
+        >
+          !
+        </div>
+      )}
+
       <Link href="/api/notifications">
         <div>
           <svg
@@ -435,6 +450,20 @@ const Footer = ({ data }) => {
         </div>
       </Link>
       {/* 우체통 */}
+      {data && !data.todayDrawStatus && (
+        <div
+          className="absolute h-8 w-8 rounded-full flex items-center justify-center"
+          style={{
+            bottom: "300px",
+            right: "325px",
+            backgroundColor: "#ffafbc",
+            color: "white",
+            border: "1px solid black",
+          }}
+        >
+          뽑기
+        </div>
+      )}
       <Dialog>
         <DialogTrigger onClick={handlePostClick}>
           <div>
@@ -594,9 +623,12 @@ const Footer = ({ data }) => {
                   flexDirection: "column",
                   alignItems: "center",
                   paddingBottom: "30px",
-                }} href="/api/receipts/random"
+                }}
+                href="/api/receipts/random"
               >
-                <Button>영수증 뽑기</Button>
+                <Button style={{
+                  backgroundColor: "#ffafbc"
+                }}>영수증 뽑기</Button>
               </Link>
             </div>
           )}
@@ -691,3 +723,23 @@ const Footer = ({ data }) => {
 };
 
 export default Footer;
+
+function PlusIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14" />
+      <path d="M12 5v14" />
+    </svg>
+  );
+}

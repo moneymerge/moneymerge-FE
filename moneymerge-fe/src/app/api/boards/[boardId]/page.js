@@ -215,10 +215,34 @@ export default function Component() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const notification = {
+      type : 'BOARD_GET_COMMENT',
+      detail: "\"" + comment.content + "\""
+    }
+  
+
     if (comment.content === "" || /^\s+$/.test(comment.content)) {
       alert("내용을 입력해주세요.");
       return;
     }
+
+    fetch(`http://localhost:8080/api/notifications/${board.userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(notification),
+    })
+      .then((response) => {
+        if (response.ok) {
+        } else {
+          alert("Error:" + response.status);
+        }
+      })
+      .catch((error) => {
+        alert("Fetch error:" + error);
+      });
 
     fetch(`http://localhost:8080/api/boards/${board.boardId}/comments`, {
       method: "POST",
@@ -239,9 +263,8 @@ export default function Component() {
       .catch((error) => {
         alert("Fetch error:" + error);
       });
+
   };
-  console.log("content");
-  console.log(comment);
 
   const HandleCommentLikeClick = (commentId) => {
     if (commentId !== null) {
