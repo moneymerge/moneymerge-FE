@@ -282,6 +282,31 @@ export default function Component() {
       .catch((error) => {
         console.error(error);
       });
+
+      const notification = {
+        type : 'GOAL_CHANGE',
+        detail: book.bookTitle + "의 이번달 "
+      }
+
+      for (const user of book.userList) {
+        fetch(`http://localhost:8080/api/notifications/${user.userId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(notification),
+        })
+          .then((response) => {
+            if (response.ok) {
+            } else {
+              alert("Error:" + response.status);
+            }
+          })
+          .catch((error) => {
+            alert("Fetch error:" + error);
+          });
+      }
   };
 
   // 올해 목표 수정
@@ -320,6 +345,31 @@ export default function Component() {
       .catch((error) => {
         console.error(error);
       });
+
+      const notification = {
+        type : 'GOAL_CHANGE',
+        detail: book.bookTitle + "의 올해 "
+      }
+
+      for (const user of book.userList) {
+        fetch(`http://localhost:8080/api/notifications/${user.userId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(notification),
+        })
+          .then((response) => {
+            if (response.ok) {
+            } else {
+              alert("Error:" + response.status);
+            }
+          })
+          .catch((error) => {
+            alert("Fetch error:" + error);
+          });
+      }
   };
 
   // 삭제 동의

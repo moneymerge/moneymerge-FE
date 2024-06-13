@@ -34,6 +34,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "eventsource-polyfill": "^0.9.6",
     "lucide-react": "^0.378.0",
     "next": "^14.2.3",
     "next-cookies": "^2.0.3",
