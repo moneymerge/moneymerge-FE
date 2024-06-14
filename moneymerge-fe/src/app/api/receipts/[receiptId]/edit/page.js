@@ -18,29 +18,37 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+// npx shadcn-ui@latest add popover
+// npx shadcn-ui@latest add calendar
 
 import Link from "next/link";
-import RootLayout from "../../../../components/layout";
+import RootLayout from "../../../../../components/layout.js";
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
 export default function Component() {
+  const params = useParams();
+  const receiptId = params.receiptId;
   const [receipt, setReceipt] = useState({
     date: "",
     content: "",
     shared: false,
     positive: null,
     negative: null,
+    likeCount: 0,
   });
   const [date, setDate] = useState(null);
 
   useEffect(() => {
-    if (date instanceof Date && !isNaN(date)) {
-      setReceipt((prevReceipt) => ({
-        ...prevReceipt,
-        date: format(date, "yyyy-MM-dd"),
-      }));
-    }
-  }, [date]);
+    fetch(`http://localhost:8080/api/receipts/${receiptId}`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        setReceipt(result.data);
+      });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -87,8 +95,8 @@ export default function Component() {
       return;
     }
 
-    fetch(`http://localhost:8080/api/receipts`, {
-      method: "POST",
+    fetch(`http://localhost:8080/api/receipts/${receiptId}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -98,7 +106,7 @@ export default function Component() {
       .then((response) => {
         console.log(response);
         if (response.ok) {
-          window.location.href = `/api/receipts`;
+          window.location.href = `/api/receipts/${receiptId}`;
         } else if (response.status === 403) {
           alert("모두 입력해주세요.");
         } else {
@@ -118,9 +126,12 @@ export default function Component() {
             className="flex items-center gap-4"
             style={{ position: "absolute", top: "-45px" }}
           >
-            <Link className="flex items-center gap-2" href={`/api/receipts`}>
+            <Link
+              className="flex items-center gap-2"
+              href={`/api/receipts/${receiptId}`}
+            >
               <ArrowLeftIcon className="h-5 w-5" />
-              <h1 className="text-2xl font-bold">하루 영수증 작성</h1>
+              <h1 className="text-2xl font-bold">하루 영수증 수정</h1>
             </Link>
           </div>
         </div>
@@ -139,12 +150,12 @@ export default function Component() {
                     variant={"outline"}
                     className={cn(
                       "w-[280px] justify-start text-left font-normal",
-                      !date && "text-muted-foreground"
+                      !receipt.date && "text-muted-foreground"
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? (
-                      format(date, "yyyy-MM-dd") // ?
+                    {receipt.date ? (
+                      format(receipt.date, "yyyy-MM-dd") // ?
                     ) : (
                       <span>Pick a date</span>
                     )}
@@ -167,6 +178,7 @@ export default function Component() {
                 placeholder="내용을 입력하세요"
                 rows={5}
                 name="content"
+                value={receipt.content}
                 onChange={handleChange}
               />
             </div>
@@ -179,6 +191,7 @@ export default function Component() {
                 id="positive"
                 placeholder="긍정적 기분을 입력하세요"
                 name="positive"
+                value={receipt.positive}
                 onChange={handleChange}
               />
             </div>
@@ -191,6 +204,7 @@ export default function Component() {
                 id="negative"
                 placeholder="부정적 기분을 입력하세요"
                 name="negative"
+                value={receipt.negative}
                 onChange={handleChange}
               />
             </div>
@@ -203,11 +217,12 @@ export default function Component() {
                 onChange={handleSharedChange} // 체크 박스의 상태 변경을 처리
               />
             </div>
+
             <div className="flex justify-center gap-4">
-              <Link href={`/api/receipts`}>
+              <Link href={`/api/receipts/${receiptId}`}>
                 <Button variant="outline">취소</Button>
               </Link>
-              <Button type="submit">저장</Button>
+              <Button>수정</Button>
             </div>
           </form>
         </main>

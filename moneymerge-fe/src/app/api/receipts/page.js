@@ -15,8 +15,6 @@ import interactionPlugin, {
 } from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import koLocale from "@fullcalendar/core/locales/ko";
-// npm install @fullcalendar/core @fullcalendar/react @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "../receipts/receipts.css";
@@ -76,7 +74,15 @@ export default function Component() {
   return (
     <RootLayout>
       <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
-        <div className="px-2 flex items-center justify-between">
+        <div className="flex-col absolute ml-4 mt-2 text-sm">
+          <div className="flex items-center gap-2">
+            총 긍정적 기분: <p className="text-[#3D73DB]">{totalPositive}</p>원
+          </div>
+          <div className="flex items-center gap-2">
+            총 부정적 기분: <p className="text-[#DB7292]">{totalNegative}</p>원
+          </div>
+        </div>
+        <div className="px-2 flex items-center justify-between absolute">
           <div
             className="flex items-center gap-4"
             style={{ position: "absolute", top: "-50px" }}
@@ -137,6 +143,11 @@ export default function Component() {
               // 표시된 년도와 월을 useState로 설정합니다.
               setYear(arg.start.getFullYear());
               setMonth(arg.start.getMonth() + 1);
+            }}
+            eventContent={(arg) => {
+              let lines = arg.event.title.split(" ");
+              let title = `<div className="flex-col" style="margin-left: 5px;"><div style="color: #3D73DB;">${lines[0]}</div><div style="color: #DB7292;">${lines[1]}</div></div>`;
+              return { html: title };
             }}
           />
           <div
