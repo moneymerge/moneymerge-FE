@@ -2,12 +2,13 @@
 import RootLayout from "../../../../components/layout.js";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
   const [receipts, setReceipts] = useState([]);
 
   useEffect(() => {
-    let url = "http://localhost:8080/api/receipts/random";
+    let url = `${BASE_URL}/receipts/random`;
 
     fetch(url, {
       method: "GET",
@@ -38,7 +39,7 @@ export default function Component() {
     }
     console.log(receipts[index - 1]);
 
-    fetch("http://localhost:8080/api/receipts/random", {
+    fetch(`${BASE_URL}/receipts/random`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

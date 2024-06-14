@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogTrigger, DialogContent } from "@radix-ui/react-dialog";
 import { Input } from "@/components/ui/input";
 import { SketchPicker } from "react-color";
+import { BASE_URL } from '../../../../../../url.js';
 
 export default function Component() {
   const params = useParams();
@@ -40,7 +41,7 @@ export default function Component() {
   }
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/books/${bookId}`, {
+    fetch(`${BASE_URL}/books/${bookId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +70,7 @@ export default function Component() {
   };
 
   const handleUpdateTitle = () => {
-    fetch(`http://localhost:8080/api/books/${bookId}/book-title`, {
+    fetch(`${BASE_URL}/books/${bookId}/book-title`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -114,7 +115,7 @@ export default function Component() {
   };
 
   const handleBookColor = () => {
-    fetch(`http://localhost:8080/api/books/${bookId}/book-color`, {
+    fetch(`${BASE_URL}/books/${bookId}/book-color`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -138,7 +139,7 @@ export default function Component() {
   };
 
   const handleUserColor = () => {
-    fetch(`http://localhost:8080/api/books/${bookId}/user-color`, {
+    fetch(`${BASE_URL}/books/${bookId}/user-color`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -168,7 +169,7 @@ export default function Component() {
   };
 
   const handleUpdateName = () => {
-    fetch(`http://localhost:8080/api/books/${bookId}/user-name`, {
+    fetch(`${BASE_URL}/books/${bookId}/user-name`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -200,7 +201,7 @@ export default function Component() {
 
   const handleSearchClick = (email) => {
     if (email) {
-      fetch(`http://localhost:8080/api/users/search?email=${email}`, {
+      fetch(`${BASE_URL}/users/search?email=${email}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -222,7 +223,7 @@ export default function Component() {
     e.preventDefault(); // 기본 양식 제출 방지
     console.log(invitedUserId);
 
-    fetch(`http://localhost:8080/api/books/${bookId}/users`, {
+    fetch(`${BASE_URL}/books/${bookId}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -261,7 +262,7 @@ export default function Component() {
       return;
     }
 
-    fetch(`http://localhost:8080/api/books/${bookId}/month-goal`, {
+    fetch(`${BASE_URL}/books/${bookId}/month-goal`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -289,7 +290,7 @@ export default function Component() {
       }
 
       for (const user of book.userList) {
-        fetch(`http://localhost:8080/api/notifications/${user.userId}`, {
+        fetch(`${BASE_URL}/notifications/${user.userId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -324,7 +325,7 @@ export default function Component() {
       return;
     }
 
-    fetch(`http://localhost:8080/api/books/${bookId}/year-goal`, {
+    fetch(`h${BASE_URL}/books/${bookId}/year-goal`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -352,7 +353,7 @@ export default function Component() {
       }
 
       for (const user of book.userList) {
-        fetch(`http://localhost:8080/api/notifications/${user.userId}`, {
+        fetch(`${BASE_URL}/notifications/${user.userId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -374,7 +375,7 @@ export default function Component() {
 
   // 삭제 동의
   const toggleDelete = () => {
-    fetch(`http://localhost:8080/api/books/${bookId}/agree`, {
+    fetch(`${BASE_URL}/books/${bookId}/agree`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -406,7 +407,7 @@ export default function Component() {
       return;
     }
 
-    fetch(`http://localhost:8080/api/books/${bookId}`, {
+    fetch(`${BASE_URL}/books/${bookId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

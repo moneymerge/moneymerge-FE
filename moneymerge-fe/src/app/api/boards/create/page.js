@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import RootLayout from "../../../../components/layout.js";
 import { useState } from "react";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
   const [board, setBoard] = useState({
@@ -58,7 +59,7 @@ export default function Component() {
       formData.append("multipartFile", file);
     }
 
-    fetch("http://localhost:8080/api/boards", {
+    fetch(`${BASE_URL}/boards`, {
       method: "POST",
       credentials: "include",
       body: formData,

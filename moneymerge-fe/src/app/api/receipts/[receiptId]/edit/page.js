@@ -25,6 +25,7 @@ import Link from "next/link";
 import RootLayout from "../../../../../components/layout.js";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { BASE_URL } from '../../../../../../url.js';
 
 export default function Component() {
   const params = useParams();
@@ -40,7 +41,7 @@ export default function Component() {
   const [date, setDate] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/receipts/${receiptId}`, {
+    fetch(`${BASE_URL}/receipts/${receiptId}`, {
       method: "GET",
       credentials: "include",
     })
@@ -95,7 +96,7 @@ export default function Component() {
       return;
     }
 
-    fetch(`http://localhost:8080/api/receipts/${receiptId}`, {
+    fetch(`${BASE_URL}/receipts/${receiptId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

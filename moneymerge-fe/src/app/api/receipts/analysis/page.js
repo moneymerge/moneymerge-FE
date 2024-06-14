@@ -16,6 +16,7 @@ import {
   CardFooter,
   Card,
 } from "@/components/ui/card";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
   const currentYear = new Date().getFullYear();
@@ -28,7 +29,7 @@ export default function Component() {
   //// 막대 ////
   useEffect(() => {
     fetch(
-      `http://localhost:8080/api/receipts/analysis?year=${year}&month=${month}`,
+      `${BASE_URL}/receipts/analysis?year=${year}&month=${month}`,
       {
         method: "GET",
         headers: {

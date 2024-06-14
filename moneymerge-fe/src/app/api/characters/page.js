@@ -16,6 +16,7 @@ import {
   PaginationContent,
   Pagination,
 } from "@/components/ui/pagination";
+import { BASE_URL } from '../../../../url.js';
 
 export default function Component() {
   const [character, setCharacter] = useState({});
@@ -24,7 +25,7 @@ export default function Component() {
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users/character", {
+    fetch(`${BASE_URL}/users/character`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -40,7 +41,7 @@ export default function Component() {
   }, []);
 
   useEffect(() => {
-    let url = "http://localhost:8080/api/characters";
+    let url = `${BASE_URL}/characters`;
 
     if (currentPage) {
       url += `?page=${currentPage}`;
@@ -76,7 +77,7 @@ export default function Component() {
   };
 
   const ChangeCharacter = (characterId) => {
-    fetch("http://localhost:8080/api/characters", {
+    fetch(`${BASE_URL}/characters`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

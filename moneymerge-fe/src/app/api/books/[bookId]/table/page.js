@@ -110,6 +110,7 @@ import "./table.css";
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { BASE_URL } from '../../../../../../url.js';
 
 export default function Component() {
   const router = useRouter();
@@ -121,7 +122,7 @@ export default function Component() {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
 
   useEffect(() => {
-    let url = `http://localhost:8080/api/books/${bookId}/records/${year}/${
+    let url = `${BASE_URL}/books/${bookId}/records/${year}/${
       month 
     }`;
     fetch(url, {
@@ -141,7 +142,7 @@ export default function Component() {
         if (result.data && result.data.length > 0) {
           const promises = result.data.map((record) =>
             fetch(
-              `http://localhost:8080/api/books/${bookId}/records/${record.recordId}`,
+              `${BASE_URL}/books/${bookId}/records/${record.recordId}`,
               {
                 method: "GET",
                 headers: {

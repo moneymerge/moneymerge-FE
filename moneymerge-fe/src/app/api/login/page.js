@@ -10,19 +10,20 @@ import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import { LOGIN_URL } from '../../../../url.js';
 
 export default function LoginPage() {
   const router = useRouter();
 
   const handleKakaoLogin = () => {
     router.push(
-      "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=http://localhost:8080/auth/kakao/callback"
+      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=${LOGIN_URL}/auth/kakao/callback`
     );
   };
 
   const handleNaverLogin = () => {
     router.push(
-      "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=http://localhost:8080/auth/naver/callback&state=test"
+      `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=${LOGIN_URL}/auth/naver/callback&state=test`
     );
   };
 

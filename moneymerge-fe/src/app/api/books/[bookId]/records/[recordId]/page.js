@@ -18,8 +18,8 @@ import { Textarea } from "@/components/ui/textarea";
 import RootLayout from "../../../../../../components/layout.js";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-
 import Link from "next/link";
+import { BASE_URL } from '../../../../../../../url.js';
 
 export default function Records() {
   const params = useParams();
@@ -40,7 +40,7 @@ export default function Records() {
   const [editedContents, setEditedContents] = useState({});
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users", {
+    fetch(`${BASE_URL}/users`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export default function Records() {
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/books/${params.bookId}`, {
+    fetch(`${BASE_URL}/books/${params.bookId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -78,7 +78,7 @@ export default function Records() {
   useEffect(() => {
     if (params.recordId) {
       fetch(
-        `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}`,
+        `${BASE_URL}/books/${params.bookId}/records/${params.recordId}`,
         {
           method: "GET",
           headers: {
@@ -105,7 +105,7 @@ export default function Records() {
     if (confirmDelete) {
       // fetch(`http://localhost:8080/api/books/1/records/15`, {
       fetch(
-        `http://localhost:8080/api/books/${params.bookId}/records/${recordId}`,
+        `${BASE_URL}/books/${params.bookId}/records/${recordId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -128,7 +128,7 @@ export default function Records() {
   const HandleRecordLikeClick = () => {
     if (records !== null) {
       fetch(
-        `http://localhost:8080/api/books/${params.bookId}/records/${records.recordId}/likes`,
+        `${BASE_URL}/books/${params.bookId}/records/${records.recordId}/likes`,
         {
           method: "POST",
           headers: {
@@ -139,7 +139,7 @@ export default function Records() {
       )
         .then(() => {
           fetch(
-            `http://localhost:8080/api/books/${params.bookId}/records/${records.recordId}/likes`,
+            `${BASE_URL}/books/${params.bookId}/records/${records.recordId}/likes`,
             {
               method: "GET",
               headers: {
@@ -165,7 +165,7 @@ export default function Records() {
   const HandleRecordDislikeClick = () => {
     if (records !== null) {
       fetch(
-        `http://localhost:8080/api/books/${params.bookId}/records/${records.recordId}/dislikes`,
+        `${BASE_URL}/books/${params.bookId}/records/${records.recordId}/dislikes`,
         {
           method: "POST",
           headers: {
@@ -176,7 +176,7 @@ export default function Records() {
       )
         .then(() => {
           fetch(
-            `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}/dislikes`,
+            `${BASE_URL}/books/${params.bookId}/records/${params.recordId}/dislikes`,
             {
               method: "GET",
               headers: {
@@ -213,7 +213,7 @@ export default function Records() {
     }
 
     fetch(
-      `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}/comments`,
+      `${BASE_URL}/books/${params.bookId}/records/${params.recordId}/comments`,
       {
         method: "POST",
         headers: {
@@ -235,7 +235,7 @@ export default function Records() {
         alert("Fetch error:" + error);
       });
 
-      fetch(`http://localhost:8080/api/notifications/${records.userId}`, {
+      fetch(`${BASE_URL}/notifications/${records.userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -283,7 +283,7 @@ export default function Records() {
 
     if (confirmDelete) {
       fetch(
-        `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}/comments/${commentId}`,
+        `${BASE_URL}/books/${params.bookId}/records/${params.recordId}/comments/${commentId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -307,7 +307,7 @@ export default function Records() {
     comment.content = editedContents[commentId];
 
     fetch(
-      `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}/comments/${commentId}`,
+      `${BASE_URL}/books/${params.bookId}/records/${params.recordId}/comments/${commentId}`,
       {
         method: "PUT",
         headers: {

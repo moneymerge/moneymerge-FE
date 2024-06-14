@@ -18,6 +18,7 @@ import {
   DialogContent,
   Dialog,
 } from "@/components/ui/dialog";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
   const params = useParams();
@@ -34,7 +35,7 @@ export default function Component() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users", {
+    fetch(`${BASE_URL}/users`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +53,7 @@ export default function Component() {
 
   const fetchUserProfile = (userId) => {
     console.log(userId);
-    fetch(`http://localhost:8080/api/users/${userId}`, {
+    fetch(`${BASE_URL}/users/${userId}`, {
       method: "GET",
       credentials: "include",
     })
@@ -84,7 +85,7 @@ export default function Component() {
     comment.content = editedContents[commentId];
 
     fetch(
-      `http://localhost:8080/api/boards/${board.boardId}/comments/${commentId}`,
+      `${BASE_URL}/boards/${board.boardId}/comments/${commentId}`,
       {
         method: "PUT",
         headers: {
@@ -139,7 +140,7 @@ export default function Component() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/boards/${params.boardId}`)
+    fetch(`${BASE_URL}/boards/${params.boardId}`)
       .then((result) => result.json())
       .then((result) => {
         setBoard(result.data);
@@ -170,7 +171,7 @@ export default function Component() {
   const HandleBoardLikeClick = () => {
     console.log(board.boardId);
     if (board !== null) {
-      fetch(`http://localhost:8080/api/boards/${board.boardId}/likes`, {
+      fetch(`${BASE_URL}/boards/${board.boardId}/likes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -194,7 +195,7 @@ export default function Component() {
     const confirmDelete = window.confirm("게시물을 삭제하시겠습니까?");
 
     if (confirmDelete) {
-      fetch(`http://localhost:8080/api/boards/${board.boardId}`, {
+      fetch(`${BASE_URL}/boards/${board.boardId}`, {
         method: "DELETE",
         credentials: "include",
       })
@@ -226,7 +227,7 @@ export default function Component() {
       return;
     }
 
-    fetch(`http://localhost:8080/api/notifications/${board.userId}`, {
+    fetch(`${BASE_URL}/notifications/${board.userId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -244,7 +245,7 @@ export default function Component() {
         alert("Fetch error:" + error);
       });
 
-    fetch(`http://localhost:8080/api/boards/${board.boardId}/comments`, {
+    fetch(`${BASE_URL}/boards/${board.boardId}/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -269,7 +270,7 @@ export default function Component() {
   const HandleCommentLikeClick = (commentId) => {
     if (commentId !== null) {
       fetch(
-        `http://localhost:8080/api/boards/${board.boardId}/comments/${commentId}/likes`,
+        `${BASE_URL}/boards/${board.boardId}/comments/${commentId}/likes`,
         {
           method: "POST",
           headers: {
@@ -299,7 +300,7 @@ export default function Component() {
 
     if (confirmDelete) {
       fetch(
-        `http://localhost:8080/api/boards/${board.boardId}/comments/${commentId}`,
+        `${BASE_URL}/boards/${board.boardId}/comments/${commentId}`,
         {
           method: "DELETE",
           credentials: "include",

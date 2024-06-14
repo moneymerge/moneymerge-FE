@@ -22,6 +22,7 @@ import {
 import Link from "next/link";
 import RootLayout from "../../../../components/layout";
 import { useState, useEffect } from "react";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
   const [receipt, setReceipt] = useState({
@@ -87,7 +88,7 @@ export default function Component() {
       return;
     }
 
-    fetch(`http://localhost:8080/api/receipts`, {
+    fetch(`${BASE_URL}/receipts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -16,6 +16,7 @@ import {
   Pagination,
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
   const [character, setCharacter] = useState({});
@@ -26,7 +27,7 @@ export default function Component() {
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users/character", {
+    fetch(`${BASE_URL}/users/character`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +43,7 @@ export default function Component() {
   }, []);
 
   useEffect(() => {
-    let url = "http://localhost:8080/api/characters/shop";
+    let url = `${BASE_URL}/characters/shop`;
 
     if (currentPage) {
       url += `?page=${currentPage}`;
@@ -65,7 +66,7 @@ export default function Component() {
   }, [currentPage]);
 
   useEffect(() => {
-    let url = "http://localhost:8080/api/characters/own";
+    let url = `${BASE_URL}/characters/own`;
 
     fetch(url, {
       method: "GET",
@@ -82,7 +83,7 @@ export default function Component() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users/point", {
+    fetch(`${BASE_URL}/users/point`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -117,7 +118,7 @@ export default function Component() {
       return;
     }
 
-    fetch("http://localhost:8080/api/characters", {
+    fetch(`${BASE_URL}/characters`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

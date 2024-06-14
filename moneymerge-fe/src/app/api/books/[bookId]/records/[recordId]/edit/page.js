@@ -25,6 +25,7 @@ import Link from "next/link";
 import RootLayout from "../../../../../../../components/layout";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { BASE_URL } from '../../../../../../../../url.js';
 
 export default function RecordEdit() {
   const params = useParams();
@@ -53,7 +54,7 @@ export default function RecordEdit() {
   // 해당 게시글 데이터 가져오기
   useEffect(() => {
     fetch(
-      `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}`,
+      `${BASE_URL}/books/${params.bookId}/records/${params.recordId}`,
       {
         method: "GET",
         credentials: "include",
@@ -99,7 +100,7 @@ export default function RecordEdit() {
   }, [date]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users", {
+    fetch(`${BASE_URL}/users`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -123,7 +124,7 @@ export default function RecordEdit() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/books/${params.bookId}/categories`, {
+    fetch(`${BASE_URL}/books/${params.bookId}/categories`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -226,7 +227,7 @@ export default function RecordEdit() {
     }
 
     fetch(
-      `http://localhost:8080/api/books/${params.bookId}/records/${params.recordId}`,
+      `${BASE_URL}/books/${params.bookId}/records/${params.recordId}`,
       {
         method: "PUT",
         credentials: "include",
@@ -268,7 +269,7 @@ export default function RecordEdit() {
       return;
     }
 
-    fetch(`http://localhost:8080/api/books/${params.bookId}/categories`, {
+    fetch(`${BASE_URL}/books/${params.bookId}/categories`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -297,7 +298,7 @@ export default function RecordEdit() {
     setNewCategory("");
   };
   const fetchCategories = () => {
-    fetch(`http://localhost:8080/api/books/${params.bookId}/categories`, {
+    fetch(`${BASE_URL}/books/${params.bookId}/categories`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -321,7 +322,7 @@ export default function RecordEdit() {
   const handleCategoryDelete = (categoryIdToDelete) => {
     if (confirm("정말로 이 카테고리를 삭제하시겠습니까?")) {
       fetch(
-        `http://localhost:8080/api/books/${params.bookId}/categories/${categoryIdToDelete}`,
+        `${BASE_URL}/books/${params.bookId}/categories/${categoryIdToDelete}`,
         {
           method: "DELETE",
           headers: {

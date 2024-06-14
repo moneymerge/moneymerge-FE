@@ -8,12 +8,13 @@ import Link from "next/link";
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
 import RootLayout from "../../../../components/layout.js";
 import { useState, useEffect } from "react";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
   const [bookList, setBookList] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/books", {
+    fetch(`${BASE_URL}/books`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

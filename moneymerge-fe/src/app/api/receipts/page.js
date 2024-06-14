@@ -18,6 +18,7 @@ import koLocale from "@fullcalendar/core/locales/ko";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "../receipts/receipts.css";
+import { BASE_URL } from '../../../../url.js';
 
 export default function Component() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export default function Component() {
   const [month, setMonth] = useState(new Date().getMonth());
 
   useEffect(() => {
-    let url = `http://localhost:8080/api/receipts/${year}/${month + 1}`;
+    let url = `${BASE_URL}/receipts/${year}/${month + 1}`;
     fetch(url, {
       method: "GET",
       headers: {

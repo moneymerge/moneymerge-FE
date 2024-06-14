@@ -25,6 +25,7 @@ import Link from "next/link";
 import RootLayout from "../../../../../../components/layout.js";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { BASE_URL } from '../../../../../../../url.js';
 
 export default function Component() {
   const params = useParams();
@@ -75,7 +76,7 @@ export default function Component() {
   }, [date]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users", {
+    fetch(`${BASE_URL}/users`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -119,7 +120,7 @@ export default function Component() {
       return;
     }
 
-    fetch(`http://localhost:8080/api/books/${params.bookId}/categories`, {
+    fetch(`${BASE_URL}/books/${params.bookId}/categories`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -149,7 +150,7 @@ export default function Component() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/books/${params.bookId}/categories`, {
+    fetch(`${BASE_URL}/books/${params.bookId}/categories`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -174,7 +175,7 @@ export default function Component() {
   console.log(categories);
 
   const fetchCategories = () => {
-    fetch(`http://localhost:8080/api/books/${params.bookId}/categories`, {
+    fetch(`${BASE_URL}/books/${params.bookId}/categories`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -249,7 +250,7 @@ export default function Component() {
     }
     console.log({ record });
 
-    fetch(`http://localhost:8080/api/books/${params.bookId}/records`, {
+    fetch(`${BASE_URL}/books/${params.bookId}/records`, {
       method: "POST",
       credentials: "include",
       body: formData,
@@ -272,7 +273,7 @@ export default function Component() {
   const handleCategoryDelete = (categoryIdToDelete) => {
     if (confirm("정말로 이 카테고리를 삭제하시겠습니까?")) {
       fetch(
-        `http://localhost:8080/api/books/${params.bookId}/categories/${categoryIdToDelete}`,
+        `${BASE_URL}/books/${params.bookId}/categories/${categoryIdToDelete}`,
         {
           method: "DELETE",
           headers: {

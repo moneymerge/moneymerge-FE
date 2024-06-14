@@ -22,6 +22,7 @@ import "../../books/book.css";
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function Component() {
   useEffect(() => {
     // Fetch data from the backend
     // let url = "http://localhost:8080/api/books/1/records/2024/5";
-    let url = `http://localhost:8080/api/books/${bookId}/records/${year}/${
+    let url = `${BASE_URL}/books/${bookId}/records/${year}/${
       month + 1
     }`;
     fetch(url, {

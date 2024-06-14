@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { SketchPicker } from "react-color";
+import { BASE_URL } from '../../url.js';
 
 const Sidebar = ({ data }) => {
   const router = useRouter();
@@ -36,7 +37,7 @@ const Sidebar = ({ data }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/users/logout", {
+      const response = await fetch(`${BASE_URL}/users/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -262,7 +263,7 @@ function BookForm() {
 
   const handleSearchClick = (email) => {
     if (email) {
-      fetch(`http://localhost:8080/api/users/search?email=${email}`, {
+      fetch(`${BASE_URL}/users/search?email=${email}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -295,7 +296,7 @@ function BookForm() {
       return;
     }
 
-    fetch("http://localhost:8080/api/books", {
+    fetch(`${BASE_URL}/books`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -323,7 +324,7 @@ function BookForm() {
       }
 
       for (const user of userList) {
-        fetch(`http://localhost:8080/api/notifications/${user.userId}`, {
+        fetch(`${BASE_URL}/notifications/${user.userId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

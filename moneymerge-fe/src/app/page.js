@@ -2,12 +2,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import RootLayout from "../components/layout.js";
+import { BASE_URL } from '../../url.js';
 
 export default function Home() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users", {
+    fetch(`${BASE_URL}/users`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

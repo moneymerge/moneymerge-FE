@@ -11,6 +11,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { BASE_URL } from '../../url.js';
 
 const Footer = ({ data }) => {
   const [receipt, setReceipt] = useState(null);
@@ -19,7 +20,7 @@ const Footer = ({ data }) => {
   const [likes, setLikes] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users/character", {
+    fetch(`${BASE_URL}/users/character`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +37,7 @@ const Footer = ({ data }) => {
 
   const handlePostClick = () => {
     if (data && data.receivedReceiptId !== null) {
-      fetch(`http://localhost:8080/api/receipts/${data.receivedReceiptId}`, {
+      fetch(`${BASE_URL}/receipts/${data.receivedReceiptId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +64,7 @@ const Footer = ({ data }) => {
   const HandleReceiptLikeClick = () => {
     if (data && data.receivedReceiptId !== null) {
       fetch(
-        `http://localhost:8080/api/receipts/${data.receivedReceiptId}/likes`,
+        `${BASE_URL}/receipts/${data.receivedReceiptId}/likes`,
         {
           method: "POST",
           headers: {

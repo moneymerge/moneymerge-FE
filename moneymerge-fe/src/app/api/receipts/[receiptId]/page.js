@@ -16,8 +16,8 @@ import { Button } from "@/components/ui/button";
 import RootLayout from "../../../../components/layout.js";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-
 import Link from "next/link";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
   const params = useParams();
@@ -28,7 +28,7 @@ export default function Component() {
   const [likes, setLikes] = useState(0);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/receipts/${receiptId}`, {
+    fetch(`${BASE_URL}/receipts/${receiptId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export default function Component() {
     const confirmDelete = window.confirm("영수증을 삭제하시겠습니까?");
 
     if (confirmDelete) {
-      fetch(`http://localhost:8080/api/receipts/${receiptId}`, {
+      fetch(`${BASE_URL}receipts/${receiptId}`, {
         method: "DELETE",
         credentials: "include",
       })

@@ -23,6 +23,7 @@ import "./table.css";
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function Component() {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
 
   useEffect(() => {
-    let url = `http://localhost:8080/api/receipts/${year}/${month}`;
+    let url = `${BASE_URL}/receipts/${year}/${month}`;
     fetch(url, {
       method: "GET",
       headers: {
@@ -49,7 +50,7 @@ export default function Component() {
         console.log(result.data.receiptList);
         if (result.data && result.data.receiptList.length > 0) {
           const promises = result.data.receiptList.map((receipt) =>
-            fetch(`http://localhost:8080/api/receipts/${receipt.receiptId}`, {
+            fetch(`${BASE_URL}/receipts/${receipt.receiptId}`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",

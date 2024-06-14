@@ -4,6 +4,7 @@ import Sidebar from "./Sidebar";
 import Article from "./Article";
 import Footer from "./Footer";
 import { useEffect, useState } from "react";
+import { BASE_URL } from '../../url.js';
 
 // export const metadata = {
 //   title: "Create Next App",
@@ -15,7 +16,7 @@ function RootLayout({ children }) {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users", {
+    fetch(`${BASE_URL}/users`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

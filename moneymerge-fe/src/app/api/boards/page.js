@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/pagination";
 import RootLayout from "../../../components/layout.js";
 import { useState, useEffect } from "react";
+import { BASE_URL } from '../../../../url.js';
 
 export default function Component() {
   const [boards, setBoards] = useState([]);
@@ -46,7 +47,7 @@ export default function Component() {
   };
 
   useEffect(() => {
-    let url = "http://localhost:8080/api/boards";
+    let url = `${BASE_URL}/boards`;
     // let countUrl = "http://localhost:8080/api/boards/count";
 
     if (currentPage) {
@@ -101,8 +102,8 @@ export default function Component() {
 
   const handleSearchClick = (keyword, e) => {
     e.preventDefault();
-    let searchUrl = "http://localhost:8080/api/boards/search";
-    let url = "http://localhost:8080/api/boards";
+    let searchUrl = `${BASE_URL}/boards/search`;
+    let url = `${BASE_URL}/boards`;
 
     if (currentPage) {
       searchUrl += `?page=${currentPage}`;

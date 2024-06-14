@@ -12,6 +12,7 @@ import { DialogTrigger, DialogContent, Dialog } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { BASE_URL } from '../../../../url.js';
 
 export default function Component() {
   const [profile, setProfile] = useState({});
@@ -21,7 +22,7 @@ export default function Component() {
   const [previewFile, setPreviewFile] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users/profile", {
+    fetch(`${BASE_URL}/users/profile`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +58,7 @@ export default function Component() {
     const formData = new FormData();
     formData.append("multipartFile", file);
 
-    fetch("http://localhost:8080/api/users/profile-image", {
+    fetch(`${BASE_URL}/users/profile-image`, {
       method: "PATCH",
       body: formData,
       credentials: "include",
@@ -81,7 +82,7 @@ export default function Component() {
   };
 
   const handleUpdateName = () => {
-    fetch("http://localhost:8080/api/users/username", {
+    fetch(`${BASE_URL}/users/username`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +107,7 @@ export default function Component() {
 
   // 알람 설정
   const toggleAlarm = () => {
-    fetch("http://localhost:8080/api/users/alarm", {
+    fetch(`${BASE_URL}/users/alarm`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -133,7 +134,7 @@ export default function Component() {
       return;
     }
 
-    fetch("http://localhost:8080/api/users/logout", {
+    fetch(`${BASE_URL}/users/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -164,7 +165,7 @@ export default function Component() {
       return;
     }
 
-    fetch("http://localhost:8080/api/users", {
+    fetch(`${BASE_URL}/users`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

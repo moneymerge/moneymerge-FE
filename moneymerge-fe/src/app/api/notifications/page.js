@@ -2,12 +2,13 @@
 import RootLayout from "../../../components/layout.js";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { BASE_URL } from '../../../../url.js';
 
 export default function Component() {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/notifications", {
+    fetch(`${BASE_URL}/notifications`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +24,7 @@ export default function Component() {
   }, [notifications]);
 
   const handleDeleteNotification = (notificationId) => {
-    fetch(`http://localhost:8080/api/notifications/${notificationId}`, {
+    fetch(`${BASE_URL}/notifications/${notificationId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

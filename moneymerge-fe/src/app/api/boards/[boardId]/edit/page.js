@@ -12,6 +12,7 @@ import Link from "next/link";
 import RootLayout from "../../../../../components/layout.js";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { BASE_URL } from '../../../../../../url.js';
 
 export default function Component() {
   const params = useParams();
@@ -20,7 +21,7 @@ export default function Component() {
 
   // 해당 게시글 데이터 가져오기
   useEffect(() => {
-    fetch(`http://localhost:8080/api/boards/${params.boardId}`)
+    fetch(`${BASE_URL}/boards/${params.boardId}`)
       .then((result) => result.json())
       .then((result) => {
         setBoard(result.data);
@@ -65,7 +66,7 @@ export default function Component() {
       formData.append("multipartFile", file);
     }
 
-    fetch(`http://localhost:8080/api/boards/${board.boardId}`, {
+    fetch(`${BASE_URL}/boards/${board.boardId}`, {
       method: "PUT",
       credentials: "include",
       body: formData,

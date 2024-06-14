@@ -18,6 +18,7 @@ import {
   CardFooter,
   Card,
 } from "@/components/ui/card";
+import { BASE_URL } from '../../../../../../url.js';
 
 export default function Component() {
   const params = useParams();
@@ -34,7 +35,7 @@ export default function Component() {
   //// 막대 ////
   useEffect(() => {
     fetch(
-      `http://localhost:8080/api/books/1/analysis-member?year=${year}&month=${month}`,
+      `${BASE_URL}/books/1/analysis-member?year=${year}&month=${month}`,
       {
         method: "GET",
         headers: {
@@ -145,7 +146,7 @@ export default function Component() {
   const handleViewTypeChange = (type) => {
     setViewType(type);
     fetch(
-      `http://localhost:8080/api/books/1/analysis-member?year=2024&month=6`,
+      `${BASE_URL}/books/1/analysis-member?year=2024&month=6`,
       {
         method: "GET",
         headers: {
