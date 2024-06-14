@@ -20,7 +20,10 @@ const Article = ({ children }) => {
   }, []);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ 
+      position: "relative",
+      marginTop: loading ? "65px" : "0px",
+     }}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="652"
