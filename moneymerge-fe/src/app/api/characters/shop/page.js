@@ -149,6 +149,7 @@ export default function Component() {
             style={{ position: "absolute", top: "-45px" }}
           >
             <Link className="flex items-center gap-2" href="/api/characters">
+              <ArrowLeftIcon className="h-5 w-5" />
               <h1 className="text-2xl font-bold">캐릭터 상점</h1>
             </Link>
           </div>
