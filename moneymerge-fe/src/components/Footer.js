@@ -92,6 +92,7 @@ const Footer = ({ data }) => {
         flexDirection: "column",
         alignItems: "center",
         gap: "25px",
+        position: "relative",
       }}
     >
       {/* 다마고치 */}
@@ -408,8 +409,8 @@ const Footer = ({ data }) => {
         <div
           className="absolute h-8 w-8 rounded-full flex items-center justify-center"
           style={{
-            bottom: "440px",
-            right: "325px",
+            bottom: "200px",
+            right: "30px",
             backgroundColor: "red",
             color: "white",
             border: "1px solid black",
@@ -455,8 +456,8 @@ const Footer = ({ data }) => {
         <div
           className="absolute h-8 w-8 rounded-full flex items-center justify-center"
           style={{
-            bottom: "300px",
-            right: "325px",
+            bottom: "70px",
+            right: "30px",
             backgroundColor: "#ffafbc",
             color: "white",
             border: "1px solid black",
@@ -627,9 +628,13 @@ const Footer = ({ data }) => {
                 }}
                 href="/api/receipts/random"
               >
-                <Button style={{
-                  backgroundColor: "#ffafbc"
-                }}>영수증 뽑기</Button>
+                <Button
+                  style={{
+                    backgroundColor: "#ffafbc",
+                  }}
+                >
+                  영수증 뽑기
+                </Button>
               </Link>
             </div>
           )}

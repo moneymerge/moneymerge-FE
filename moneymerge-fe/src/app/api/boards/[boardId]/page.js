@@ -217,10 +217,9 @@ export default function Component() {
     e.preventDefault();
 
     const notification = {
-      type : 'BOARD_GET_COMMENT',
-      detail: "\"" + comment.content + "\""
-    }
-  
+      type: "BOARD_GET_COMMENT",
+      detail: '"' + comment.content + '"',
+    };
 
     if (comment.content === "" || /^\s+$/.test(comment.content)) {
       alert("내용을 입력해주세요.");
@@ -264,7 +263,6 @@ export default function Component() {
       .catch((error) => {
         alert("Fetch error:" + error);
       });
-
   };
 
   const HandleCommentLikeClick = (commentId) => {
@@ -322,20 +320,7 @@ export default function Component() {
 
   return (
     <RootLayout>
-      <div className="w-full h-full bg-[#fffbeb] text-[#333] w-full h-full flex flex-col overflow-auto">
-        {/* <div
-          className="fixed pt-4 px-4 flex items-center justify-between"
-          style={{
-            top: "200px",
-          }}
-        >
-          <div className="fixed flex items-center gap-4">
-            <Link className="flex items-center gap-2" href="/api/boards">
-              <ArrowLeftIcon className="h-5 w-5" />
-              <h1 className="text-2xl font-bold">커뮤니티</h1>
-            </Link>
-          </div>
-        </div> */}
+      <div className="w-full h-full bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
         <div className="px-4 flex items-center justify-between">
           <div
             className="flex items-center gap-4"
@@ -347,8 +332,8 @@ export default function Component() {
             </Link>
           </div>
         </div>
-        <main>
-          <div className="w-full h-full max-w-3xl mx-auto bg-white shadow-lg p-8 space-y-6">
+        <main className="w-full h-full">
+          <div className="w-full max-w-3xl mx-auto bg-white p-8 space-y-6">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold">{board.title}</h2>

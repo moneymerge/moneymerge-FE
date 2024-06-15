@@ -224,106 +224,118 @@ export default function Component() {
             overflow: "auto",
           }}
         >
-          {/* 연도, 월 변경 버튼 */}
-          <div className="w-full flex flex-col items-center">
-            <div className="flex items-center gap-4 ">
-              <Button
-                variant="outline"
-                className="flex items-center px-4 py-2  bg-[#ffffff]"
-                onClick={() => handleYearChange(-1)}
-              >
-                &lt;
-              </Button>
-              <Button
-                variant="outline"
-                className="flex items-center px-4 py-2  bg-[#ffffff]"
-                onClick={() => handleMonthChange(-1)}
-              >
-                &lt;
-              </Button>
-              <div className="flex items-center px-4 py-2  bg-[#ffffff]">
-                {year}년 {month}월
+          <Card>
+            <CardContent>
+              {/* 연도, 월 변경 버튼 */}
+              <div className="w-full flex flex-col items-center border-b pb-2">
+                <div className="flex items-center gap-4 ">
+                  <Button
+                    variant="outline"
+                    className="flex items-center px-4 py-2  bg-[#ffffff]"
+                    onClick={() => handleYearChange(-1)}
+                  >
+                    &lt;
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex items-center px-4 py-2  bg-[#ffffff]"
+                    onClick={() => handleMonthChange(-1)}
+                  >
+                    &lt;
+                  </Button>
+                  <div className="flex items-center px-4 py-2  bg-[#ffffff]">
+                    {year}년 {month}월
+                  </div>
+                  <Button
+                    variant="outline"
+                    className="flex items-center px-4 py-2  bg-[#ffffff]"
+                    onClick={() => handleMonthChange(1)}
+                  >
+                    &gt;
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex items-center px-4 py-2  bg-[#ffffff]"
+                    onClick={() => handleYearChange(1)}
+                  >
+                    &gt;
+                  </Button>
+                </div>
               </div>
-              <Button
-                variant="outline"
-                className="flex items-center px-4 py-2  bg-[#ffffff]"
-                onClick={() => handleMonthChange(1)}
-              >
-                &gt;
-              </Button>
-              <Button
-                variant="outline"
-                className="flex items-center px-4 py-2  bg-[#ffffff]"
-                onClick={() => handleYearChange(1)}
-              >
-                &gt;
-              </Button>
-            </div>
-          </div>
 
-          {/* 수입, 지출 변경 버튼 */}
-          <div className="flex items-center">
-            <button
-              className={`flex items-center px-4 py-2 ${
-                viewType === "income" ? "bg-[#f8f9fa]" : "bg-[#ffffff]"
-              }`}
-              onClick={() => handleViewTypeChange("income")}
-            >
-              수입
-            </button>
-            <button
-              className={`flex items-center px-4 py-2 ${
-                viewType === "expense" ? "bg-[#f8f9fa]" : "bg-[#ffffff]"
-              }`}
-              onClick={() => handleViewTypeChange("expense")}
-            >
-              지출
-            </button>
-          </div>
+              {/* 수입, 지출 변경 버튼 */}
+              <div className="flex items-center pt-2">
+                <button
+                  className={`flex items-center px-4 py-2 ${
+                    viewType === "income" ? "bg-[#f8f9fa]" : "bg-[#ffffff]"
+                  }`}
+                  onClick={() => handleViewTypeChange("income")}
+                >
+                  수입
+                </button>
+                <button
+                  className={`flex items-center px-4 py-2 ${
+                    viewType === "expense" ? "bg-[#f8f9fa]" : "bg-[#ffffff]"
+                  }`}
+                  onClick={() => handleViewTypeChange("expense")}
+                >
+                  지출
+                </button>
+              </div>
 
-          {/* 막대 */}
+              {/* 막대 */}
 
-          {barData.length > 0 && (
-            <BarChart
-              dataset={barData}
-              xAxis={[{ scaleType: "band", dataKey: "month" }]}
-              series={Object.keys(barData[0])
-                .filter((key) => key !== "month")
-                .map((username) => ({
-                  dataKey: username,
-                  label: username,
-                  valueFormatter,
-                }))}
-              {...chartSetting}
-              sx={{
-                // margin: "20px",
-                padding: "10px",
-                // border: "1px solid black",
-              }}
-            />
-          )}
+              {barData.length > 0 && (
+                <BarChart
+                  dataset={barData}
+                  xAxis={[{ scaleType: "band", dataKey: "month" }]}
+                  series={Object.keys(barData[0])
+                    .filter((key) => key !== "month")
+                    .map((username) => ({
+                      dataKey: username,
+                      label: username,
+                      valueFormatter,
+                    }))}
+                  {...chartSetting}
+                  sx={{
+                    // margin: "20px",
+                    padding: "20px",
+                    // border: "1px solid black",
+                  }}
+                />
+              )}
+            </CardContent>
+          </Card>
 
           {/* 원형 */}
           {pieData.map((userData) => (
-            <div key={userData.userId} style={{ marginBottom: "20px" }}>
-              <h2>{userData.username}</h2>
-              <PieChart
-                series={[
-                  {
-                    arcLabel: (item) => `${item.label} (${item.value}원)`,
-                    arcLabelMinAngle: 45,
-                    data: userData.data,
-                  },
-                ]}
-                sx={{
-                  [`& .${pieArcLabelClasses.root}`]: {
-                    fill: "white",
-                    fontWeight: "bold",
-                  },
-                }}
-                {...size}
-              />
-            </div>
+            <Card className="shadow">
+              <CardHeader>
+                {/* <CardTitle>{userData.username}</CardTitle> */}
+                {/* <CardDescription>원</CardDescription> */}
+              </CardHeader>
+              <CardContent>
+                <div key={userData.userId} style={{ marginBottom: "20px" }}>
+                  <h2>{userData.username}</h2>
+                  <PieChart
+                    series={[
+                      {
+                        arcLabel: (item) => `${item.label} (${item.value}원)`,
+                        arcLabelMinAngle: 45,
+                        data: userData.data,
+                      },
+                    ]}
+                    sx={{
+                      [`& .${pieArcLabelClasses.root}`]: {
+                        fill: "white",
+                        fontWeight: "bold",
+                      },
+                    }}
+                    {...size}
+                  />
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </main>
       </div>

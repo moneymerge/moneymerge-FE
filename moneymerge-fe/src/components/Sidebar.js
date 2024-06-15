@@ -14,19 +14,43 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SketchPicker } from "react-color";
+import { useNavigate } from "react-router-dom";
 import { BASE_URL } from '../../url.js';
 
 const Sidebar = ({ data }) => {
   const router = useRouter();
   const [checkedBooks, setCheckBooks] = useState({});
 
+  //페이지 로드 시 checkedBooks 상태 초기화
+  // useEffect(() => {
+  //   const initialCheckedBooks = {};
+  //   if (data && data.bookList) {
+  //     data.bookList.forEach((book) => {
+  //       initialCheckedBooks[book.bookId] = false;
+  //     });
+  //   }
+  //   setCheckBooks(initialCheckedBooks);
+  // }, [data]);
+
   const handleCheckboxClick = (bookId) => {
     setCheckBooks((prev) => ({
       ...prev,
       [bookId]: !prev[bookId],
     }));
+
+    // 선택한 가계부의 bookId를 쿼리 파라미터로 전달하여 해당 페이지로 이동
+    const checkedIds = Object.keys(checkedBooks).filter(
+      (key) => checkedBooks[key]
+    );
+    const query =
+      checkedIds.length > 0
+        ? `?${checkedIds.map((id) => `bookId=${id}`).join("&")}`
+        : "";
+    router.push(`/api/books${query}`);
+
+    return checkedBooks;
   };
 
   const handleLogout = async () => {
@@ -95,48 +119,48 @@ const Sidebar = ({ data }) => {
               {data &&
                 data.bookList.map((book, index) => (
                   <div key={index} className="book-wrapper">
-                    <Link href={`/api/books/${book.bookId}`}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: "10px",
+                      }}
+                    >
                       <div
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleCheckboxClick(book.bookId);
+                        }}
                         style={{
+                          backgroundColor: book.bookColor,
+                          borderRadius: "3px",
+                          height: "16px",
+                          width: "16px",
                           display: "flex",
-                          flexDirection: "row",
+                          justifyContent: "center",
                           alignItems: "center",
-                          gap: "10px",
+                          cursor: "pointer",
                         }}
                       >
-                        <div
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleCheckboxClick(book.bookId);
-                          }}
-                          style={{
-                            backgroundColor: book.bookColor,
-                            borderRadius: "3px",
-                            height: "16px",
-                            width: "16px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {checkedBooks[book.bookId] && (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="12"
-                              height="12"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="feather feather-check"
-                            >
-                              <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                          )}
-                        </div>
+                        {checkedBooks[book.bookId] && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="feather feather-check"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        )}
+                      </div>
+                      <Link href={`/api/books/${book.bookId}`}>
                         <div
                           style={{
                             fontSize: "12px",
@@ -145,15 +169,17 @@ const Sidebar = ({ data }) => {
                         >
                           {book.bookTitle}
                         </div>
-                      </div>
-                    </Link>
+                      </Link>
+                    </div>
                   </div>
                 ))}
               <div className="book-wrapper">
                 {/* 가계부 추가 Dialog */}
                 <Dialog>
                   <DialogTrigger asChild>
-                    <div className="add-button cursor-pointer">+ 가계부 추가</div>
+                    <div className="add-button cursor-pointer">
+                      + 가계부 추가
+                    </div>
                   </DialogTrigger>
                   <BookForm />
                 </Dialog>
@@ -318,10 +344,10 @@ function BookForm() {
         alert("Fetch error:" + error);
       });
 
-      const notification = {
-        type : 'BOOK_INVITED',
-        detail: book.title
-      }
+    const notification = {
+      type: "BOOK_INVITED",
+      detail: book.title,
+    };
 
       for (const user of userList) {
         fetch(`${BASE_URL}/notifications/${user.userId}`, {

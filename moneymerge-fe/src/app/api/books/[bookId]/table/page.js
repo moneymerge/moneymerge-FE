@@ -122,9 +122,7 @@ export default function Component() {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
 
   useEffect(() => {
-    let url = `${BASE_URL}/books/${bookId}/records/${year}/${
-      month 
-    }`;
+    let url = `${BASE_URL}/books/${bookId}/records/${year}/${month}`;
     fetch(url, {
       method: "GET",
       headers: {
@@ -181,7 +179,7 @@ export default function Component() {
       .catch((error) => {
         console.error("Error fetching events:", error);
       });
-  }, [events, year, month]);
+  }, [bookId, year, month]);
 
   const handleEventClick = (clickInfo) => {
     const recordId = clickInfo.event.id;
@@ -276,6 +274,7 @@ export default function Component() {
                     <td>${arg.event.extendedProps.recordType}</td>
                     <td>${arg.event.extendedProps.categoryName}</td>
                     <td>${arg.event.extendedProps.assetType}</td>
+                    <td>${arg.event.extendedProps.content}</td>
                     </tr>`,
                   };
                 },
