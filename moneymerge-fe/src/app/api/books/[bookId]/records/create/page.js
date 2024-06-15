@@ -291,11 +291,11 @@ export default function Component() {
             )
           );
           alert("카테고리가 삭제되었습니다.");
-          fetchCategories();
+          fetchCategories(); // 카테고리 목록 다시 가져오기
         })
         .catch((error) => {
           console.error("Error deleting category:", error);
-          alert("카테고리 삭제 중 오류가 발생했습니다.");
+          alert("카테고리를 삭제할 수 없습니다. 관련된 레코드가 존재합니다.");
         });
     }
   };
