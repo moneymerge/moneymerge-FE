@@ -26,20 +26,40 @@ import { BASE_URL } from "../../../../url.js"
 
 export default function Component() {
   const router = useRouter();
-  // 현재 URL에서 쿼리 스트링을 추출
-  const queryString = window.location.search;
-  // URLSearchParams를 사용하여 쿼리 스트링을 파싱
-  const urlParams = new URLSearchParams(queryString);
+  // // 현재 URL에서 쿼리 스트링을 추출
+  // const queryString = window.location.search;
+  // // URLSearchParams를 사용하여 쿼리 스트링을 파싱
+  // const urlParams = new URLSearchParams(queryString);
 
-  // bookId들을 담을 배열을 선언
-  const bookIds = [];
-  // URLSearchParams의 entries() 메서드를 사용하여 쿼리 파라미터를 반복합니다.
-  for (const [key, value] of urlParams.entries()) {
-    if (key === "bookId") {
-      bookIds.push(value);
+  // // bookId들을 담을 배열을 선언
+  // const bookIds = [];
+  // // URLSearchParams의 entries() 메서드를 사용하여 쿼리 파라미터를 반복합니다.
+  // for (const [key, value] of urlParams.entries()) {
+  //   if (key === "bookId") {
+  //     bookIds.push(value);
+  //   }
+  // }
+  // console.log(bookIds);
+
+  const [bookIds, setBookIds] = useState([]);
+
+  if (typeof window !== 'undefined') {
+    // 현재 URL에서 쿼리 스트링을 추출
+    const queryString = window.location.search;
+    // URLSearchParams를 사용하여 쿼리 스트링을 파싱
+    const urlParams = new URLSearchParams(queryString);
+
+    // bookId들을 담을 배열을 선언
+    const bookIds = [];
+    // URLSearchParams의 entries() 메서드를 사용하여 쿼리 파라미터를 반복합니다.
+    for (const [key, value] of urlParams.entries()) {
+      if (key === "bookId") {
+        bookIds.push(value);
+      }
     }
+
+    setBookIds(bookIds);
   }
-  console.log(bookIds);
 
   const [events, setEvents] = useState([]);
   const [year, setYear] = useState(new Date().getFullYear());

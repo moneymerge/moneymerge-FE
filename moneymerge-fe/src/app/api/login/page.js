@@ -38,7 +38,7 @@ function setCookie(name, value, maxAgeInSeconds) {
 export default function LoginPage() {
 
   const handleKakaoLogin = () => {
-    fetch(`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=${LOGIN_URL}/auth/kakao/callback`, {
+    fetch(`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=http://3.39.225.191/auth/kakao/callback`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +53,7 @@ export default function LoginPage() {
 
   const handleNaverLogin = () => {
 
-    fetch(`https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=${LOGIN_URL}/auth/naver/callback&state=test`, {
+    fetch(`https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=http://3.39.225.191/auth/naver/callback&state=test`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
