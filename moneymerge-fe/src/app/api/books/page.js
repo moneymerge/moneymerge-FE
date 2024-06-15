@@ -22,6 +22,7 @@ import "../books/book.css";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "../../../../url.js"
 
 export default function Component() {
   const router = useRouter();
@@ -47,7 +48,7 @@ export default function Component() {
 
   // 각 bookId에 대해 요청을 보내는 함수를 정의합니다.
   async function fetchBookData(bookId) {
-    const url = `http://localhost:8080/api/books/${bookId}/records/${year}/${
+    const url = `${BASE_URL}/books/${bookId}/records/${year}/${
       month + 1
     }`;
 
