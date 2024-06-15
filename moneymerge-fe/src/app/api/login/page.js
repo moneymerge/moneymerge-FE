@@ -8,23 +8,62 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import { LOGIN_URL } from '../../../../url.js';
 
+function saveTokensToCookie(accessToken, refreshToken) {
+  // Access Token 쿠키 설정
+  const accessTokenExpiresInSec = 2 * 60 * 60; // 2시간
+  setCookie('AccessToken', accessToken, accessTokenExpiresInSec);
+
+  // Refresh Token 쿠키 설정
+  const refreshTokenExpiresInSec = 14 * 24 * 60 * 60; // 2주 (14일)
+  setCookie('RefreshToken', refreshToken, refreshTokenExpiresInSec);
+
+  console.log("토큰을 쿠키에 저장했습니다.");
+}
+
+function setCookie(name, value, maxAgeInSeconds) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + maxAgeInSeconds * 1000);
+  const cookieOptions = {
+      path: '/',
+      secure: true, // HTTPS에서만 쿠키 전송
+      sameSite: 'None', // Cross-Site 접근 허용
+      expires: expires.toUTCString()
+  };
+  document.cookie = `${name}=${value}; ${Object.entries(cookieOptions).map(entry => entry.join('=')).join('; ')}`;
+}
+
 export default function LoginPage() {
-  const router = useRouter();
 
   const handleKakaoLogin = () => {
-    router.push(
-      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=${LOGIN_URL}/auth/kakao/callback`
-    );
+    fetch(`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=${LOGIN_URL}/auth/kakao/callback`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        saveTokensToCookie(result.data.accessToken, result.data.refreshToken);
+      })
+      .catch((error) => console.error("Error fetching token data:", error));
   };
 
   const handleNaverLogin = () => {
-    router.push(
-      `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=${LOGIN_URL}/auth/naver/callback&state=test`
-    );
+
+    fetch(`https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=${LOGIN_URL}/auth/naver/callback&state=test`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        saveTokensToCookie(result.data.accessToken, result.data.refreshToken);
+      })
+      .catch((error) => console.error("Error fetching token data:", error));
   };
 
   return (

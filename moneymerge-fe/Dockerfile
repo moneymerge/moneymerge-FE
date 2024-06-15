@@ -1,34 +1,26 @@
-# Base image
-FROM node:18-alpine AS builder
+# 1. 베이스 이미지 설정
+FROM node:14-alpine
 
-# Set working directory
-WORKDIR /app
+# 2. 작업 디렉토리 설정
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
+# 3. 필요한 파일 복사
 COPY package*.json ./
+COPY next.config.js ./
+COPY public ./public
+COPY pages ./pages
 
-# Install dependencies
+# 4. 종속성 설치
 RUN npm install
 
-# Copy the rest of the application code
-COPY . .
-
-# Build the Next.js application
+# 5. 소스 코드 빌드
 RUN npm run build
 
-# Stage 2
-FROM node:18-alpine AS runner
+# 6. 환경 변수 설정 (필요에 따라)
+# ENV NODE_ENV=production
 
-WORKDIR /app
-
-# Copy node_modules and build output from the builder stage
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
-
-# Expose the port that the app runs on
+# 7. 포트 설정
 EXPOSE 3000
 
-# Start the Next.js application
+# 8. 앱 실행
 CMD ["npm", "start"]
