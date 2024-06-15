@@ -21,11 +21,11 @@ jobs:
         with:
           java-version: '16'
 
-      - name: Install dependencies
-        run: npm install
-
       - name: Build Next.js application
         run: npm run build
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Docker build & push to prod
         if: contains(github.ref, 'develop') || contains(github.ref, 'main')
