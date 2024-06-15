@@ -4,10 +4,8 @@
  * @see https://v0.dev/t/ulCNHlKx825
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
-import RootLayout from "../../../../components/layout.js";
+import RootLayout from "../../../components/layout";
 // FullCalendar 관련
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -17,34 +15,27 @@ import interactionPlugin, {
 } from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import koLocale from "@fullcalendar/core/locales/ko";
-// npm install @fullcalendar/core @fullcalendar/react @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
-import "../../books/book.css";
-
 import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { BASE_URL } from '../../../../../url.js';
+import { useRouter } from "next/navigation";
+import "../receipts/receipts.css";
+import { BASE_URL } from '../../../../url.js';
 
 export default function Component() {
   const router = useRouter();
-  const params = useParams();
-  console.log(params);
   const [events, setEvents] = useState([]);
-  const bookId = params.bookId;
+  const [totalPositive, setTotalPositive] = useState(0);
+  const [totalNegative, setTotalNegative] = useState(0);
   const [year, setYear] = useState(new Date().getFullYear());
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [month, setMonth] = useState(new Date().getMonth());
 
   useEffect(() => {
-    // Fetch data from the backend
-    // let url = "http://localhost:8080/api/books/1/records/2024/5";
-    let url = `${BASE_URL}/books/${bookId}/records/${year}/${
-      month + 1
-    }`;
+    let url = `${BASE_URL}/receipts/${year}/${month + 1}`;
     fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include", // 쿠키를 포함하여 요청
+      credentials: "include",
     })
       .then((result) => {
         if (!result.ok) {
@@ -53,15 +44,15 @@ export default function Component() {
         return result.json();
       })
       .then((result) => {
-        if (result.data && result.data.length > 0) {
-          const eventList = result.data.map((record) => ({
-            id: record.recordId,
-            title:
-              record.recordType === "수입"
-                ? `+${record.amount}`
-                : `-${record.amount}`,
-            start: `${record.date}T00:00:00`, //'2024-03-12T21:00:00',
-            color: `${record.userColor}`,
+        if (result.data) {
+          console.log(result.data);
+          setTotalPositive(result.data.totalPositive);
+          setTotalNegative(result.data.totalNegative);
+          const eventList = result.data.receiptList.map((receipt) => ({
+            id: receipt.receiptId,
+            title: `+${receipt.positive} -${receipt.negative}`,
+            start: `${receipt.date}T00:00:00`, //'2024-03-12T21:00:00',
+            // color: `${receipt.userColor}`,
           }));
           setEvents(eventList);
         } else {
@@ -74,8 +65,8 @@ export default function Component() {
   }, [year, month]);
 
   const handleEventClick = (clickInfo) => {
-    const recordId = clickInfo.event.id;
-    router.push(`/api/books/${bookId}/records/${recordId}`);
+    const receiptId = clickInfo.event.id;
+    router.push(`/api/receipts/${receiptId}`);
   };
   const handleDateClick = () => {
     // 모달
@@ -84,28 +75,36 @@ export default function Component() {
   return (
     <RootLayout>
       <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
-        <div className="px-2 flex items-center justify-between">
+        <div className="flex-col absolute ml-4 mt-2 text-sm">
+          <div className="flex items-center gap-2">
+            총 긍정적 기분: <p className="text-[#3D73DB]">{totalPositive}</p>원
+          </div>
+          <div className="flex items-center gap-2">
+            총 부정적 기분: <p className="text-[#DB7292]">{totalNegative}</p>원
+          </div>
+        </div>
+        <div className="px-2 flex items-center justify-between absolute">
           <div
             className="flex items-center gap-4"
             style={{ position: "absolute", top: "-50px" }}
           >
             <Link
               className="flex items-center bg-[#f1ff9c] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/${bookId}`}
+              href={`/api/receipts`}
             >
               <h1 className="text-xl font-bold w-[100px]">달력</h1>
             </Link>
             <Link
               className="flex items-center bg-[#ffffff] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/${bookId}/table`}
+              href={`/api/receipts/table`}
             >
               <h1 className="text-xl font-bold w-[100px]">표</h1>
             </Link>
             <Link
               className="flex items-center bg-[#ffffff] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/${bookId}/analysis`}
+              href={`/api/receipts/analysis`}
             >
-              <h1 className="text-xl font-bold w-[100px]">소비 분석</h1>
+              <h1 className="text-xl font-bold w-[100px]">감정 분석</h1>
             </Link>
           </div>
         </div>
@@ -146,6 +145,11 @@ export default function Component() {
               setYear(arg.start.getFullYear());
               setMonth(arg.start.getMonth() + 1);
             }}
+            eventContent={(arg) => {
+              let lines = arg.event.title.split(" ");
+              let title = `<div className="flex-col" style="margin-left: 5px;"><div style="color: #3D73DB;">${lines[0]}</div><div style="color: #DB7292;">${lines[1]}</div></div>`;
+              return { html: title };
+            }}
           />
           <div
             className="absolute"
@@ -156,10 +160,10 @@ export default function Component() {
           >
             <Link
               className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-              href={`/api/books/${params.bookId}/records/create`}
+              href={`/api/receipts/create`}
             >
               <PlusIcon className="h-5 w-5 mr-2" />
-              레코드 작성
+              영수증 작성
             </Link>
           </div>
         </main>
@@ -187,6 +191,7 @@ function PencilIcon(props) {
     </svg>
   );
 }
+
 function PlusIcon(props) {
   return (
     <svg

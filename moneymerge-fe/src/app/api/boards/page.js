@@ -19,201 +19,392 @@ import {
 import { Badge } from "@/components/ui/badge";
 import {
   PaginationPrevious,
+  PaginationNext,
   PaginationItem,
   PaginationLink,
   PaginationContent,
   Pagination,
 } from "@/components/ui/pagination";
-
+import RootLayout from "../../../components/layout.js";
 import { useState, useEffect } from "react";
+import { BASE_URL } from '../../../../url.js';
 
 export default function Component() {
   const [boards, setBoards] = useState([]);
-  //const boards = [{boardId : 1, boardType : "INFORMATION", title : "제목1", content : "내용1", image : "#", userId : 1, username : "홍길동", createdAt: "2024-05-21T17:24:54.391282", modifiedAt: "2024-05-21T17:44:56.058967", likes: 1, commentGetResList : []}];
+  const [boardType, setBoardType] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState("latest");
+  const [keyword, setKeyword] = useState("");
+  const [range, setRange] = useState("titleAndContent");
+
+  const handleOrderChange = (value) => {
+    setSortBy(value);
+  };
+
+  const handleRangeChange = (value) => {
+    setRange(value);
+  };
+
   useEffect(() => {
-    fetch("http://localhost:8080/api/boards")
+    let url = `${BASE_URL}/boards`;
+    // let countUrl = "http://localhost:8080/api/boards/count";
+
+    if (currentPage) {
+      url += `?page=${currentPage}`;
+    }
+    if (boardType) {
+      url += `&boardType=${boardType}`;
+      // countUrl += `?boardType=${boardType}`;
+    }
+    if (sortBy === "latest") {
+      url += `&sortBy=createdAt&isAsc=false`;
+    } else if (sortBy === "oldest") {
+      url += `&sortBy=createdAt&isAsc=true`;
+    } else if (sortBy === "likes") {
+      url += `&sortBy=likes&isAsc=false`;
+    }
+
+    fetch(url)
       .then((result) => result.json())
-      .then((result) => setBoards(result.data));
-  }, []);
+      .then((result) => {
+        setBoards(result.data.content);
+        setTotalPages(result.data.totalPages);
+      });
+
+    // fetch(countUrl)
+    //   .then((result) => result.json())
+    //   .then((result) => {
+    //     setTotalPages(Math.ceil(result / 10));
+    //   });
+  }, [boardType, sortBy, currentPage]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // 검색
+  const handleSearchInput = (e) => {
+    e.preventDefault();
+    const value = e.target.value;
+    setKeyword(value);
+  };
+
+  const handleSearchClick = (keyword, e) => {
+    e.preventDefault();
+    let searchUrl = `${BASE_URL}/boards/search`;
+    let url = `${BASE_URL}/boards`;
+
+    if (currentPage) {
+      searchUrl += `?page=${currentPage}`;
+      url += `?page=${currentPage}`;
+    }
+    if (boardType) {
+      searchUrl += `&boardType=${boardType}`;
+      url += `&boardType=${boardType}`;
+    }
+    if (sortBy === "latest") {
+      searchUrl += `&sortBy=createdAt&isAsc=false`;
+      url += `&sortBy=createdAt&isAsc=false`;
+    } else if (sortBy === "oldest") {
+      searchUrl += `&sortBy=createdAt&isAsc=true`;
+      url += `&sortBy=createdAt&isAsc=true`;
+    } else if (sortBy === "likes") {
+      searchUrl += `&sortBy=likes&isAsc=false`;
+      url += `&sortBy=likes&isAsc=false`;
+    }
+    if (range) {
+      searchUrl += `&range=${range}`;
+    }
+    if (keyword) {
+      searchUrl += `&searchKeyword=${keyword}`;
+    }
+
+    if (keyword !== "") {
+      fetch(searchUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+        .then((result) => result.json())
+        .then((result) => {
+          console.log(result.data);
+          setBoards(result.data.content);
+          setTotalPages(result.data.totalPages);
+        })
+        .catch((error) => {
+          console.error("Error fetching receipt data:", error);
+        });
+    } else {
+      fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+        .then((result) => result.json())
+        .then((result) => {
+          console.log(result.data);
+          setBoards(result.data.content);
+          setTotalPages(result.data.totalPages);
+        })
+        .catch((error) => {
+          console.error("Error fetching receipt data:", error);
+        });
+    }
+  };
 
   return (
-    <div className="bg-[#fffbeb] text-[#333] min-h-screen flex flex-col">
-      <header className="bg-[#f9f5e7] py-4 px-6 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold">게시판</h1>
+    <RootLayout>
+      <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
+        <div className="px-4 flex items-center justify-between">
+          <div
+            className="flex items-center gap-4"
+            style={{ position: "absolute", top: "-45px" }}
+          >
+            <Link className="flex items-center gap-2" href="/">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold w-[100px]">커뮤니티</h1>
+            </Link>
+          </div>
         </div>
-      </header>
-      <main className="flex-1 p-8">
-        <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-8 space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="outline">
-                <ListIcon className="h-5 w-5 mr-2" />
-                전체
-              </Button>
-              <Button variant="outline">
-                <SignpostIcon className="h-5 w-5 mr-2" />
-                공지사항
-              </Button>
-              <Button variant="outline">
-                <ContactIcon className="h-5 w-5 mr-2" />
-                자유게시판
-              </Button>
-              <Button variant="outline">
-                <FileQuestionIcon className="h-5 w-5 mr-2" />
-                Q&A
-              </Button>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Input
-                  className="w-[200px]"
-                  placeholder="검색어를 입력하세요"
-                  type="text"
-                />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      <FilterIcon className="h-5 w-5 mr-2" />
-                      검색 범위
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-[200px]">
-                    <DropdownMenuRadioGroup value="all">
-                      <DropdownMenuRadioItem value="all">
-                        전체
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="title">
-                        제목
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="content">
-                        내용
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="author">
-                        작성자
-                      </DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      <ArrowUpIcon className="h-5 w-5 mr-2" />
-                      정렬
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-[200px]">
-                    <DropdownMenuRadioGroup value="latest">
-                      <DropdownMenuRadioItem value="latest">
-                        최신순
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="oldest">
-                        오래된순
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="popular">
-                        좋아요순
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="views">
-                        댓글순
-                      </DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button size="sm">검색</Button>
+        <main
+          className="bg-white"
+          style={{
+            marginTop: "13px",
+            height: "432px",
+            overflow: "auto",
+          }}
+        >
+          <div className="max-w-3xl p-4 space-y-6">
+            <div>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBoardType(null);
+                    handlePageChange(1);
+                  }}
+                >
+                  {/* <ListIcon className="h-5 w-5 mr-2" /> */}
+                  전체
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBoardType("INFORMATION");
+                    handlePageChange(1);
+                  }}
+                >
+                  {/* <SignpostIcon className="h-5 w-5 mr-2" /> */}
+                  정보 나눔
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBoardType("CERTIFICATION");
+                    handlePageChange(1);
+                  }}
+                >
+                  인증
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBoardType("FREE");
+                    handlePageChange(1);
+                  }}
+                >
+                  {/* <FileQuestionIcon className="h-5 w-5 mr-2" /> */}
+                  자유
+                </Button>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Input
+                    className="w-[200px]"
+                    placeholder="검색어를 입력하세요"
+                    type="text"
+                    value={keyword}
+                    onChange={handleSearchInput}
+                  />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline">
+                        <FilterIcon className="h-5 w-5 mr-2" />
+                        검색 범위
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-[200px]">
+                      <DropdownMenuRadioGroup
+                        value={range}
+                        onValueChange={handleRangeChange}
+                      >
+                        <DropdownMenuRadioItem value="titleAndContent">
+                          제목 및 내용
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="title">
+                          제목
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="content">
+                          내용
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="user">
+                          작성자
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <Button
+                    size="sm"
+                    onClick={(e) => handleSearchClick(keyword, e)}
+                  >
+                    검색
+                  </Button>
+                  <div className="w-48 flex justify-end">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline">
+                          <ArrowUpIcon className="h-5 w-5 mr-2" />
+                          정렬
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-[200px]">
+                        <DropdownMenuRadioGroup
+                          value={sortBy}
+                          onValueChange={handleOrderChange}
+                        >
+                          <DropdownMenuRadioItem value="latest">
+                            최신순
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="oldest">
+                            오래된순
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="likes">
+                            좋아요순
+                          </DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full table-auto">
-              <thead>
-                <tr className="bg-gray-100 dark:bg-gray-800">
-                  <th className="px-4 py-3 text-left font-medium">제목</th>
-                  <th className="px-4 py-3 text-left font-medium">종류</th>
-                  <th className="px-4 py-3 text-left font-medium">작성자</th>
-                  <th className="px-4 py-3 text-left font-medium">작성일</th>
-                  <th className="px-4 py-3 text-left font-medium">좋아요</th>
-                  <th className="px-4 py-3 text-left font-medium">댓글 수</th>
-                </tr>
-              </thead>
-              <tbody>
-                {boards &&
-                  boards.map((row) => (
-                    <tr className="border-b">
-                      <td className="px-4 py-3">
-                        <Link
-                          className="font-medium hover:text-[#333]"
-                          href="/community/{row.boardId}"
-                        >
-                          {row.title}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3">
-                        <Badge
-                          className="bg-[#f9f5e7] text-[#333]"
-                          variant="secondary"
-                        >
-                          {row.boardType}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-3">{row.username}</td>
-                      <td className="px-4 py-3">{row.createdAt}</td>
-                      <td className="px-4 py-3">{row.likes}</td>
-                      <td className="px-4 py-3">
-                        {row.commentGetResList.length}
-                      </td>
-                    </tr>
+            <div className="overflow-x-auto">
+              <table className="w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-100 dark:bg-gray-800">
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      제목
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      종류
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      작성자
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      작성일
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      좋아요
+                    </th>
+                    <th className="px-4 py-3 text-left font-medium text-xs">
+                      댓글 수
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {boards &&
+                    boards.map((row) => (
+                      <tr className="border-b">
+                        <td className="px-4 py-3">
+                          <Link
+                            className="font-medium hover:text-[#333] text-xs"
+                            href={`/api/boards/${row.boardId}`}
+                          >
+                            {row.title}
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge
+                            className="bg-[#f9f5e7] text-[#333] text-xs"
+                            variant="secondary"
+                          >
+                            {row.boardType}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3 text-xs">{row.author}</td>
+                        <td className="px-4 py-3 text-xs">{row.createdAt}</td>
+                        <td className="px-4 py-3 text-xs">{row.likes}</td>
+                        <td className="px-4 py-3 text-xs">{row.comments}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex justify-center">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={handlePrevPage}
+                      disabled={currentPage === 1}
+                    />
+                  </PaginationItem>
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <PaginationItem key={i + 1}>
+                      <PaginationLink
+                        href="#"
+                        isActive={currentPage === i + 1} // 현재 페이지 버튼 활성화
+                        onClick={() => handlePageChange(i + 1)}
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
                   ))}
-                {/* <tr className="border-b">
-                  <td className="px-4 py-3">
-                    <Link className="font-medium hover:text-[#333]" href="#">
-                      이벤트 안내
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge
-                      className="bg-[#f9f5e7] text-[#333]"
-                      variant="secondary"
-                    >
-                      공지사항
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3">관리자</td>
-                  <td className="px-4 py-3">2023-05-25</td>
-                  <td className="px-4 py-3">5</td>
-                  <td className="px-4 py-3">2</td>
-                </tr>
-                */}
-              </tbody>
-            </table>
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
           </div>
-          <div className="flex justify-center">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" isActive>
-                    2
-                  </PaginationLink>
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        </div>
-      </main>
-      <div className="fixed bottom-8 right-8">
-        <Link
-          className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-          href="/api/boards/create"
+        </main>
+        <div
+          className="absolute"
+          style={{
+            bottom: "-40px",
+            right: "-40px",
+          }}
         >
-          <PlusIcon className="h-5 w-5 mr-2" />글 작성
-        </Link>
+          <Link
+            className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+            href="/api/boards/create"
+          >
+            <PlusIcon className="h-5 w-5 mr-2" />글 작성
+          </Link>
+        </div>
       </div>
-    </div>
+    </RootLayout>
   );
 }
 

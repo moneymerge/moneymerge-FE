@@ -7,7 +7,7 @@
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
-import RootLayout from "../../../../components/layout.js";
+import RootLayout from "../../../components/layout.js";
 // FullCalendar 관련
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -18,64 +18,67 @@ import interactionPlugin, {
 import timeGridPlugin from "@fullcalendar/timegrid";
 import koLocale from "@fullcalendar/core/locales/ko";
 // npm install @fullcalendar/core @fullcalendar/react @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
-import "../../books/book.css";
+import "../books/book.css";
 
 import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { BASE_URL } from '../../../../../url.js';
+import { useRouter } from "next/navigation";
+import { BASE_URL } from "../../../../url.js"
 
 export default function Component() {
   const router = useRouter();
-  const params = useParams();
-  console.log(params);
+  // 현재 URL에서 쿼리 스트링을 추출
+  const queryString = window.location.search;
+  // URLSearchParams를 사용하여 쿼리 스트링을 파싱
+  const urlParams = new URLSearchParams(queryString);
+
+  // bookId들을 담을 배열을 선언
+  const bookIds = [];
+  // URLSearchParams의 entries() 메서드를 사용하여 쿼리 파라미터를 반복합니다.
+  for (const [key, value] of urlParams.entries()) {
+    if (key === "bookId") {
+      bookIds.push(value);
+    }
+  }
+  console.log(bookIds);
+
   const [events, setEvents] = useState([]);
-  const bookId = params.bookId;
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [isChecked, setIsChecked] = useState(false); // 체크박스 상태 관리
 
-  useEffect(() => {
-    // Fetch data from the backend
-    // let url = "http://localhost:8080/api/books/1/records/2024/5";
-    let url = `${BASE_URL}/books/${bookId}/records/${year}/${
+  // 각 bookId에 대해 요청을 보내는 함수를 정의합니다.
+  async function fetchBookData(bookId) {
+    const url = `${BASE_URL}/books/${bookId}/records/${year}/${
       month + 1
     }`;
-    fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include", // 쿠키를 포함하여 요청
-    })
-      .then((result) => {
-        if (!result.ok) {
-          throw new Error("Failed to fetch events");
-        }
-        return result.json();
-      })
-      .then((result) => {
-        if (result.data && result.data.length > 0) {
-          const eventList = result.data.map((record) => ({
-            id: record.recordId,
-            title:
-              record.recordType === "수입"
-                ? `+${record.amount}`
-                : `-${record.amount}`,
-            start: `${record.date}T00:00:00`, //'2024-03-12T21:00:00',
-            color: `${record.userColor}`,
-          }));
-          setEvents(eventList);
-        } else {
-          console.error("No data returned from the server");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching events:", error);
+
+    try {
+      const response = await fetch(url, {
+        credentials: "include", // Ensure credentials are included
       });
-  }, [year, month]);
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data); // 받은 데이터를 콘솔에 출력하거나 필요한 처리
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+  // bookIds 배열에 있는 각 bookId에 대해 fetchBookData 함수를 호출
+  useEffect(() => {
+    bookIds.forEach((bookId) => {
+      fetchBookData(bookId);
+    });
+  }, [bookIds]);
+
+  console.log(events);
 
   const handleEventClick = (clickInfo) => {
     const recordId = clickInfo.event.id;
-    router.push(`/api/books/${bookId}/records/${recordId}`);
+    router.push(`/api/books/1/records/${recordId}`);
   };
   const handleDateClick = () => {
     // 모달
@@ -91,19 +94,19 @@ export default function Component() {
           >
             <Link
               className="flex items-center bg-[#f1ff9c] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/${bookId}`}
+              href={`/api/books/1}`}
             >
               <h1 className="text-xl font-bold w-[100px]">달력</h1>
             </Link>
             <Link
               className="flex items-center bg-[#ffffff] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/${bookId}/table`}
+              href={`/api/books/1}/table`}
             >
               <h1 className="text-xl font-bold w-[100px]">표</h1>
             </Link>
             <Link
               className="flex items-center bg-[#ffffff] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/${bookId}/analysis`}
+              href={`/api/books/1}/analysis`}
             >
               <h1 className="text-xl font-bold w-[100px]">소비 분석</h1>
             </Link>
@@ -156,7 +159,7 @@ export default function Component() {
           >
             <Link
               className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-              href={`/api/books/${params.bookId}/records/create`}
+              href={`/api/books/1/records/create`}
             >
               <PlusIcon className="h-5 w-5 mr-2" />
               레코드 작성
