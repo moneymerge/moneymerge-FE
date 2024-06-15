@@ -12,7 +12,7 @@ import Link from "next/link";
 import RootLayout from "../../../../../components/layout.js";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { BASE_URL } from '../../../../../../url.js';
+import { BASE_URL } from "../../../../../../url.js";
 
 export default function Component() {
   const params = useParams();
