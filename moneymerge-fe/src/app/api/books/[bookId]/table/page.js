@@ -91,6 +91,7 @@
  * @see https://v0.dev/t/ulCNHlKx825
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
+import "./table.css";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
@@ -106,11 +107,10 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import koLocale from "@fullcalendar/core/locales/ko";
 // npm install @fullcalendar/core @fullcalendar/react @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
-import "./table.css";
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { BASE_URL } from '../../../../../../url.js';
+import { BASE_URL } from "../../../../../../url.js";
 
 export default function Component() {
   const router = useRouter();
@@ -139,16 +139,13 @@ export default function Component() {
       .then((result) => {
         if (result.data && result.data.length > 0) {
           const promises = result.data.map((record) =>
-            fetch(
-              `${BASE_URL}/books/${bookId}/records/${record.recordId}`,
-              {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                credentials: "include",
-              }
-            )
+            fetch(`${BASE_URL}/books/${bookId}/records/${record.recordId}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+            })
               .then((response) => response.json())
               .then((recordDetails) => ({
                 id: recordDetails.data.recordId,

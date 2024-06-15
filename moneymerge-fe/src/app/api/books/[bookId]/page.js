@@ -4,6 +4,7 @@
  * @see https://v0.dev/t/ulCNHlKx825
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
+import "../../books/book.css";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
@@ -18,11 +19,10 @@ import interactionPlugin, {
 import timeGridPlugin from "@fullcalendar/timegrid";
 import koLocale from "@fullcalendar/core/locales/ko";
 // npm install @fullcalendar/core @fullcalendar/react @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
-import "../../books/book.css";
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { BASE_URL } from '../../../../../url.js';
+import { BASE_URL } from "../../../../../url.js";
 
 export default function Component() {
   const router = useRouter();
@@ -36,9 +36,7 @@ export default function Component() {
   useEffect(() => {
     // Fetch data from the backend
     // let url = "http://localhost:8080/api/books/1/records/2024/5";
-    let url = `${BASE_URL}/books/${bookId}/records/${year}/${
-      month + 1
-    }`;
+    let url = `${BASE_URL}/books/${bookId}/records/${year}/${month + 1}`;
     fetch(url, {
       method: "GET",
       headers: {
