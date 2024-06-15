@@ -6,9 +6,15 @@ WORKDIR /usr/src/app
 
 # 3. 필요한 파일 복사
 COPY package*.json ./
-COPY next.config.js ./
+COPY .next ./.next
 COPY public ./public
-COPY pages ./pages
+COPY node_modules ./node_modules
+COPY components.json ./
+COPY jsconfig.json ./
+COPY next.config.mjs ./
+COPY postcss.config.mjs ./
+COPY tailwind.config.js ./
+COPY url.js ./
 
 # 4. 종속성 설치
 RUN npm install
