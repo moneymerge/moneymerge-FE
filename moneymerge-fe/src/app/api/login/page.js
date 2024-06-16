@@ -28,7 +28,7 @@ function setCookie(name, value, maxAgeInSeconds) {
   expires.setTime(expires.getTime() + maxAgeInSeconds * 1000);
   const cookieOptions = {
       path: '/',
-      secure: true, // HTTPS에서만 쿠키 전송
+      secure: false, // HTTPS에서만 쿠키 전송
       sameSite: 'None', // Cross-Site 접근 허용
       expires: expires.toUTCString()
   };
@@ -46,6 +46,7 @@ export default function LoginPage() {
     })
       .then((result) => result.json())
       .then((result) => {
+        console.logs(result.data);
         saveTokensToCookie(result.data.accessToken, result.data.refreshToken);
       })
       .catch((error) => console.error("Error fetching token data:", error));
