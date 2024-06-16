@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 import { SketchPicker } from "react-color";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from '../../url.js';
+import { BASE_URL } from "../../url.js";
 
 const Sidebar = ({ data }) => {
   const router = useRouter();
@@ -40,7 +40,9 @@ const Sidebar = ({ data }) => {
       [bookId]: !prev[bookId],
     }));
 
-    // 선택한 가계부의 bookId를 쿼리 파라미터로 전달하여 해당 페이지로 이동
+    return checkedBooks;
+  };
+  const applyFilters = () => {
     const checkedIds = Object.keys(checkedBooks).filter(
       (key) => checkedBooks[key]
     );
@@ -49,8 +51,6 @@ const Sidebar = ({ data }) => {
         ? `?${checkedIds.map((id) => `bookId=${id}`).join("&")}`
         : "";
     router.push(`/api/books${query}`);
-
-    return checkedBooks;
   };
 
   const handleLogout = async () => {
@@ -116,63 +116,75 @@ const Sidebar = ({ data }) => {
             </Link>
             <div className="book-list">
               {/* 서버에서 받은 bookList 데이터를 사용하여 가계부 목록 생성 */}
-              {data &&
-                data.bookList.map((book, index) => (
-                  <div key={index} className="book-wrapper">
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
+              <div>
+                {data &&
+                  data.bookList.map((book, index) => (
+                    <div key={index} className="book-wrapper">
                       <div
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleCheckboxClick(book.bookId);
-                        }}
                         style={{
-                          backgroundColor: book.bookColor,
-                          borderRadius: "3px",
-                          height: "16px",
-                          width: "16px",
                           display: "flex",
-                          justifyContent: "center",
+                          flexDirection: "row",
                           alignItems: "center",
-                          cursor: "pointer",
+                          gap: "10px",
                         }}
                       >
-                        {checkedBooks[book.bookId] && (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="12"
-                            height="12"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="feather feather-check"
-                          >
-                            <polyline points="20 6 9 17 4 12" />
-                          </svg>
-                        )}
-                      </div>
-                      <Link href={`/api/books/${book.bookId}`}>
                         <div
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleCheckboxClick(book.bookId);
+                          }}
                           style={{
-                            fontSize: "12px",
-                            width: "70px",
+                            backgroundColor: book.bookColor,
+                            borderRadius: "3px",
+                            height: "16px",
+                            width: "16px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            cursor: "pointer",
                           }}
                         >
-                          {book.bookTitle}
+                          {checkedBooks[book.bookId] && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="12"
+                              height="12"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="feather feather-check"
+                            >
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                          )}
                         </div>
-                      </Link>
+                        <Link href={`/api/books/${book.bookId}`}>
+                          <div
+                            style={{
+                              fontSize: "12px",
+                              width: "70px",
+                            }}
+                          >
+                            {book.bookTitle}
+                          </div>
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+
+                {Object.values(checkedBooks).some((value) => value) && (
+                  <Button
+                    type="button" // 기본 동작 방지
+                    className="w-[100px] h-[20px] ml-[20px]"
+                    onClick={applyFilters}
+                  >
+                    Apply Filters
+                  </Button>
+                )}
+              </div>
               <div className="book-wrapper">
                 {/* 가계부 추가 Dialog */}
                 <Dialog>
@@ -349,25 +361,25 @@ function BookForm() {
       detail: book.title,
     };
 
-      for (const user of userList) {
-        fetch(`${BASE_URL}/notifications/${user.userId}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(notification),
+    for (const user of userList) {
+      fetch(`${BASE_URL}/notifications/${user.userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(notification),
+      })
+        .then((response) => {
+          if (response.ok) {
+          } else {
+            alert("Error:" + response.status);
+          }
         })
-          .then((response) => {
-            if (response.ok) {
-            } else {
-              alert("Error:" + response.status);
-            }
-          })
-          .catch((error) => {
-            alert("Fetch error:" + error);
-          });
-      }
+        .catch((error) => {
+          alert("Fetch error:" + error);
+        });
+    }
   };
 
   return (

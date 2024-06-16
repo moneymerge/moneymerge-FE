@@ -18,7 +18,7 @@ import {
   DialogContent,
   Dialog,
 } from "@/components/ui/dialog";
-import { BASE_URL } from '../../../../../url.js';
+import { BASE_URL } from "../../../../../url.js";
 
 export default function Component() {
   const params = useParams();
@@ -84,17 +84,14 @@ export default function Component() {
   const handleSaveButtonClick = (commentId) => {
     comment.content = editedContents[commentId];
 
-    fetch(
-      `${BASE_URL}/boards/${board.boardId}/comments/${commentId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(comment),
-        credentials: "include",
-      }
-    )
+    fetch(`${BASE_URL}/boards/${board.boardId}/comments/${commentId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(comment),
+      credentials: "include",
+    })
       .then((response) => {
         if (response.ok) {
           window.location.href = `/api/boards/${board.boardId}`;
@@ -267,16 +264,13 @@ export default function Component() {
 
   const HandleCommentLikeClick = (commentId) => {
     if (commentId !== null) {
-      fetch(
-        `${BASE_URL}/boards/${board.boardId}/comments/${commentId}/likes`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      )
+      fetch(`${BASE_URL}/boards/${board.boardId}/comments/${commentId}/likes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
         .then((result) => result.json())
         .then((result) => {
           if (result.data) {
@@ -297,13 +291,10 @@ export default function Component() {
     const confirmDelete = window.confirm("댓글을 삭제하시겠습니까?");
 
     if (confirmDelete) {
-      fetch(
-        `${BASE_URL}/boards/${board.boardId}/comments/${commentId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      )
+      fetch(`${BASE_URL}/boards/${board.boardId}/comments/${commentId}`, {
+        method: "DELETE",
+        credentials: "include",
+      })
         .then((response) => {
           console.log(response);
           if (response.ok) {
