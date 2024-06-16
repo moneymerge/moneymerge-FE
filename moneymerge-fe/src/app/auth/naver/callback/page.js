@@ -15,7 +15,8 @@ const KakaoCallback = () => {
       })
         .then((result) => result.json())
         .then((result) => {
-            saveTokensToCookie(result.data.accessToken, res.data.refreshToken);
+            saveTokensToCookie(result.data.accessToken, result.data.refreshToken);
+            router.push('/');
         })
         .catch((error) => console.error("Error fetching token data:", error));
   }, []);
