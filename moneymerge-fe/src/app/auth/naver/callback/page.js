@@ -43,8 +43,6 @@ function saveTokensToCookie(accessToken, refreshToken) {
     expires.setTime(expires.getTime() + maxAgeInSeconds * 1000);
     const cookieOptions = {
         path: '/',
-        secure: false, // HTTPS에서만 쿠키 전송
-        sameSite: 'None', // Cross-Site 접근 허용
         expires: expires.toUTCString()
     };
     document.cookie = `${name}=${value}; ${Object.entries(cookieOptions).map(entry => entry.join('=')).join('; ')}`;
