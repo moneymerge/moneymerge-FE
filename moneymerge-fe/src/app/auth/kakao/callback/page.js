@@ -46,6 +46,7 @@ function setCookie(name, value, maxAgeInSeconds) {
     secure: true, // HTTPS에서만 쿠키 전송
     sameSite: "None", // Cross-Site 접근 허용
     expires: expires.toUTCString(),
+    domain: ".moneymerge.store"
   };
   document.cookie = `${name}=${value}; ${Object.entries(cookieOptions)
     .map((entry) => entry.join("="))
