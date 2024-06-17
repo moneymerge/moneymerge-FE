@@ -71,9 +71,9 @@ const Sidebar = ({ data }) => {
 
       if (response.ok) {
         document.cookie =
-          "AccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          "AccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.moneymerge.store";
         document.cookie =
-          "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=/moneymerge.store";
         router.push("/api/login");
       } else {
         console.error("Failed to log out");
