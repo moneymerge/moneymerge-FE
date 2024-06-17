@@ -146,7 +146,7 @@ export default function Component() {
   const handleViewTypeChange = (type) => {
     setViewType(type);
     fetch(
-      `${BASE_URL}/books/${bookId}/analysis-member?year=2024&month=6`,
+      `${BASE_URL}/books/${bookId}/analysis-member?year=${year}&month=${month}`,
       {
         method: "GET",
         headers: {

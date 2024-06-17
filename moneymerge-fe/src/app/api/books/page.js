@@ -33,7 +33,12 @@ export default function Component() {
   // 중복
   const [multiEventList, setMultiEventList] = useState([]);
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
+    // 현재 URL에서 쿼리 스트링을 추출
+    const queryString = window.location.search;
+    // URLSearchParams를 사용하여 쿼리 스트링을 파싱
+    const urlParams = new URLSearchParams(queryString);
+
     useEffect(() => {
       const bookIds = [];
       for (const [key, value] of urlParams.entries()) {
@@ -43,10 +48,9 @@ export default function Component() {
       }
       setCheckedbooks(bookIds);
     }, [queryString]);
-  
+
     console.log(checkedbooks);
   }
-  
 
   // 각 bookId에 대해 요청을 보내는 함수를 정의합니다.
   const fetchBookData = async (bookId) => {
@@ -109,13 +113,20 @@ export default function Component() {
   }, [checkedbooks, year, month]);
 
   const handleApplyFilter = () => {
-    const bookIds = [];
-    for (const [key, value] of urlParams.entries()) {
-      if (key === "bookId") {
-        bookIds.push(value);
+    if (typeof window !== "undefined") {
+      // 현재 URL에서 쿼리 스트링을 추출
+      const queryString = window.location.search;
+      // URLSearchParams를 사용하여 쿼리 스트링을 파싱
+      const urlParams = new URLSearchParams(queryString);
+
+      const bookIds = [];
+      for (const [key, value] of urlParams.entries()) {
+        if (key === "bookId") {
+          bookIds.push(value);
+        }
       }
+      setCheckedbooks(bookIds);
     }
-    setCheckedbooks(bookIds);
   };
 
   const handleEventClick = (clickInfo) => {
@@ -136,7 +147,7 @@ export default function Component() {
           >
             <Link
               className="flex items-center bg-[#f1ff9c] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/1}`}
+              href={`/api/books/1`}
             >
               <h1 className="text-xl font-bold w-[100px]">달력</h1>
             </Link>
