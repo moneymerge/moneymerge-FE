@@ -9,12 +9,12 @@ import styled from "styled-components";
 export default function LoginPage() {
 
   const handleKakaoLogin = () => {
-    window.location.href = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=http://43.203.66.36:3000/auth/kakao/callback";
+    window.location.href = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ae799c21398028744a91ebd1035fc7a&redirect_uri=https://moneymerge.store/auth/kakao/callback";
     
   };
 
   const handleNaverLogin = () => {
-    window.location.href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=http://43.203.66.36:3000/auth/naver/callback&state=test";
+    window.location.href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=h9r5xd35tpbGhFazlIvP&redirect_uri=https://moneymerge.store/auth/naver/callback&state=test";
   };
 
   return (
