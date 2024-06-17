@@ -35,7 +35,7 @@ export default function Component() {
   //// 막대 ////
   useEffect(() => {
     fetch(
-      `${BASE_URL}/books/1/analysis-member?year=${year}&month=${month}`,
+      `${BASE_URL}/books/${bookId}/analysis-member?year=${year}&month=${month}`,
       {
         method: "GET",
         headers: {
@@ -146,7 +146,7 @@ export default function Component() {
   const handleViewTypeChange = (type) => {
     setViewType(type);
     fetch(
-      `${BASE_URL}/books/1/analysis-member?year=2024&month=6`,
+      `${BASE_URL}/books/${bookId}/analysis-member?year=2024&month=6`,
       {
         method: "GET",
         headers: {
