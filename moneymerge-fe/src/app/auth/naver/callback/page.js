@@ -7,7 +7,7 @@ const KakaoCallback = () => {
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
-    fetch(`http://43.203.68.172:80/auth/naver/callback?code=${code}`, {
+    fetch(`http://43.203.66.36/auth/naver/callback?code=${code}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
