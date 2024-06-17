@@ -7,7 +7,7 @@ const KakaoCallback = () => {
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
-    fetch(`http://3.39.225.191/auth/kakao/callback?code=${code}`, {
+    fetch(`http://43.203.68.172:80/auth/kakao/callback?code=${code}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
