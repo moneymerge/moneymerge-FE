@@ -7,7 +7,7 @@ const KakaoCallback = () => {
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
-    fetch(`https://sappun.shop/auth/kakao/callback?code=${code}`, {
+    fetch(`https://be.moneymerge.store/auth/kakao/callback?code=${code}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
