@@ -4,7 +4,6 @@
  * @see https://v0.dev/t/ulCNHlKx825
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import "../../books/book.css";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
@@ -17,69 +16,24 @@ import interactionPlugin, {
   DropArg,
 } from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import listPlugin from "@fullcalendar/list";
 import koLocale from "@fullcalendar/core/locales/ko";
 // npm install @fullcalendar/core @fullcalendar/react @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
+import "./table.css";
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { BASE_URL } from "../../../../../url.js";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
   const router = useRouter();
-  const params = useParams();
-  console.log(params);
   const [events, setEvents] = useState([]);
-  const bookId = params.bookId;
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
-  const [monthGoal, setMonthGoal] = useState(null);
-  const [yearGoal, setYearGoal] = useState(null);
-  const [income, setIncome] = useState(null);
-  const [outcome, setOutcome] = useState(null);
-  const [total, setTotal] = useState(null);
 
   useEffect(() => {
-    // Fetch data from the backend
-    // let url = "http://localhost:8080/api/books/1/records/2024/5";
-    let url = `${BASE_URL}/books/${bookId}/records/${year}/${month + 1}`;
+    let url = `${BASE_URL}/receipts/${year}/${month}`;
     fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include", // 쿠키를 포함하여 요청
-    })
-      .then((result) => {
-        if (!result.ok) {
-          throw new Error("Failed to fetch events");
-        }
-        return result.json();
-      })
-      .then((result) => {
-        if (result.data && result.data.length > 0) {
-          const eventList = result.data.map((record) => ({
-            id: record.recordId,
-            title:
-              record.recordType === "수입"
-                ? `+${record.amount}`
-                : `-${record.amount}`,
-            start: `${record.date}T00:00:00`, //'2024-03-12T21:00:00',
-            extendedProps: {
-              color: `${record.userColor}`,
-            },
-            textColor: record.recordType === "수입" ? "#3D73DB" : "#DB7292",
-          }));
-          setEvents(eventList);
-        } else {
-          console.error("No data returned from the server");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching events:", error);
-      });
-
-    // 목표, 수입지출
-    fetch(`${BASE_URL}/books/${bookId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -88,50 +42,60 @@ export default function Component() {
     })
       .then((result) => {
         if (!result.ok) {
-          throw new Error("Failed to fetch user data");
+          throw new Error("Failed to fetch events");
         }
         return result.json();
       })
       .then((result) => {
-        console.log("결과");
-        console.log("Received user data:", result);
-        setMonthGoal(result.data.monthGoal);
-        setYearGoal(result.data.yearGoal);
-        setIncome(result.data.income);
-        setOutcome(result.data.outcome);
-        setTotal(result.data.total);
+        console.log(result.data.receiptList);
+        if (result.data && result.data.receiptList.length > 0) {
+          const promises = result.data.receiptList.map((receipt) =>
+            fetch(`${BASE_URL}/receipts/${receipt.receiptId}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+            })
+              .then((response) => response.json())
+              .then((receiptDetails) => ({
+                id: receiptDetails.data.receiptId,
+                title: `${receiptDetails.data.date}`,
+                start: `${receiptDetails.data.date}T00:00:00`,
+                extendedProps: {
+                  positive: `${receiptDetails.data.positive}`,
+                  negative: `${receiptDetails.data.negative}`,
+                  content: `${receiptDetails.data.content}`,
+                  shared: `${receiptDetails.data.shared}`,
+                  likes: `${receiptDetails.data.likeCount}`,
+                },
+              }))
+          );
+
+          Promise.all(promises)
+            .then((eventList) => {
+              setEvents(eventList);
+            })
+            .catch((error) => {
+              console.error("Error fetching record details:", error);
+            });
+        } else {
+          console.error("No data returned from the server");
+        }
       })
-      .catch((error) => console.error("Error fetching user data:", error));
+      .catch((error) => {
+        console.error("Error fetching events:", error);
+      });
   }, [year, month]);
 
   const handleEventClick = (clickInfo) => {
-    const recordId = clickInfo.event.id;
-    router.push(`/api/books/${bookId}/records/${recordId}`);
+    const receiptId = clickInfo.event.id;
+    router.push(`/api/receipts/${receiptId}`);
   };
-  const handleDateClick = (arg) => {
-    const clickedDate = arg.dateStr;
-    window.location.href = `/api/books/${bookId}/records/create?date=${clickedDate}`;
+  const handleDateClick = () => {
+    // 모달
   };
 
-  // 이벤트 컨텐츠를 커스터마이즈하는 함수
-  const renderEventContent = (eventInfo) => {
-    return (
-      <div className="flex">
-        <div
-          style={{
-            width: "10px",
-            height: "10px",
-            backgroundColor: `${eventInfo.event.extendedProps.color}`,
-            borderRadius: "50%",
-            marginRight: "5px",
-          }}
-        ></div>
-        <div style={{ color: eventInfo.event.textColor }}>
-          {eventInfo.event.title}
-        </div>
-      </div>
-    );
-  };
   return (
     <RootLayout>
       <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
@@ -141,42 +105,25 @@ export default function Component() {
             style={{ position: "absolute", top: "-50px" }}
           >
             <Link
-              className="flex items-center bg-[#f1ff9c] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/${bookId}`}
+              className="flex items-center bg-[#ffffff] pl-2 pr-2 pt-2 rounded-t-xl"
+              href={`/api/receipts`}
             >
               <h1 className="text-xl font-bold w-[100px]">달력</h1>
             </Link>
             <Link
-              className="flex items-center bg-[#ffffff] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/${bookId}/table`}
+              className="flex items-center bg-[#f1ff9c] pl-2 pr-2 pt-2 rounded-t-xl"
+              href={`/api/receipts/table`}
             >
               <h1 className="text-xl font-bold w-[100px]">표</h1>
             </Link>
             <Link
               className="flex items-center bg-[#ffffff] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/${bookId}/analysis`}
+              href={`/api/receipts/analysis`}
             >
-              <h1 className="text-xl font-bold w-[100px]">소비 분석</h1>
+              <h1 className="text-xl font-bold w-[100px]">감정 분석</h1>
             </Link>
           </div>
         </div>
-        {/* 목표, 총수입지출 */}
-        <div
-          className="absolute p-2 flex flex-col left-2"
-          style={{ fontSize: "12px" }}
-        >
-          <div>월 목표: {monthGoal}</div>
-          <div>연 목표: {yearGoal}</div>
-        </div>
-        <div
-          className=" absolute flex flex-col right-10"
-          style={{ fontSize: "12px" }}
-        >
-          <div className="text-[#3D73DB]">수입: {income}</div>
-          <div className="text-[#DB7292]">지출: {outcome}</div>
-          <div>합계: {total}</div>
-        </div>
-        {/* </div> */}
         <main
           className="bg-white"
           style={{
@@ -186,9 +133,15 @@ export default function Component() {
           }}
         >
           <FullCalendar
-            plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]} // 플러그인 설정
+            plugins={[
+              dayGridPlugin,
+              interactionPlugin,
+              // timeGridPlugin,
+              listPlugin,
+            ]} // 플러그인 설정
             locales={[koLocale]}
             locale="ko"
+            initialView="listMonth"
             // dayHeaderFormat={{ weekday: "short" }} // 요일 형식 지정
             dayCellContent={(e) => e.dayNumberText.replace("일", "")} // 날짜 형식 변경
             timeFormat=""
@@ -202,19 +155,55 @@ export default function Component() {
             nowIndicator={true} // 현재 시간을 표시하는 인디케이터를 활성화합니다.
             // eventBackgroundColor={record.userColor} // 이벤트의 배경색을 설정합니다.
             // eventBorderColor="#0000ff" // 이벤트의 테두리 색을 설정합니다.
-            allDay={false} // 이벤트가 하루 종일인지 여부를 지정합니다.
+            // allDay={false} // 이벤트가 하루 종일인지 여부를 지정합니다.
             timeZone="UTC" // 캘린더의 시간대를 UTC로 설정합니다.
+            // headerToolbar={{
+            //   left: "",
+            //   center: "prevYear,prev,title,next,nextYear",
+            //   right: "today",
+            // }}
             headerToolbar={{
-              left: "",
-              center: "prevYear,prev,title,next,nextYear",
-              right: "today",
+              start: "title",
+              center: "",
+              end: "listDay,listWeek,listMonth prev,next",
+            }}
+            views={{
+              listDay: { buttonText: "Day" },
+              listWeek: { buttonText: "Week" },
+              listMonth: { buttonText: "Month" },
+
+              //   list: {
+              //     eventContent: function (arg) {
+              //       let content = `<tr style="display: flex; flex-direction: column;">
+              //         <td class="custom-event" style="padding-right: 20px;">${arg.event.title}</td>
+              //         <td>긍정: +${arg.event.extendedProps.positive}</td>
+              //         <td>부정: -${arg.event.extendedProps.negative}</td>
+              //         <td>좋아요: ${arg.event.extendedProps.likes}</td>
+              //         </tr>`;
+              //       return { html: content };
+              //     },
+              //   },
+              list: {
+                buttonText: "List",
+                eventContent: function (arg) {
+                  return {
+                    html: `
+                      <div class="flex">
+                        <div class="custom-event mb-2">${arg.event.title}</div>
+                        <div class="text-gray-500 ml-2" style="color: #3D73DB;">긍정: ${arg.event.extendedProps.positive}원</div>
+                        <div class="text-gray-500 ml-2" style="color: #DB7292;">부정: ${arg.event.extendedProps.negative}원</div>
+                        <div class="text-gray-500 ml-2">좋아요: ${arg.event.extendedProps.likes}</div>
+                      </div>
+                    `,
+                  };
+                },
+              },
             }}
             datesSet={(arg) => {
               // 표시된 년도와 월을 useState로 설정합니다.
               setYear(arg.start.getFullYear());
               setMonth(arg.start.getMonth() + 1);
             }}
-            eventContent={renderEventContent}
           />
           <div
             className="absolute"
@@ -225,10 +214,10 @@ export default function Component() {
           >
             <Link
               className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-              href={`/api/books/${params.bookId}/records/create`}
+              href={`/api/receipts/create`}
             >
               <PlusIcon className="h-5 w-5 mr-2" />
-              레코드 작성
+              영수증 작성
             </Link>
           </div>
         </main>

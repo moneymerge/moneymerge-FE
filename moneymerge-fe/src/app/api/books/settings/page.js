@@ -1,89 +1,79 @@
+"use client";
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/0c9vh5jQgPE
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
+import Link from "next/link";
+import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
+import RootLayout from "../../../../components/layout.js";
+import { useState, useEffect } from "react";
+import { BASE_URL } from '../../../../../url.js';
 
 export default function Component() {
+  const [bookList, setBookList] = useState([]);
+
+  useEffect(() => {
+    fetch(`${BASE_URL}/books`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        console.log("Received book data:", result.data);
+        setBookList(result.data);
+      })
+      .catch((error) => console.error("Error fetching book data:", error));
+  }, []);
+
   return (
-    <div className="flex flex-col w-full min-h-screen">
-      <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] bg-gray-100/40 flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 dark:bg-gray-800/40">
-        <div className="max-w-6xl w-full mx-auto grid gap-2">
-          <h1 className="font-semibold text-3xl">가계부 환경설정</h1>
-          <p className="text-gray-500 dark:text-gray-400">Manage your household budgets and track your spending.</p>
+    <RootLayout>
+      <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
+        <div className="px-4 flex items-center justify-between">
+          <div
+            className="flex items-center gap-4"
+            style={{ position: "absolute", top: "-45px" }}
+          >
+            <Link className="flex items-center gap-2" href="/">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <h1 className="text-2xl font-bold">가계부 환경설정</h1>
+            </Link>
+          </div>
         </div>
-        <div className="grid gap-6 max-w-6xl w-full mx-auto">
-          <Card>
-            <CardHeader>
-              <CardTitle>Personal Budget</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400">Track your personal expenses</p>
-                </div>
-                <Link className="text-primary" href="#">
-                  <PencilIcon className="w-5 h-5" />
-                  <span className="sr-only">Edit Personal Budget</span>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Household Budget</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400">Track your household expenses</p>
-                </div>
-                <Link className="text-primary" href="#">
-                  <PencilIcon className="w-5 h-5" />
-                  <span className="sr-only">Edit Household Budget</span>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Travel Budget</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400">Track your travel expenses</p>
-                </div>
-                <Link className="text-primary" href="#">
-                  <PencilIcon className="w-5 h-5" />
-                  <span className="sr-only">Edit Travel Budget</span>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Business Budget</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400">Track your business expenses</p>
-                </div>
-                <Link className="text-primary" href="#">
-                  <PencilIcon className="w-5 h-5" />
-                  <span className="sr-only">Edit Business Budget</span>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-    </div>
-  )
+        <main
+          className="bg-white"
+          style={{
+            marginTop: "13px",
+            height: "432px",
+            overflow: "auto",
+          }}
+        >
+          <div className="grid gap-6 max-w-6xl w-full mx-auto">
+            {bookList &&
+              bookList.map((row) => (
+                <Card>
+                  <CardContent>
+                    <div className="flex items-center justify-between mt-4">
+                      <CardTitle>{row.bookTitle}</CardTitle>
+                      <Link
+                        className="text-primary"
+                        href={`/api/books/${row.bookId}/settings`}
+                      >
+                        <PencilIcon className="w-5 h-5" />
+                        <span className="sr-only">Edit Personal Budget</span>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+          </div>
+        </main>
+      </div>
+    </RootLayout>
+  );
 }
 
 function FrameIcon(props) {
@@ -105,9 +95,8 @@ function FrameIcon(props) {
       <line x1="6" x2="6" y1="2" y2="22" />
       <line x1="18" x2="18" y1="2" y2="22" />
     </svg>
-  )
+  );
 }
-
 
 function PencilIcon(props) {
   return (
@@ -126,5 +115,25 @@ function PencilIcon(props) {
       <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
       <path d="m15 5 4 4" />
     </svg>
-  )
+  );
+}
+
+function ArrowLeftIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m12 19-7-7 7-7" />
+      <path d="M19 12H5" />
+    </svg>
+  );
 }
