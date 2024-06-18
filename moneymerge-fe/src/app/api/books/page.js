@@ -68,6 +68,9 @@ export default function Component() {
               : `-${record.amount}`,
           start: `${record.date}T00:00:00`,
           color: `${record.userColor}`,
+          extendedProps: {
+            bookId: `${record.bookId}`,
+          },
         }));
 
         // 중복 찾기
@@ -89,12 +92,6 @@ export default function Component() {
       console.error("Error fetching data:", error);
     }
   };
-
-  // useEffect(() => {
-  //   setEvents([]); // 새로운 bookIds로 변경 시 기존 events 초기화
-  //   setMultiEventList([]);
-  //   checkedbooks.forEach(fetchBookData);
-  // }, [checkedbooks, year, month]);
 
   useEffect(() => {
     setEvents([]); // 새로운 bookIds로 변경 시 기존 events 초기화
@@ -130,8 +127,10 @@ export default function Component() {
   };
 
   const handleEventClick = (clickInfo) => {
+    console.log(clickInfo);
     const recordId = clickInfo.event.id;
-    router.push(`/api/books/1/records/${recordId}`);
+    const bookId = clickInfo.event.extendedProps.bookId;
+    router.push(`/api/books/${bookId}/records/${recordId}`);
   };
   const handleDateClick = () => {
     // 모달
@@ -147,7 +146,7 @@ export default function Component() {
           >
             <Link
               className="flex items-center bg-[#f1ff9c] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/1`}
+              href={`/api/books`}
             >
               <h1 className="text-xl font-bold w-[100px]">달력</h1>
             </Link>
@@ -206,7 +205,7 @@ export default function Component() {
           >
             <Link
               className="inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-              href={`/api/books/1/records/create`}
+              href={`/api/books/${checkedbooks[0]}/records/create`}
             >
               <PlusIcon className="h-5 w-5 mr-2" />
               레코드 작성

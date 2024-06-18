@@ -23,17 +23,6 @@ const Sidebar = ({ data }) => {
   const router = useRouter();
   const [checkedBooks, setCheckBooks] = useState({});
 
-  //페이지 로드 시 checkedBooks 상태 초기화
-  // useEffect(() => {
-  //   const initialCheckedBooks = {};
-  //   if (data && data.bookList) {
-  //     data.bookList.forEach((book) => {
-  //       initialCheckedBooks[book.bookId] = false;
-  //     });
-  //   }
-  //   setCheckBooks(initialCheckedBooks);
-  // }, [data]);
-
   const handleCheckboxClick = (bookId) => {
     setCheckBooks((prev) => ({
       ...prev,
