@@ -108,8 +108,9 @@ export default function Component() {
     const recordId = clickInfo.event.id;
     router.push(`/api/books/${bookId}/records/${recordId}`);
   };
-  const handleDateClick = () => {
-    // 모달
+  const handleDateClick = (arg) => {
+    const clickedDate = arg.dateStr;
+    window.location.href = `/api/books/${bookId}/records/create?date=${clickedDate}`;
   };
 
   // 이벤트 컨텐츠를 커스터마이즈하는 함수
