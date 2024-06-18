@@ -111,7 +111,7 @@ export default function Component() {
         if (response.ok) {
           window.location.href = `/api/receipts`;
         } else if (response.status === 403) {
-          alert("모두 입력해주세요.");
+          alert("올바르게 입력해주세요.");
         } else {
           alert("Error:" + response.status);
         }

@@ -267,7 +267,7 @@ export default function Component() {
               <div className="flex items-center pt-2">
                 <button
                   className={`flex items-center px-4 py-2 ${
-                    viewType === "income" ? "bg-[#f8f9fa]" : "bg-[#ffffff]"
+                    viewType === "income" ? "bg-[#FFD7DD]" : "bg-[#ffffff]"
                   }`}
                   onClick={() => handleViewTypeChange("income")}
                 >
@@ -275,7 +275,7 @@ export default function Component() {
                 </button>
                 <button
                   className={`flex items-center px-4 py-2 ${
-                    viewType === "expense" ? "bg-[#f8f9fa]" : "bg-[#ffffff]"
+                    viewType === "expense" ? "bg-[#FFD7DD]" : "bg-[#ffffff]"
                   }`}
                   onClick={() => handleViewTypeChange("expense")}
                 >
