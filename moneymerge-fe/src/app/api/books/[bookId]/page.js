@@ -39,6 +39,8 @@ export default function Component() {
   const [total, setTotal] = useState(null);
 
   useEffect(() => {
+    // Fetch data from the backend
+    // let url = "http://localhost:8080/api/books/1/records/2024/5";
     let url = `${BASE_URL}/books/${bookId}/records/${year}/${month + 1}`;
     fetch(url, {
       method: "GET",
@@ -106,10 +108,8 @@ export default function Component() {
     const recordId = clickInfo.event.id;
     router.push(`/api/books/${bookId}/records/${recordId}`);
   };
-  
-  const handleDateClick = (arg) => {
-    const clickedDate = arg.dateStr;
-    window.location.href = `/api/books/${bookId}/records/create?date=${clickedDate}`;
+  const handleDateClick = () => {
+    // 모달
   };
 
   // 이벤트 컨텐츠를 커스터마이즈하는 함수
@@ -161,19 +161,21 @@ export default function Component() {
         </div>
         {/* 목표, 총수입지출 */}
         <div
-          className="absolute w-[100%] flex justify-between"
+          className="absolute p-2 flex flex-col left-2"
           style={{ fontSize: "12px" }}
         >
-          <div className="p-2 flex flex-col">
-            <div>월 목표: {monthGoal}</div>
-            <div>연 목표: {yearGoal}</div>
-          </div>
-          <div className="flex flex-col items-end pr-10">
-            <div className="text-[#3D73DB]">수입: {income}</div>
-            <div className="text-[#DB7292]">지출: {outcome}</div>
-            <div>합계: {total}</div>
-          </div>
+          <div>월 목표: {monthGoal}</div>
+          <div>연 목표: {yearGoal}</div>
         </div>
+        <div
+          className=" absolute flex flex-col right-10"
+          style={{ fontSize: "12px" }}
+        >
+          <div className="text-[#3D73DB]">수입: {income}</div>
+          <div className="text-[#DB7292]">지출: {outcome}</div>
+          <div>합계: {total}</div>
+        </div>
+        {/* </div> */}
         <main
           className="bg-white"
           style={{
