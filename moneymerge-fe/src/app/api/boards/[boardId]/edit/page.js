@@ -172,6 +172,7 @@ export default function Component() {
                 name="content"
                 value={board.content}
                 onChange={handleChange}
+                className="whitespace-pre-wrap"
               />
             </div>
             <div>

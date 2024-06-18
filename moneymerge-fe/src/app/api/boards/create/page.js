@@ -147,6 +147,7 @@ export default function Component() {
                 rows={8}
                 name="content"
                 onChange={handleChange}
+                className="whitespace-pre-wrap"
               />
             </div>
             <div>
