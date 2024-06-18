@@ -542,6 +542,7 @@ function BookForm() {
                   type="number"
                   name="monthGoal"
                   min="0"
+                  max="1000000000000"
                   onChange={handleChange}
                 />
               </div>
@@ -553,6 +554,7 @@ function BookForm() {
                   type="number"
                   name="yearGoal"
                   min="0"
+                  max="1000000000000"
                   onChange={handleChange}
                 />
               </div>

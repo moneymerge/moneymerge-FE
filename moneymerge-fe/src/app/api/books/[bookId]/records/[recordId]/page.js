@@ -19,7 +19,7 @@ import RootLayout from "../../../../../../components/layout.js";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { BASE_URL } from '../../../../../../../url.js';
+import { BASE_URL } from "../../../../../../../url.js";
 
 export default function Records() {
   const params = useParams();
@@ -77,16 +77,13 @@ export default function Records() {
 
   useEffect(() => {
     if (params.recordId) {
-      fetch(
-        `${BASE_URL}/books/${params.bookId}/records/${params.recordId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      )
+      fetch(`${BASE_URL}/books/${params.bookId}/records/${params.recordId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
         .then((result) => result.json())
         .then((result) => {
           setRecords(result.data);
@@ -104,13 +101,10 @@ export default function Records() {
 
     if (confirmDelete) {
       // fetch(`http://localhost:8080/api/books/1/records/15`, {
-      fetch(
-        `${BASE_URL}/books/${params.bookId}/records/${recordId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      )
+      fetch(`${BASE_URL}/books/${params.bookId}/records/${recordId}`, {
+        method: "DELETE",
+        credentials: "include",
+      })
         .then((response) => {
           console.log(response);
           if (response.ok) {
@@ -208,9 +202,9 @@ export default function Records() {
     }
 
     const notification = {
-      type : 'BOOK_GET_COMMENT',
-      detail: "\"" + comment.content + "\""
-    }
+      type: "BOOK_GET_COMMENT",
+      detail: '"' + comment.content + '"',
+    };
 
     fetch(
       `${BASE_URL}/books/${params.bookId}/records/${params.recordId}/comments`,
@@ -235,23 +229,23 @@ export default function Records() {
         alert("Fetch error:" + error);
       });
 
-      fetch(`${BASE_URL}/notifications/${records.userId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(notification),
+    fetch(`${BASE_URL}/notifications/${records.userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(notification),
+    })
+      .then((response) => {
+        if (response.ok) {
+        } else {
+          alert("Error:" + response.status);
+        }
       })
-        .then((response) => {
-          if (response.ok) {
-          } else {
-            alert("Error:" + response.status);
-          }
-        })
-        .catch((error) => {
-          alert("Fetch error:" + error);
-        });
+      .catch((error) => {
+        alert("Fetch error:" + error);
+      });
   };
 
   ///////////////////////////
@@ -408,19 +402,21 @@ export default function Records() {
 
                     <div>
                       <div className="mt-3 font-medium">사진</div>
-                      <img
-                        alt="Transaction Photo"
-                        className="rounded-md"
-                        src={records.image}
-                        style={{
-                          width: "200px",
-                          height: "200px",
-                          backgroundImage: `url(${records.image})`,
-                          backgroundSize: "contain",
-                          backgroundRepeat: "no-repeat",
-                          backgroundPosition: "center",
-                        }}
-                      />
+                      {records.image && (
+                        <img
+                          alt="Transaction Photo"
+                          className="rounded-md"
+                          src={records.image}
+                          style={{
+                            width: "200px",
+                            height: "200px",
+                            backgroundImage: `url(${records.image})`,
+                            backgroundSize: "contain",
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "center",
+                          }}
+                        />
+                      )}
                     </div>
                     <div className="flex mt-3">
                       <div>가계부</div>

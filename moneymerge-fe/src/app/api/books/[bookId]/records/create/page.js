@@ -270,7 +270,8 @@ export default function Component() {
       });
   };
 
-  const handleCategoryDelete = (categoryIdToDelete) => {
+  const handleCategoryDelete = (e, categoryIdToDelete) => {
+    e.preventDefault();
     if (confirm("정말로 이 카테고리를 삭제하시겠습니까?")) {
       fetch(
         `${BASE_URL}/books/${params.bookId}/categories/${categoryIdToDelete}`,
@@ -372,6 +373,8 @@ export default function Component() {
                 id="amount"
                 placeholder="금액을 입력하세요"
                 name="amount"
+                min="0"
+                max="1000000000000"
                 onChange={handleChange}
               />
             </div>
@@ -408,7 +411,7 @@ export default function Component() {
                 </select>
                 <Button
                   className="w-[10px] h-[20px]"
-                  onClick={() => handleCategoryDelete(record.categoryId)}
+                  onClick={(e) => handleCategoryDelete(e, record.categoryId)}
                 >
                   삭제
                 </Button>

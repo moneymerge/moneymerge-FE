@@ -422,6 +422,8 @@ export default function RecordEdit() {
                 placeholder="금액을 입력하세요"
                 name="amount"
                 value={record.amount}
+                min="0"
+                max="1000000000000"
                 onChange={handleChange}
               />
             </div>
