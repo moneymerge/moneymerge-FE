@@ -333,7 +333,7 @@ export default function Component() {
       return;
     }
 
-    fetch(`h${BASE_URL}/books/${bookId}/year-goal`, {
+    fetch(`${BASE_URL}/books/${bookId}/year-goal`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
