@@ -182,7 +182,10 @@ export default function Component() {
           }}
         >
           <span>
-            <Button className="w-[100px] h-[20px]" onClick={handleApplyFilter}>
+            <Button
+              className="absolute w-[100px] h-[20px]"
+              onClick={handleApplyFilter}
+            >
               Apply Filter
             </Button>
           </span>
