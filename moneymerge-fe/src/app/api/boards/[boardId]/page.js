@@ -387,7 +387,7 @@ export default function Component() {
                     {editStates[comment.boardCommentId] ? (
                       <div className="mt-6">
                         <textarea
-                          className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
+                          className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent whitespace-pre-wrap"
                           placeholder="댓글을 입력하세요"
                           name="content"
                           value={editedContents[comment.boardCommentId]}

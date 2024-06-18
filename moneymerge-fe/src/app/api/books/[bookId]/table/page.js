@@ -195,13 +195,13 @@ export default function Component() {
             style={{ position: "absolute", top: "-50px" }}
           >
             <Link
-              className="flex items-center bg-[#f1ff9c] pl-2 pr-2 pt-2 rounded-t-xl"
+              className="flex items-center bg-[#ffffff] pl-2 pr-2 pt-2 rounded-t-xl"
               href={`/api/books/${bookId}`}
             >
               <h1 className="text-xl font-bold w-[100px]">달력</h1>
             </Link>
             <Link
-              className="flex items-center bg-[#ffffff] pl-2 pr-2 pt-2 rounded-t-xl"
+              className="flex items-center bg-[#f1ff9c] pl-2 pr-2 pt-2 rounded-t-xl"
               href={`/api/books/${bookId}/table`}
             >
               <h1 className="text-xl font-bold w-[100px]">표</h1>
