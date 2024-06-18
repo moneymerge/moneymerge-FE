@@ -139,18 +139,6 @@ export default function Component() {
             >
               <h1 className="text-xl font-bold w-[100px]">달력</h1>
             </Link>
-            {/* <Link
-              className="flex items-center bg-[#ffffff] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/1}/table`}
-            >
-              <h1 className="text-xl font-bold w-[100px]">표</h1>
-            </Link>
-            <Link
-              className="flex items-center bg-[#ffffff] pl-2 pr-2 pt-2 rounded-t-xl"
-              href={`/api/books/1}/analysis`}
-            >
-              <h1 className="text-xl font-bold w-[100px]">소비 분석</h1>
-            </Link> */}
           </div>
         </div>
         <main
