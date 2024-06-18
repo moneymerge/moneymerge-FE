@@ -123,6 +123,16 @@ export default function RecordEdit() {
     console.log(record);
   };
 
+  const handleAmountChange = (e) => {
+    const { name, value } = e.target;
+    if(value > 1000000000000) {
+      alert("금액은 1,000,000,000,000 이내로 작성해주세요!");
+      return;
+    }
+    setRecord((prevRecord) => ({ ...prevRecord, [name]: value }));
+    console.log(record);
+  };
+
   useEffect(() => {
     fetch(`${BASE_URL}/books/${params.bookId}/categories`, {
       method: "GET",
@@ -424,7 +434,7 @@ export default function RecordEdit() {
                 value={record.amount}
                 min="0"
                 max="1000000000000"
-                onChange={handleChange}
+                onChange={handleAmountChange}
               />
             </div>
 

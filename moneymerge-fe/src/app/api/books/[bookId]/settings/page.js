@@ -249,6 +249,10 @@ export default function Component() {
   // 이번달 목표 수정
   const handleMonthGoalChange = (event) => {
     event.preventDefault();
+    if(event.target.value > 1000000000000) {
+      alert("목표 금액은 1,000,000,000,000 이내로 작성해주세요!");
+      return;
+    }
     setMonthGoal(event.target.value);
     console.log(monthGoal);
   };
@@ -313,6 +317,10 @@ export default function Component() {
   // 올해 목표 수정
   const handleYearGoalChange = (event) => {
     event.preventDefault();
+    if(event.target.value > 1000000000000) {
+      alert("목표 금액은 1,000,000,000,000 이내로 작성해주세요!");
+      return;
+    }
     setYearGoal(event.target.value);
   };
 
