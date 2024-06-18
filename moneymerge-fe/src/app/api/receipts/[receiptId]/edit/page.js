@@ -57,6 +57,16 @@ export default function Component() {
     console.log(receipt);
   };
 
+  const handleEmotionChange = (e) => {
+    const { name, value } = e.target;
+    if(value > 1000000000000) {
+      alert("기분은 1,000,000,000,000 이내로 작성해주세요!");
+      return;
+    }
+    setReceipt((prevReceipt) => ({ ...prevReceipt, [name]: value }));
+    console.log(receipt);
+  };
+
   const handleSharedChange = (e) => {
     const value = e.target.checked; // 체크 박스의 체크 상태를 가져옴
     setReceipt({
@@ -181,6 +191,7 @@ export default function Component() {
                 name="content"
                 value={receipt.content}
                 onChange={handleChange}
+                className="whitespace-pre-wrap"
               />
             </div>
             <div className="flex items-center gap-4">
@@ -193,7 +204,7 @@ export default function Component() {
                 placeholder="긍정적 기분을 입력하세요"
                 name="positive"
                 value={receipt.positive}
-                onChange={handleChange}
+                onChange={handleEmotionChange}
               />
             </div>
             <div className="flex items-center gap-4">
@@ -206,7 +217,7 @@ export default function Component() {
                 placeholder="부정적 기분을 입력하세요"
                 name="negative"
                 value={receipt.negative}
-                onChange={handleChange}
+                onChange={handleEmotionChange}
               />
             </div>
             <div className="flex items-center flex-grow gap-4">

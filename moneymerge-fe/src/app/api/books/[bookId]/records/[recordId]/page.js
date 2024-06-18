@@ -390,13 +390,13 @@ export default function Records() {
                     <div className="">
                       <div className="font-medium">내용</div>
                       <div className="border rounded-md p-4">
-                        <div className="text-gray-500">{records.content}</div>
+                        <div className="text-gray-500 whitespace-pre-wrap">{records.content}</div>
                       </div>
                     </div>
                     <div className="">
                       <div className="font-medium">메모</div>
                       <div className="border rounded-md p-4">
-                        <div className="text-gray-500">{records.memo}</div>
+                        <div className="text-gray-500 whitespace-pre-wrap">{records.memo}</div>
                       </div>
                     </div>
 
@@ -504,7 +504,7 @@ export default function Records() {
               <h3 className="text-lg font-bold mb-4">댓글</h3>
               <form className="mt-6" onSubmit={handleSubmit}>
                 <Textarea
-                  className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
+                  className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent whitespace-pre-wrap"
                   placeholder="댓글을 입력하세요"
                   name="content"
                   onChange={handleChange}
@@ -520,7 +520,7 @@ export default function Records() {
                     {editStates[comment.commentId] ? (
                       <div className="mt-6">
                         <Textarea
-                          className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
+                          className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent whitespace-pre-wrap"
                           placeholder="댓글을 입력하세요"
                           name="content"
                           value={editedContents[comment.commentId]}
@@ -585,7 +585,7 @@ export default function Records() {
                               </div>
                             </div>
                           </div>
-                          <p className="mt-2">{comment.content}</p>
+                          <p className="mt-2 whitespace-pre-wrap">{comment.content}</p>
                           {userData && userData.userId === comment.userId && (
                             <div className="flex items-center gap-2 mt-2">
                               <Button

@@ -352,7 +352,7 @@ export default function Component() {
                 }}
               ></div>
             )}
-            <div className="prose prose-gray">
+            <div className="prose prose-gray whitespace-pre-wrap">
               <p>{board.content}</p>
             </div>
             {userData && board.userId === userData.userId && (
@@ -372,7 +372,7 @@ export default function Component() {
               <h3 className="text-lg font-bold mb-4">댓글</h3>
               <form className="mt-6" onSubmit={handleSubmit}>
                 <Textarea
-                  className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent"
+                  className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#333] focus:border-transparent whitespace-pre-wrap"
                   placeholder="댓글을 입력하세요"
                   name="content"
                   onChange={handleChange}
@@ -535,7 +535,7 @@ export default function Component() {
                               </Button>
                             </div>
                           </div>
-                          <p className="mt-2">{comment.content}</p>
+                          <p className="mt-2 whitespace-pre-wrap">{comment.content}</p>
                           {userData && userData.userId === comment.userId && (
                             <div className="flex items-center gap-2 mt-2">
                               <Button

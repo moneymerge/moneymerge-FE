@@ -282,6 +282,25 @@ function BookForm() {
     console.log(book);
   };
 
+  const handleGoalChange = (e) => {
+    const { name, value } = e.target;
+    if(value > 1000000000000) {
+      alert("목표 금액은 1,000,000,000,000 이내로 작성해주세요!");
+      return;
+    }
+    setBook({ ...book, [name]: value });
+    setBook((prevBook) => {
+      const userIdList = userList.map((user) => user.userId);
+      return {
+        ...prevBook,
+        userColor: userColor,
+        bookColor: bookColor,
+        userList: userIdList,
+      };
+    });
+    console.log(book);
+  };
+
   const handleSearchInput = (e) => {
     const value = e.target.value;
     setEmail(value);
@@ -532,7 +551,7 @@ function BookForm() {
                   name="monthGoal"
                   min="0"
                   max="1000000000000"
-                  onChange={handleChange}
+                  onChange={handleGoalChange}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -544,7 +563,7 @@ function BookForm() {
                   name="yearGoal"
                   min="0"
                   max="1000000000000"
-                  onChange={handleChange}
+                  onChange={handleGoalChange}
                 />
               </div>
             </div>
