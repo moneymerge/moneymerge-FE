@@ -96,7 +96,7 @@ export default function Component() {
                       <div className="">
                         <div className="font-medium">내용</div>
                         <div className="border rounded-md p-4 min-h-[100px]">
-                          <div className="text-gray-500">{receipt.content}</div>
+                          <div className="text-gray-500 whitespace-pre-wrap">{receipt.content}</div>
                         </div>
                       </div>
                     </div>

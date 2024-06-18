@@ -191,6 +191,7 @@ export default function Component() {
                 name="content"
                 value={receipt.content}
                 onChange={handleChange}
+                className="whitespace-pre-wrap"
               />
             </div>
             <div className="flex items-center gap-4">

@@ -502,6 +502,7 @@ export default function RecordEdit() {
                 name="content"
                 value={record.content}
                 onChange={handleChange}
+                className="whitespace-pre-wrap"
               />
             </div>
             <div>
@@ -513,6 +514,7 @@ export default function RecordEdit() {
                 name="memo"
                 value={record.memo}
                 onChange={handleChange}
+                className="whitespace-pre-wrap"
               />
             </div>
             <div>

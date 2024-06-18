@@ -451,6 +451,7 @@ export default function Component() {
                 rows={1}
                 name="content"
                 onChange={handleChange}
+                className="whitespace-pre-wrap"
               />
             </div>
             <div>
@@ -461,6 +462,7 @@ export default function Component() {
                 rows={1}
                 name="memo"
                 onChange={handleChange}
+                className="whitespace-pre-wrap"
               />
             </div>
             <div>

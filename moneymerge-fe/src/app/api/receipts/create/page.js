@@ -179,6 +179,7 @@ export default function Component() {
                 rows={5}
                 name="content"
                 onChange={handleChange}
+                className="whitespace-pre-wrap"
               />
             </div>
             <div className="flex items-center gap-4">
