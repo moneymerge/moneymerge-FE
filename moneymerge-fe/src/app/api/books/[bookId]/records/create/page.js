@@ -47,6 +47,23 @@ export default function Component() {
   const [file, setFile] = useState(null);
   const [newCategory, setNewCategory] = useState("");
 
+  // 날짜 클릭 시 바로 date 반영
+  if (typeof window !== "undefined") {
+    // 현재 URL에서 쿼리 스트링을 추출
+    const queryString = window.location.search;
+    // URLSearchParams를 사용하여 쿼리 스트링을 파싱
+    const urlParams = new URLSearchParams(queryString);
+
+    useEffect(() => {
+      for (const [key, value] of urlParams.entries()) {
+        if (key === "date") {
+          setDate(value);
+        }
+      }
+    }, [queryString]);
+
+  }
+
   const checkItemHandler = (e) => {
     const { id, checked } = e.target;
     if (checked) {
@@ -59,6 +76,7 @@ export default function Component() {
       });
     }
   };
+  
   useEffect(() => {
     const selectedBooks = [...checkItems];
     setRecord((prevRecord) => ({ ...prevRecord, bookList: selectedBooks }));
@@ -270,7 +288,7 @@ export default function Component() {
         if (response.ok) {
           window.location.href = `/api/books/${params.bookId}`;
         } else if (response.status === 403) {
-          alert("모두 입력해주세요.");
+          alert("올바르게 입력해주세요.");
         } else {
           alert("Error:" + response.status);
         }

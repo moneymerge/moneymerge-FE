@@ -39,8 +39,6 @@ export default function Component() {
   const [total, setTotal] = useState(null);
 
   useEffect(() => {
-    // Fetch data from the backend
-    // let url = "http://localhost:8080/api/books/1/records/2024/5";
     let url = `${BASE_URL}/books/${bookId}/records/${year}/${month + 1}`;
     fetch(url, {
       method: "GET",
@@ -108,8 +106,10 @@ export default function Component() {
     const recordId = clickInfo.event.id;
     router.push(`/api/books/${bookId}/records/${recordId}`);
   };
-  const handleDateClick = () => {
-    // 모달
+  
+  const handleDateClick = (arg) => {
+    const clickedDate = arg.dateStr;
+    window.location.href = `/api/books/${bookId}/records/create?date=${clickedDate}`;
   };
 
   // 이벤트 컨텐츠를 커스터마이즈하는 함수

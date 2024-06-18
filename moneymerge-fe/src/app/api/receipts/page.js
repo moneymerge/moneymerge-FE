@@ -68,8 +68,9 @@ export default function Component() {
     const receiptId = clickInfo.event.id;
     router.push(`/api/receipts/${receiptId}`);
   };
-  const handleDateClick = () => {
-    // 모달
+  const handleDateClick = (arg) => {
+    const clickedDate = arg.dateStr;
+    window.location.href = `/api/receipts/create?date=${clickedDate}`;
   };
 
   return (

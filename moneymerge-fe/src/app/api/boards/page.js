@@ -48,14 +48,12 @@ export default function Component() {
 
   useEffect(() => {
     let url = `${BASE_URL}/boards`;
-    // let countUrl = "http://localhost:8080/api/boards/count";
 
     if (currentPage) {
       url += `?page=${currentPage}`;
     }
     if (boardType) {
       url += `&boardType=${boardType}`;
-      // countUrl += `?boardType=${boardType}`;
     }
     if (sortBy === "latest") {
       url += `&sortBy=createdAt&isAsc=false`;
@@ -72,11 +70,6 @@ export default function Component() {
         setTotalPages(result.data.totalPages);
       });
 
-    // fetch(countUrl)
-    //   .then((result) => result.json())
-    //   .then((result) => {
-    //     setTotalPages(Math.ceil(result / 10));
-    //   });
   }, [boardType, sortBy, currentPage]);
 
   const handlePageChange = (pageNumber) => {
