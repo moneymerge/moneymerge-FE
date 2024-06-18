@@ -58,6 +58,7 @@ export default function Component() {
       for (const [key, value] of urlParams.entries()) {
         if (key === "date") {
           setDate(value);
+          record.date = value;
         }
       }
     }, [queryString]);

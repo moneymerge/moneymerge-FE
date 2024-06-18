@@ -45,6 +45,7 @@ export default function Component() {
       for (const [key, value] of urlParams.entries()) {
         if (key === "date") {
           setDate(value);
+          receipt.date = value;
         }
       }
     }, [queryString]);
