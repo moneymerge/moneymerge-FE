@@ -144,9 +144,9 @@ export default function Component() {
       .then((response) => {
         if (response.ok) {
           document.cookie =
-            "AccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.moneymerge.store";
+            "AccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.moneymerge.store;";
           document.cookie =
-            "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.moneymerge.store";
+            "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.moneymerge.store;";
           window.location.href = "/api/login";
         } else {
           console.error("Failed to log out");
@@ -175,9 +175,9 @@ export default function Component() {
       .then((response) => {
         if (response.ok) {
           document.cookie =
-            "AccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.moneymerge.store";
+            "AccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.moneymerge.store;";
           document.cookie =
-            "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.moneymerge.store";
+            "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.moneymerge.store;";
           window.location.href = "/api/login";
         } else {
           console.error("Failed to withdrawal");
