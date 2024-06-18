@@ -66,11 +66,12 @@ export default function Component() {
             record.recordType === "수입"
               ? `+${record.amount}`
               : `-${record.amount}`,
-          start: `${record.date}T00:00:00`,
-          color: `${record.userColor}`,
+          start: `${record.date}T00:00:00`, //'2024-03-12T21:00:00',
           extendedProps: {
+            color: `${record.userColor}`,
             bookId: `${record.bookId}`,
           },
+          textColor: record.recordType === "수입" ? "#3D73DB" : "#DB7292",
         }));
 
         // 중복 찾기
@@ -136,6 +137,26 @@ export default function Component() {
     // 모달
   };
   console.log(events);
+
+  // 이벤트 컨텐츠를 커스터마이즈하는 함수
+  const renderEventContent = (eventInfo) => {
+    return (
+      <div className="flex">
+        <div
+          style={{
+            width: "10px",
+            height: "10px",
+            backgroundColor: `${eventInfo.event.extendedProps.color}`,
+            borderRadius: "50%",
+            marginRight: "5px",
+          }}
+        ></div>
+        <div style={{ color: eventInfo.event.textColor }}>
+          {eventInfo.event.title}
+        </div>
+      </div>
+    );
+  };
   return (
     <RootLayout>
       <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
@@ -161,7 +182,10 @@ export default function Component() {
           }}
         >
           <span>
-            <Button className="w-[100px] h-[20px]" onClick={handleApplyFilter}>
+            <Button
+              className="absolute w-[100px] h-[20px]"
+              onClick={handleApplyFilter}
+            >
               Apply Filter
             </Button>
           </span>
@@ -195,6 +219,7 @@ export default function Component() {
               setYear(arg.start.getFullYear());
               setMonth(arg.start.getMonth() + 1);
             }}
+            eventContent={renderEventContent}
           />
           <div
             className="absolute"
