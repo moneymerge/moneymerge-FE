@@ -32,6 +32,11 @@ export default function Component() {
   const bookId = params.bookId;
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [monthGoal, setMonthGoal] = useState(null);
+  const [yearGoal, setYearGoal] = useState(null);
+  const [income, setIncome] = useState(null);
+  const [outcome, setOutcome] = useState(null);
+  const [total, setTotal] = useState(null);
 
   useEffect(() => {
     // Fetch data from the backend
@@ -59,7 +64,10 @@ export default function Component() {
                 ? `+${record.amount}`
                 : `-${record.amount}`,
             start: `${record.date}T00:00:00`, //'2024-03-12T21:00:00',
-            color: `${record.userColor}`,
+            extendedProps: {
+              color: `${record.userColor}`,
+            },
+            textColor: record.recordType === "수입" ? "#3D73DB" : "#DB7292",
           }));
           setEvents(eventList);
         } else {
@@ -69,6 +77,31 @@ export default function Component() {
       .catch((error) => {
         console.error("Error fetching events:", error);
       });
+
+    // 목표, 수입지출
+    fetch(`${BASE_URL}/books/${bookId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((result) => {
+        if (!result.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        return result.json();
+      })
+      .then((result) => {
+        console.log("결과");
+        console.log("Received user data:", result);
+        setMonthGoal(result.data.monthGoal);
+        setYearGoal(result.data.yearGoal);
+        setIncome(result.data.income);
+        setOutcome(result.data.outcome);
+        setTotal(result.data.total);
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
   }, [year, month]);
 
   const handleEventClick = (clickInfo) => {
@@ -79,6 +112,25 @@ export default function Component() {
     // 모달
   };
 
+  // 이벤트 컨텐츠를 커스터마이즈하는 함수
+  const renderEventContent = (eventInfo) => {
+    return (
+      <div className="flex">
+        <div
+          style={{
+            width: "10px",
+            height: "10px",
+            backgroundColor: `${eventInfo.event.extendedProps.color}`,
+            borderRadius: "50%",
+            marginRight: "5px",
+          }}
+        ></div>
+        <div style={{ color: eventInfo.event.textColor }}>
+          {eventInfo.event.title}
+        </div>
+      </div>
+    );
+  };
   return (
     <RootLayout>
       <div className="bg-[#ffffff] text-[#333] w-full h-full flex flex-col overflow-auto">
@@ -105,6 +157,21 @@ export default function Component() {
             >
               <h1 className="text-xl font-bold w-[100px]">소비 분석</h1>
             </Link>
+          </div>
+        </div>
+        {/* 목표, 총수입지출 */}
+        <div
+          className="absolute w-[100%] flex justify-between"
+          style={{ fontSize: "12px" }}
+        >
+          <div className="p-2 flex flex-col">
+            <div>월 목표: {monthGoal}</div>
+            <div>연 목표: {yearGoal}</div>
+          </div>
+          <div className="flex flex-col items-end pr-10">
+            <div className="text-[#3D73DB]">수입: {income}</div>
+            <div className="text-[#DB7292]">지출: {outcome}</div>
+            <div>합계: {total}</div>
           </div>
         </div>
         <main
@@ -144,6 +211,7 @@ export default function Component() {
               setYear(arg.start.getFullYear());
               setMonth(arg.start.getMonth() + 1);
             }}
+            eventContent={renderEventContent}
           />
           <div
             className="absolute"
