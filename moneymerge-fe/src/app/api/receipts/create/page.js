@@ -34,6 +34,23 @@ export default function Component() {
   });
   const [date, setDate] = useState(null);
 
+  // 날짜 클릭 시 바로 date 반영
+  if (typeof window !== "undefined") {
+    // 현재 URL에서 쿼리 스트링을 추출
+    const queryString = window.location.search;
+    // URLSearchParams를 사용하여 쿼리 스트링을 파싱
+    const urlParams = new URLSearchParams(queryString);
+
+    useEffect(() => {
+      for (const [key, value] of urlParams.entries()) {
+        if (key === "date") {
+          setDate(value);
+        }
+      }
+    }, [queryString]);
+
+  }
+
   useEffect(() => {
     if (date instanceof Date && !isNaN(date)) {
       setReceipt((prevReceipt) => ({
