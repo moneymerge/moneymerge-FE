@@ -88,6 +88,8 @@ export default function Records() {
         .then((result) => {
           setRecords(result.data);
           setComments(result.data.commentList);
+          setLikes(result.data.likes);
+          setDislikes(result.data.dilikes);
         })
         .catch((error) => {
           console.error("Error fetching record:", error);
